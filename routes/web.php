@@ -18,4 +18,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/finance', [FinanceController::class, 'index'])->name('finance.index');
+// Admin
+Route::get('/dashboard', [FinanceController::class, 'index'])->name('finance.index');
