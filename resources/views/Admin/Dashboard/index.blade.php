@@ -13,10 +13,11 @@
 {{-- Update jumlah pengunjung --}}
 <h6 class="update-title">Update Jumlah Pengunjung</h6>
 <div class="input-group mb-3">
-  <span class="input-group-text custom-box">50000</span>
-  <input type="number" class="form-control" placeholder="Jumlah Pengunjung" aria-label="Jumlah Pengunjung" aria-describedby="basic-addon1">
-  <button class="btn btn-primary" type="button">Update</button>
+  <span class="input-group-text custom-box">{{ $visitors->jumlah }}</span>
+  <input id="inputJumlahPengunjung" type="number" class="form-control" placeholder="Update Jumlah Pengunjung" aria-label="Jumlah Pengunjung" aria-describedby="basic-addon1">
+  <button id="buttonUpdatePengunjung" class="btn btn-primary" type="submit">Update</button>
 </div>
+
 
     
 @endsection

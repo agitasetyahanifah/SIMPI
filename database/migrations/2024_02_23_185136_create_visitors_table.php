@@ -11,8 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('admin_dashboards', function (Blueprint $table) {
+        Schema::create('visitors', function (Blueprint $table) {
             $table->id();
+            $table->integer('jumlah');
             $table->timestamps();
         });
     }
@@ -22,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('admin_dashboards');
+        Schema::dropIfExists('visitors');
     }
 };
