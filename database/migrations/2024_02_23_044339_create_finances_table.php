@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('manajemen_keuangan', function (Blueprint $table) {
+        Schema::create('finances', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal_transaksi');
-            $table->double('jumlah');
-            $table->enum('jenis', ['Pemasukan', 'Pengeluaran']);
+            $table->decimal('jumlah', 10, 2);
+            $table->enum('jenis_transaksi', ['pemasukan', 'pengeluaran']);
             $table->string('keterangan')->nullable();
-            $table->timestamps(); // This will automatically create created_at and updated_at columns
+            $table->timestamps();
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('manajemen_keuangan');
+        Schema::dropIfExists('finances');
     }
 };

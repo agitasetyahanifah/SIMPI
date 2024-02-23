@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\ManajemenKeuangan;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FinanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +17,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/finance', [FinanceController::class, 'index'])->name('finance.index');
