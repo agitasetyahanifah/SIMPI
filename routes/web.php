@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminDashboardController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FinanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,4 +19,4 @@ Route::get('/', function () {
 });
 
 // Admin
-Route::get('/dashboard', [FinanceController::class, 'index'])->name('finance.index');
+Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard.index');

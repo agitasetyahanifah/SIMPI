@@ -27,6 +27,32 @@
           font-size: 3.5rem;
         }
       }
+
+      /* Custom CSS for the update title */
+      .update-title {
+        font-size: 1.2em;
+        margin-bottom: 20px;
+      }
+
+      /* Custom CSS for the custom box */
+      .custom-box {
+        background-color: #f8f9fa; /* Light gray background */
+        border: 1px solid #007bff; /* Blue border */
+        font-weight: bold;
+        padding: 10px 15px;
+        border-radius: 5px;
+        margin-right: 10px;
+      }
+
+      /* Custom CSS for the input and button */
+      .form-control {
+        border-radius: 5px 0 0 5px;
+      }
+
+      .btn-primary {
+        border-radius: 0 5px 5px 0;
+      }
+
     </style>
 
     
@@ -35,17 +61,19 @@
   </head>
   <body>
     
-<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+<header class="navbar navbar-dark sticky-top bg-primary flex-md-nowrap p-0 shadow">
   <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">SIMPI</a>
   <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+  {{-- <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> --}}
+
   <div class="navbar-nav">
     <div class="nav-item text-nowrap">
-      <a class="nav-link px-3" href="#">Sign out</a>
+      <h6 class="px-3" style="color: white;">Selamat Datang, Admin!</h6>
     </div>
   </div>
+
 </header>
 
 <div class="container-fluid">

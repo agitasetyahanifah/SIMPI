@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('finances', function (Blueprint $table) {
+        Schema::create('admin_dashboards', function (Blueprint $table) {
             $table->id();
-            $table->date('tanggal_transaksi');
-            $table->decimal('jumlah', 10, 2);
-            $table->enum('jenis_transaksi', ['pemasukan', 'pengeluaran']);
-            $table->string('keterangan')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('finances');
+        Schema::dropIfExists('admin_dashboards');
     }
 };
