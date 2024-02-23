@@ -14,12 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-// Route::get('/', function () {
-//     return view('Admin.ManajemenKeuangan.manajemenkeuangan');
-// });
-
-Route::get('/admin/manajemen-keuangan', [ManajemenKeuangan::class, 'index']);
+Route::get('/', function () {
+    return view('welcome');
+});
