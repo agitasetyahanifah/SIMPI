@@ -95,5 +95,42 @@
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
     <script src="/js/dashboard.js"></script>
+
+    {{-- Menu Galeri --}}
+    <script>
+      $(document).ready(function() {
+        // Inisialisasi tooltip
+        $('[data-toggle="tooltip"]').tooltip();
+    
+        // Fungsi untuk tombol Maximize
+        $('.maximize-btn').click(function() {
+          var $card = $(this).closest('.card');
+          var $img = $card.find('img');
+          if ($card.hasClass('maximized')) {
+            // Jika sudah diperbesar, mengembalikan ukuran gambar ke ukuran aslinya
+            $img.css('max-width', '');
+            $card.removeClass('maximized');
+          } else {
+            // Jika belum diperbesar, membuat gambar menjadi lebih besar
+            $img.css('max-width', '100%');
+            $card.addClass('maximized');
+          }
+        });
+    
+        // Fungsi untuk tombol Trash (Hapus)
+        $('.trash-btn').click(function() {
+          // Memunculkan konfirmasi sebelum menghapus gambar
+          var confirmation = confirm('Anda yakin ingin menghapus gambar ini?');
+          if (confirmation) {
+            // Jika dikonfirmasi, hapus gambar
+            $(this).closest('.col-md-2').remove();
+          }
+        });
+    
+        // Menerapkan ikon Feather
+        feather.replace();
+      });
+    </script>    
+
   </body>
 </html>

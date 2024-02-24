@@ -16,18 +16,19 @@ class AdminDashboardController extends Controller
 
     public function updatePengunjung(Request $request)
     {
+        // Validasi input
         $request->validate([
-            'jumlah' => 'integer'
+            'jumlah' => 'required|integer'
         ]);
 
-        if ($request->has('jumlah')) {
-            Visitors::create([
-                'jumlah' => $request->jumlah
-            ]);
-        }
+        // Buat objek Visitor dengan data yang diterima dari request
+        $visitor = new Visitors();
+        $visitor->jumlah = $request->jumlah;
 
-        return redirect()->back()->with('success', 'Jumlah pengunjung berhasil diperbarui.');
+        // Simpan objek Visitor ke database
+        $visitor->save();
+
+        // Redirect ke halaman lain atau tampilkan pesan sukses jika diperlukan
+        return redirect()->back()->with('success', 'Jumlah pengunjung berhasil diupdate!');
     }
-
-
 }
