@@ -31,15 +31,41 @@
 {{-- Menu Galeri --}}
 <form method="" action="#">
   @csrf
-  <div class="container">
     <div class="row">
       <div class="col-md-12">
         <div class="d-flex justify-content-between align-items-center">
             <h6 class="update-title">Galeri Pemancingan</h6>
-            <button class="btn btn-success p-1 mb-3" ><span data-feather="plus-circle"></span> Tambah</button>
+            <form action="/admin/dashboard/uploadGambar" method="POST" enctype="multipart/form-data">
+              @csrf
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-success p-1 mb-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <span data-feather="plus-circle"></span> Tambah
+              </button>
+              <!-- Modal -->
+              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Upload Gambar</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="input-group mb-3">
+                        <input type="file" class="form-control">
+                      </div>                    
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Batal</button>
+                      <button type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </form>
         </div>
       </div>    
     </div>
+  <div class="container">
   </div>
   <div class="container">
     <div class="row">

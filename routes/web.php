@@ -21,3 +21,5 @@ Route::get('/', function () {
 // Admin
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard.index');
 Route::post('/admin/dashboard/updatePengunjung', [AdminDashboardController::class, 'updatePengunjung'])->name('admin.dashboard.updatePengunjung');
+Route::post('/admin/dashboard/uploadGambar', [AdminDashboardController::class, 'uploadGambar'])->name('admin.dashboard.uploadGambar');
+
