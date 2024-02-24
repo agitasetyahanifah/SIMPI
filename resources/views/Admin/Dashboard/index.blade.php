@@ -11,13 +11,14 @@
 {{-- <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas> --}}
 
 {{-- Update jumlah pengunjung --}}
-<h6 class="update-title">Update Jumlah Pengunjung</h6>
-<div class="input-group mb-3">
-  <span class="input-group-text custom-box">{{ $visitors->jumlah }}</span>
-  <input id="inputJumlahPengunjung" type="number" class="form-control" placeholder="Update Jumlah Pengunjung" aria-label="Jumlah Pengunjung" aria-describedby="basic-addon1">
-  <button id="buttonUpdatePengunjung" class="btn btn-primary" type="submit">Update</button>
-</div>
-
-
+<form method="post" action="/admin/dashboard/updatePengunjung">
+  @csrf
+  <h6 class="update-title">Update Jumlah Pengunjung</h6>
+  <div class="input-group mb-3">
+    <span class="input-group-text custom-box">{{ $visitors->jumlah }}</span>
+    <input name="visitors" id="visitors" type="number" class="form-control" placeholder="Update Jumlah Pengunjung">
+    <button class="btn btn-primary" type="submit">Update</button>
+  </div>
+</form>
     
 @endsection

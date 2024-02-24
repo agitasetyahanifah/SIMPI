@@ -11,6 +11,7 @@ class AdminDashboardController extends Controller
     {
         $visitors = Visitors::latest()->first();
         return view('admin.dashboard.index', compact('visitors'));
+        // return view('admin.dashboard.index');
     }
 
     public function updatePengunjung(Request $request)
@@ -19,8 +20,11 @@ class AdminDashboardController extends Controller
             'jumlah' => 'integer'
         ]);
 
-        $visitors = Visitors::first();
-        $visitors->update(['jumlah' => $request->jumlah]);
+        if ($request->has('jumlah')) {
+            Visitors::create([
+                'jumlah' => $request->jumlah
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Jumlah pengunjung berhasil diperbarui.');
     }
