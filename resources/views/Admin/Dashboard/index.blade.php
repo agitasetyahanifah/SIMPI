@@ -14,12 +14,22 @@
     </div>
 @endif
 
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 {{-- <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas> --}}
 
 {{-- Update jumlah pengunjung --}}
 <form method="post" action="/admin/dashboard/updatePengunjung">
   @csrf
-  <h6 class="update-title">Jumlah Pengunjung</h6>
+  <h6 class="update-title">Jumlah Pengunjung Pemancingan</h6>
   <div class="input-group mb-2">
     <span class="input-group-text custom-box">{{ isset($visitors) ? $visitors->jumlah : 0 }}</span>
     <input name="jumlah" id="jumlah" type="number" class="form-control" placeholder="Update Jumlah Pengunjung">
@@ -76,14 +86,20 @@
           <div class="carousel-inner">
             <div class="carousel-item active">
               <div class="row">
+                @if($images->isEmpty())
+                  <h6 class="text-center text-muted">Belum ada gambar yang ditambahkan</h6>
+                @endif
                 @foreach($images as $image)
                   <div class="col-md-2 mb-2 position-relative">
                       <div class="card">
+                        @if($image->filename)
                           <img src="{{ asset('images/' . $image->filename) }}" class="card-img-top" alt="...">
+                        @endif
                           <div class="position-absolute top-0 end-0">
                               <!-- Tambahkan class 'expand-btn' dan 'delete-btn' -->
-                              <button class="btn btn-light btn-sm p-0 expand-btn" type="button" data-toggle="tooltip" title="Expand" data-feather="maximize" data-image="{{ asset('images/' . $image->filename) }}"></button>
-                              <button class="btn btn-light btn-sm p-0 delete-btn" type="button" data-toggle="tooltip" title="Delete" data-feather="trash" data-image-id="{{ $image->id }}"></button>
+                              {{-- <button class="btn btn-light btn-sm p-0 expand-btn" type="button" data-toggle="tooltip" title="Expand" data-feather="maximize" data-image="{{ asset('images/' . $image->filename) }}"></button>
+                              <button class="btn btn-light btn-sm p-0 delete-btn" type="button" data-toggle="tooltip" title="Delete" data-feather="trash" data-image-id="{{ $image->id }}"></button> --}}
+                              <button class="btn btn-sm p-0 expand-btn" type="button" id="maximize" data-feather="maximize" data-image="{{ asset('images/' . $image->filename) }}"></button>                            
                           </div>
                       </div>
                   </div>
@@ -101,16 +117,19 @@
           </a> --}}
         </div>
       </div>
-    </div>
+    </div>                   
 
 @endsection
 
     {{-- Menu Galeri --}}
-    <script>
+    {{-- <script>
       $(document).ready(function() {
           // Fungsi untuk menangani tombol expand
           $('.expand-btn').click(function() {
               var imageUrl = $(this).data('image');
+              // Menambahkan console log
+              console.log('Tombol expand diklik');
+              console.log('URL gambar:', imageUrl);
               // Tampilkan gambar dalam modal
               $('#imageModal').find('.modal-body img').attr('src', imageUrl);
               $('#imageModal').modal('show');
@@ -137,5 +156,18 @@
               }
           });
       });
-    </script> 
+    </script>  --}}
 
+    <script>
+      $(document).ready(function() {
+        // Ketika tombol ditekan
+        $('#maximize').click(function() {
+          // Ambil URL gambar dari atribut data-image
+          var imageUrl = $(this).data('image');
+          // Atur sumber gambar pada modal
+          $('#expandedImage').attr('src', imageUrl);
+          // Tampilkan modal
+          $('#imageModal').modal('show');
+        });
+      });
+    </script>

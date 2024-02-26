@@ -33,19 +33,31 @@ class AdminDashboardController extends Controller
         return redirect()->back()->with('success', 'Jumlah pengunjung berhasil diupdate!');
     }
 
-    public function uploadGambar(Request $request){
+    public function uploadGambar(Request $request)
+    {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048',
+        ], [
+            'image.required' => 'Gambar harus dipilih.',
+            'image.image' => 'File harus berupa gambar.',
+            'image.mimes' => 'Format gambar harus jpeg, png, jpg, atau gif.',
+            'image.max' => 'Ukuran gambar tidak boleh lebih dari 5 MB.',
         ]);
 
-        $imageName = time().'.'.$request->image->extension();  
-   
-        $request->image->move(public_path('images'), $imageName);
+        // Check if the file is an image
+        if ($request->file('image')->isValid()) {
+            $imageName = time().'.'.$request->image->extension();  
+    
+            $request->image->move(public_path('images'), $imageName);
 
-        $image = new Galeri();
-        $image->filename = $imageName;
-        $image->save();
+            $image = new Galeri();
+            $image->filename = $imageName;
+            $image->save();
 
-        return redirect()->back()->with('success', 'Gambar berhasil ditambahkan!');
+            return redirect()->back()->with('success', 'Gambar berhasil ditambahkan!');
+        } else {
+            return redirect()->back()->withErrors(['image' => 'File yang diunggah bukanlah gambar yang valid.']);
+        }
     }
+    
 }
