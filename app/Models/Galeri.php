@@ -9,5 +9,7 @@ class Galeri extends Model
 {
     use HasFactory;
 
+    protected $table = 'galeri';
+
     protected $guarded = ['id'];
 }

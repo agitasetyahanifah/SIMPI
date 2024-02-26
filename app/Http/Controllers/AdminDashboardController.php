@@ -11,18 +11,18 @@ class AdminDashboardController extends Controller
     public function index()
     {
         $visitors = Visitors::latest()->first();
-        return view('admin.dashboard.index', compact('visitors'));
-        // return view('admin.dashboard.index');
+        $images = Galeri::orderBy('created_at', 'desc')->get();
+        return view('admin.dashboard.index', compact(['visitors', 'images']));
     }
 
     public function updatePengunjung(Request $request)
     {
-        // Validasi input
+         // Validasi input
         $request->validate([
             'jumlah' => 'required|integer'
         ]);
 
-        // Buat objek Visitor dengan data yang diterima dari request
+           // Buat objek Visitor dengan data yang diterima dari request
         $visitor = new Visitors();
         $visitor->jumlah = $request->jumlah;
 
