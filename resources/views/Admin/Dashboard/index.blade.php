@@ -170,29 +170,25 @@
                 $('#imageModal').modal('show');
             });
 
-           // Fungsi untuk menangani klik tombol delete
-          $('.delete').click(function() {
-              // Ambil id gambar dari atribut data-image-id
-              var imageId = $(this).data('image-id');
-
-              // Konfirmasi penghapusan
-              if (confirm("Apakah Anda yakin ingin menghapus gambar ini?")) {
-                  // Kirim permintaan AJAX untuk menghapus gambar
-                  $.ajax({
-                      url: '/delete-image/' + imageId, // Ganti dengan URL yang sesuai di backend Anda
-                      method: 'DELETE',
-                      success: function(response) {
-                          // Tindakan setelah berhasil menghapus gambar
-                          console.log('Gambar berhasil dihapus');
-                          // Misalnya, perbarui tampilan atau tampilkan pesan sukses
-                      },
-                      error: function(xhr, status, error) {
-                          // Tindakan jika terjadi kesalahan
-                          console.error('Kesalahan dalam menghapus gambar:', error);
-                          // Tampilkan pesan kesalahan atau lakukan tindakan yang sesuai
-                      }
-                  });
-              }
-          });
+           // Fungsi untuk menangani tombol delete dengan konfirmasi
+            $('.delete').click(function() {
+                var imageId = $(this).data('image-id');
+                // Tampilkan konfirmasi penghapusan
+                if (confirm("Apakah Anda yakin ingin menghapus gambar ini?")) {
+                    // Lakukan penghapusan gambar dengan AJAX request
+                    $.ajax({
+                        url: '/admin/dashboard/hapusGambar/' + imageId,
+                        method: 'DELETE',
+                        success: function(response) {
+                            // Refresh halaman atau hapus gambar dari tampilan
+                            location.reload(); // Contoh: refresh halaman setelah penghapusan
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                            // Tampilkan pesan kesalahan jika diperlukan
+                        }
+                    });
+                }
+            });
         });
     </script>

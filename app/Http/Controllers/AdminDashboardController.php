@@ -59,5 +59,25 @@ class AdminDashboardController extends Controller
             return redirect()->back()->withErrors(['image' => 'File yang diunggah bukanlah gambar yang valid.']);
         }
     }
+
+    public function hapusGambar($id)
+    {
+        // Temukan gambar berdasarkan ID
+        $image = Galeri::find($id);
+
+        if (!$image) {
+            // Jika gambar tidak ditemukan, kembalikan respons dengan status 404
+            return response()->json(['message' => 'Gambar tidak ditemukan.'], 404);
+        }
+
+        // Hapus gambar dari sistem penyimpanan Anda
+        // Misalnya, jika gambar disimpan di folder 'public/images', Anda dapat menggunakan fungsi unlink() untuk menghapusnya
+
+        // Hapus entri gambar dari database
+        $image->delete();
+
+        // Kembalikan respons sukses
+        return response()->json(['message' => 'Gambar berhasil dihapus.']);
+    }
     
 }

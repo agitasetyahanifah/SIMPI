@@ -22,6 +22,6 @@ Route::get('/', function () {
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard.index');
 Route::post('/admin/dashboard/updatePengunjung', [AdminDashboardController::class, 'updatePengunjung'])->name('admin.dashboard.updatePengunjung');
 Route::post('/admin/dashboard/uploadGambar', [AdminDashboardController::class, 'uploadGambar'])->name('admin.dashboard.uploadGambar');
-Route::delete('/admin/dashboard/hapusGambar/{id}', [AdminDashboardController::class, 'hapusGambar'])->name('admin.dashboard.uploadGambar');
+Route::delete('/admin/dashboard/hapusGambar/{id}', [AdminDashboardController::class, 'hapusGambar'])->name('admin.dashboard.hapusGambar');
 
 
