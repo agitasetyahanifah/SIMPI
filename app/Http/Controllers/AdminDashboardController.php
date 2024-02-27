@@ -60,10 +60,15 @@ class AdminDashboardController extends Controller
         }
     }
 
-    public function hapusGambar($id)
+    public function hapusGambar(Request $request)
     {
+        // Validasi permintaan
+        $request->validate([
+            'image_id' => 'required|exists:galeri,id', // Pastikan ID gambar yang akan dihapus ada dalam tabel galeri
+        ]);
+
         // Temukan gambar berdasarkan ID
-        $image = Galeri::find($id);
+        $image = Galeri::find($request->image_id);
 
         if (!$image) {
             // Jika gambar tidak ditemukan, kembalikan respons dengan status 404

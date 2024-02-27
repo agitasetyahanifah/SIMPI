@@ -10,6 +10,8 @@
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <style>
       .bd-placeholder-img {
         font-size: 1.125rem;
@@ -52,7 +54,7 @@
 
       /* CSS Galeri */
       /* CSS untuk memposisikan modal di tengah */
-      .modal-dialog {
+      .modal-dialog-galeri {
           display: flex;
           align-items: center;
           justify-content: center;
@@ -72,7 +74,7 @@
       }
 
       /* CSS untuk latar belakang modal semi-transparan */
-      .modal-content {
+      .modal-content-galeri {
           background-color: rgba(0, 0, 0, 0.5); /* Warna latar belakang modal */
           color: white; /* Warna teks modal */
       }
