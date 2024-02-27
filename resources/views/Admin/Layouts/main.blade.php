@@ -28,7 +28,7 @@
       /* Custom CSS for the update title */
       .update-title {
         font-size: 1.2em;
-        margin-bottom: 20px;
+        /* margin-bottom: 20px; */
       }
 
       /* Custom CSS for the custom box */
@@ -48,6 +48,47 @@
 
       .btn-primary {
         border-radius: 0 5px 5px 0;
+      }
+
+      /* CSS Galeri */
+      /* CSS untuk memposisikan modal di tengah */
+      .modal-dialog {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0;
+      }
+
+      /* CSS untuk memperbesar gambar menjadi fullscreen */
+      .modal-body {
+          text-align: center;
+      }
+
+      #maximizedImage {
+          margin: auto;
+          width: 100%; /* Mengisi lebar container */
+          height: 100%; /* Mengisi tinggi container */
+          object-fit: cover; /* Skala gambar agar sesuai dengan container */
+      }
+
+      /* CSS untuk latar belakang modal semi-transparan */
+      .modal-content {
+          background-color: rgba(0, 0, 0, 0.5); /* Warna latar belakang modal */
+          color: white; /* Warna teks modal */
+      }
+
+      /* CSS untuk tombol close */
+      .btn-close {
+        cursor:pointer;
+        width: 20px;
+        height: auto;
+        background-color: #00A8EA;
+        color: #fff;
+        border: solid 1px #0095cc;
+        text-align: center;
+        float: right;
+        padding: 3px;
+        border-radius: 3px;
       }
 
     </style>

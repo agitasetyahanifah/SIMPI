@@ -96,14 +96,26 @@
                           <img src="{{ asset('images/' . $image->filename) }}" class="card-img-top" alt="...">
                         @endif
                           <div class="position-absolute top-0 end-0">
-                              <!-- Tambahkan class 'expand-btn' dan 'delete-btn' -->
-                              {{-- <button class="btn btn-light btn-sm p-0 expand-btn" type="button" data-toggle="tooltip" title="Expand" data-feather="maximize" data-image="{{ asset('images/' . $image->filename) }}"></button>
-                              <button class="btn btn-light btn-sm p-0 delete-btn" type="button" data-toggle="tooltip" title="Delete" data-feather="trash" data-image-id="{{ $image->id }}"></button> --}}
-                              <button class="btn btn-sm p-0 expand-btn" type="button" id="maximize" data-feather="maximize" data-image="{{ asset('images/' . $image->filename) }}"></button>                            
+                              <!-- Button Maximize dan Delete -->
+                              <button class="btn btn-sm p-0 btn-transparent maximize" data-image="{{ asset('images/' . $image->filename) }}"><span data-feather="maximize"></span></button>
+                              <button class="btn btn-sm p-0 btn-transparent delete" data-image-id="{{ $image->id }}"><span data-feather="trash"></span></button>
                           </div>
                       </div>
                   </div>
                 @endforeach
+                {{-- modal untuk maximize --}}
+                <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-fullscreen">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                              <img id="maximizedImage" src="#" class="img-fluid" alt="Gambar Diperbesar" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                          </div>
+                      </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -122,19 +134,7 @@
 @endsection
 
     {{-- Menu Galeri --}}
-    {{-- <script>
-      $(document).ready(function() {
-          // Fungsi untuk menangani tombol expand
-          $('.expand-btn').click(function() {
-              var imageUrl = $(this).data('image');
-              // Menambahkan console log
-              console.log('Tombol expand diklik');
-              console.log('URL gambar:', imageUrl);
-              // Tampilkan gambar dalam modal
-              $('#imageModal').find('.modal-body img').attr('src', imageUrl);
-              $('#imageModal').modal('show');
-          });
-    
+    {{-- <script>  
           // Fungsi untuk menangani tombol delete dengan konfirmasi
           $('.delete-btn').click(function() {
               var imageId = $(this).data('image-id');
@@ -158,16 +158,41 @@
       });
     </script>  --}}
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery -->
     <script>
-      $(document).ready(function() {
-        // Ketika tombol ditekan
-        $('#maximize').click(function() {
-          // Ambil URL gambar dari atribut data-image
-          var imageUrl = $(this).data('image');
-          // Atur sumber gambar pada modal
-          $('#expandedImage').attr('src', imageUrl);
-          // Tampilkan modal
-          $('#imageModal').modal('show');
+        $(document).ready(function() {
+            // Fungsi untuk tombol maximize
+            $('.maximize').click(function() {
+                var imageUrl = $(this).data('image');
+                console.log('Tombol maximize diklik');
+                console.log('URL gambar:', imageUrl);
+                $('#maximizedImage').attr('src', imageUrl);
+                $('#imageModal').modal('show');
+            });
+
+           // Fungsi untuk menangani klik tombol delete
+          $('.delete').click(function() {
+              // Ambil id gambar dari atribut data-image-id
+              var imageId = $(this).data('image-id');
+
+              // Konfirmasi penghapusan
+              if (confirm("Apakah Anda yakin ingin menghapus gambar ini?")) {
+                  // Kirim permintaan AJAX untuk menghapus gambar
+                  $.ajax({
+                      url: '/delete-image/' + imageId, // Ganti dengan URL yang sesuai di backend Anda
+                      method: 'DELETE',
+                      success: function(response) {
+                          // Tindakan setelah berhasil menghapus gambar
+                          console.log('Gambar berhasil dihapus');
+                          // Misalnya, perbarui tampilan atau tampilkan pesan sukses
+                      },
+                      error: function(xhr, status, error) {
+                          // Tindakan jika terjadi kesalahan
+                          console.error('Kesalahan dalam menghapus gambar:', error);
+                          // Tampilkan pesan kesalahan atau lakukan tindakan yang sesuai
+                      }
+                  });
+              }
+          });
         });
-      });
     </script>
