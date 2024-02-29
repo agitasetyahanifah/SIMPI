@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 // });
 
 Route::get('/', function () {
-    return view('Admin.Layouts.main1');
+    return view('welcome');
 });
 
 // Admin
