@@ -24,6 +24,17 @@
   <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
 
   <link href="/assets/css/nucleo.css" rel="stylesheet">
+
+  {{-- Style --}}
+  <style>
+    .btn-transparent {
+      background-color: rgba(255, 255, 255, 0.5); /* Warna putih dengan transparansi 50% */
+      border: none; /* Hapus border */
+      color: #000; /* Warna teks */
+      font-size: 16px; /* Ukuran font */
+      cursor: pointer; /* Ubah kursor saat diarahkan ke tombol */
+  }
+  </style>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -151,6 +162,8 @@
     <!-- End Navbar -->
 
     @yield('content')
+
+  </main>
     
   <!--   Core JS Files   -->
   <script src="../assets/js/core/popper.min.js"></script>
