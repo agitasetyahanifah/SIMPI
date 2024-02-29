@@ -118,16 +118,26 @@
                         </div>
                         {{-- card gambar --}}
                         @foreach($images as $image)
-                            <div class="col-lg-2 text-center mt-5 mt-lg-0">
-                                <div class="bg-gradient-primary border-radius-lg">
-                                    <div class="position-relative d-flex align-items-center justify-content-start h-100">
-                                        @if($image->filename)
-                                            <img class="w-100 position-relative z-index-2" src="{{ asset('images/' . $image->filename) }}" alt="{{ asset('images/' . $image->filename) }}">
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach                      
+                          <div class="col-lg-2 text-center mt-5 mt-lg-0">
+                              <div class="bg-gradient-primary border-radius-lg position-relative">
+                                  <!-- Tambahkan tombol maximize dan hapus -->
+                                  <div class="position-absolute top-0 end-0 p-2">
+                                      <button class="btn btn-transparent" onclick="maximizeImage({{ $image->id }})">
+                                          <i class="fa fa-expand"></i>
+                                      </button>
+                                      <button class="btn btn-transparent" onclick="deleteImage({{ $image->id }})">
+                                          <i class="fa fa-trash"></i>
+                                      </button>
+                                  </div>
+
+                                  <div class="position-relative d-flex align-items-center justify-content-start h-100">
+                                      @if($image->filename)
+                                          <img class="w-100 position-relative z-index-2" src="{{ asset('images/' . $image->filename) }}" alt="{{ asset('images/' . $image->filename) }}">
+                                      @endif
+                                  </div>
+                              </div>
+                          </div>
+                      @endforeach 
                       </div>
                     </div>
 
