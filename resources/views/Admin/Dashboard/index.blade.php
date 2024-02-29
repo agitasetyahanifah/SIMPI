@@ -55,7 +55,7 @@
                                     @csrf
                                     <div class="input-group p-1 col-8">
                                         <input name="jumlah" id="jumlah" type="number" class="form-control" placeholder="Update Jumlah Pengunjung">
-                                        <button class="btn btn-outline-primary mb-0" type="submit">Button</button>
+                                        <button class="btn btn-outline-primary mb-0" type="submit">Update</button>
                                     </div>
                                     @if(isset($visitors) && $visitors->updated_at)
                                     <div class="p-0">
@@ -79,39 +79,84 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="d-flex flex-column h-100">
-                                <h5 class="font-weight-bolder">Galeri Pemancingan</h5>
-                                <div class="col-12 text-end p-1">
-                                  <button class="btn-transparent">
-                                    <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                                      <i class="ni ni-fat-add text-lg opacity-10" aria-hidden="true"></i>
+                              {{-- Button Tambah Gambar --}}
+                              <h5 class="font-weight-bolder">Galeri Pemancingan</h5>
+                                <form action="/admin/dashboard/uploadGambar" method="POST" enctype="multipart/form-data">
+                                  @csrf
+                                  <div class="col-12 text-end mb-3">
+                                    <button class="btn btn-outline-primary mb-0 " type="button" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Upload</button>
+                                  </div>  
+                                <!-- Modal Upload Gambar -->
+                                <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
+                                  <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Upload Gambar</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">×</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <form>
+                                          <div class="form-group">
+                                            <input type="file" class="form-control" value="Creative Tim" name="image" id="image">
+                                          </div>
+                                        </form>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn bg-gradient-primary">Upload</button>
+                                      </div>
                                     </div>
-                                  </button>
-                                </div>                                
+                                  </div>
+                                </div>
+                                </form>                              
                                 @if($images->isEmpty())
                                     <h6 class="text-muted text-center">Belum ada gambar yang ditambahkan</h6>
-                                @endif
-                                {{-- <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="javascript:;">
-                                    Read More
-                                    <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
-                                </a> --}}
-                                <div class="d-flex justify-content-center">
-                                  {{ $images->links() }}
-                              </div>                              
+                                @endif                              
                             </div>
                         </div>
                         {{-- card gambar --}}
                         @foreach($images as $image)
-                            <div class="col-lg-2 ms-auto text-center mt-5 mt-lg-0">
-                                <div class="bg-gradient-primary border-radius-lg h-100">
-                                    <div class="position-relative d-flex align-items-center justify-content-center h-100">
+                            <div class="col-lg-2 text-center mt-5 mt-lg-0">
+                                <div class="bg-gradient-primary border-radius-lg">
+                                    <div class="position-relative d-flex align-items-center justify-content-start h-100">
                                         @if($image->filename)
-                                            <img class="w-100 position-relative z-index-2 pt-4" src="{{ asset('images/' . $image->filename) }}" alt="{{ asset('images/' . $image->filename) }}">
+                                            <img class="w-100 position-relative z-index-2" src="{{ asset('images/' . $image->filename) }}" alt="{{ asset('images/' . $image->filename) }}">
                                         @endif
                                     </div>
                                 </div>
                             </div>
                         @endforeach                      
+                      </div>
                     </div>
+
+                    {{-- Pagination --}}
+                    <!-- Tampilkan pagination -->
+                    <nav aria-label="Pagination">
+                      <ul class="pagination">
+                          <li class="page-item {{ $images->previousPageUrl() ? '' : 'disabled' }}">
+                              <a class="page-link" href="{{ $images->previousPageUrl() ?? '#' }}" tabindex="-1">
+                                  <i class="fa fa-angle-left"></i>
+                                  <span class="sr-only">Previous</span>
+                              </a>
+                          </li>
+                          <!-- Tampilkan nomor halaman -->
+                          @for ($i = 1; $i <= $images->lastPage(); $i++)
+                              <li class="page-item {{ $images->currentPage() == $i ? 'active' : '' }}">
+                                  <a class="page-link" href="{{ $images->url($i) }}">{{ $i }}</a>
+                              </li>
+                          @endfor
+                          <li class="page-item {{ $images->nextPageUrl() ? '' : 'disabled' }}">
+                              <a class="page-link" href="{{ $images->nextPageUrl() ?? '#' }}">
+                                  <i class="fa fa-angle-right"></i>
+                                  <span class="sr-only">Next</span>
+                              </a>
+                          </li>
+                      </ul>
+                    </nav>
+                    {{-- End Pagination --}}
+                  
                 </div>
             </div>
         </div>

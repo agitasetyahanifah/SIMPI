@@ -11,7 +11,7 @@ class AdminDashboardController extends Controller
     public function index()
     {
         $visitors = Visitors::latest()->first();
-        $images = Galeri::orderBy('created_at', 'desc')->paginate(5);
+        $images = Galeri::orderBy('created_at', 'desc')->paginate(6);
         return view('admin.dashboard.index', compact(['visitors', 'images']));
     }
 
