@@ -137,13 +137,13 @@
                                   </div>
                               </div>
                           </div>
-                      @endforeach 
+                        @endforeach 
                       </div>
                     </div>
 
                     {{-- Pagination --}}
                     <!-- Tampilkan pagination -->
-                    <nav aria-label="Pagination">
+                    <nav class="p-3" aria-label="Pagination">
                       <ul class="pagination">
                           <li class="page-item {{ $images->previousPageUrl() ? '' : 'disabled' }}">
                               <a class="page-link" href="{{ $images->previousPageUrl() ?? '#' }}" tabindex="-1">
@@ -188,5 +188,20 @@
         </div>
     </footer>
 </div>
+
+<!-- Script untuk fungsi tombol maximize dan hapus -->
+<script>
+  // Fungsi untuk tombol maximize
+  function maximizeImage(imageId) {
+      // Tambahkan logika sesuai dengan kebutuhan Anda
+      console.log("Maximize image with ID: " + imageId);
+  }
+
+  // Fungsi untuk tombol hapus
+  function deleteImage(imageId) {
+      // Tambahkan logika sesuai dengan kebutuhan Anda
+      console.log("Delete image with ID: " + imageId);
+  }
+</script>
 
 @endsection
