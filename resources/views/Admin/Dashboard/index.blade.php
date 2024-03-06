@@ -220,47 +220,47 @@
     </footer>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    $(document).ready(function() {
         // Menangani klik tombol maximize
-        const maximizeButtons = document.querySelectorAll('.maximize');
-        maximizeButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const imageUrl = button.dataset.image;
-                document.getElementById('maximizedImage').src = imageUrl;
-                $('#maximizeModal').modal('show');
-            });
+        $('.maximize').on('click', function() {
+            const imageUrl = $(this).data('image');
+            $('#maximizedImage').attr('src', imageUrl);
+            $('#maximizeModal').modal('show');
         });
 
-        / Menangani klik tombol konfirmasi delete
-        document.getElementById('confirmDelete').addEventListener('click', function() {
-            // Kirim permintaan AJAX untuk menghapus gambar
-            fetch('/admin/dashboard/hapusGambar/{id}', {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
-                },
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Terjadi kesalahan saat menghapus gambar.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data); // Log respons dari backend (opsional)
-                // Sembunyikan modal konfirmasi delete
-                $('#deleteModal').modal('hide');
-                // Refresh halaman atau lakukan tindakan lain yang sesuai
-                location.reload();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Tampilkan pesan kesalahan kepada pengguna (opsional)
+        // Menangani klik tombol delete
+        $('.delete').on('click', function() {
+            const imageId = $(this).data('imageId');
+            $('#deleteModal').modal('show');
+
+            // Menangani klik tombol konfirmasi delete
+            $('#confirmDelete').on('click', function() {
+                // Kirim permintaan AJAX untuk menghapus gambar
+                $.ajax({
+                    url: '/admin/dashboard/hapusGambar/' + imageId,
+                    type: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    },
+                    success: function(data) {
+                        console.log(data); // Log respons dari backend (opsional)
+                        // Sembunyikan modal konfirmasi delete
+                        $('#deleteModal').modal('hide');
+                        // Refresh halaman atau lakukan tindakan lain yang sesuai
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        // Tampilkan pesan kesalahan kepada pengguna (opsional)
+                    }
+                });
             });
         });
     });
 </script>
+
 
 @endsection
