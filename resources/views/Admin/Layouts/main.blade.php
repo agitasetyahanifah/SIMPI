@@ -35,6 +35,21 @@
       cursor: pointer; /* Ubah kursor saat diarahkan ke tombol */
   }
 
+  /* CSS untuk memposisikan gambar di tengah */
+  .modal-dialog.modal-fullscreen .modal-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+
+  /* CSS untuk gambar */
+  .modal-dialog.modal-fullscreen .modal-content img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+  }
+
+
   </style>
 </head>
 
