@@ -122,10 +122,10 @@
                               <div class="border-radius-lg position-relative">
                                   <!-- Tambahkan tombol maximize dan hapus -->
                                   <div class="position-absolute top-0 end-0 p-2" style="z-index: 999;">
-                                      <button class="btn btn-transparent" onclick="maximizeImage({{ $image->id }})">
+                                      <button class="btn btn-transparent maximize" data-image="{{ asset('images/' . $image->filename) }}">
                                           <i class="fa fa-expand"></i>
                                       </button>
-                                      <button class="btn btn-transparent" onclick="deleteImage({{ $image->id }})">
+                                      <button class="btn btn-transparent delete" data-image-id="{{ $image->id }}">
                                           <i class="fa fa-trash"></i>
                                       </button>
                                   </div>
@@ -139,10 +139,36 @@
                           </div>
                         @endforeach 
                         {{-- Modal Maximize --}}
-                        <div id="imageModal" class="modal">
-                            <span class="close" onclick="closeModal()">&times;</span>
-                            <img class="modal-content" id="modalImage">
-                        </div>
+                        <div class="modal fade" id="maximizeModal" tabindex="-1" aria-labelledby="maximizeModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-fullscreen">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <img id="maximizedImage" src="#" class="img-fluid" alt="Gambar Diperbesar" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                        
+                        {{-- Modal Delete --}}
+                        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Apakah Anda yakin ingin menghapus gambar ini?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                        <button type="button" class="btn btn-danger" id="confirmDelete">Hapus</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                        
                       </div>
                     </div>
 
@@ -194,33 +220,47 @@
     </footer>
 </div>
 
-{{-- Function Maximize dan Delete --}}
 <script>
-    function maximizeImage(imageId) {
-        // Mendapatkan gambar berdasarkan ID
-        var image = document.getElementById("image_" + imageId);
+    document.addEventListener("DOMContentLoaded", function() {
+        // Menangani klik tombol maximize
+        const maximizeButtons = document.querySelectorAll('.maximize');
+        maximizeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const imageUrl = button.dataset.image;
+                document.getElementById('maximizedImage').src = imageUrl;
+                $('#maximizeModal').modal('show');
+            });
+        });
 
-        // Menampilkan modal dengan gambar yang dipilih
-        var modal = document.getElementById("imageModal");
-        var modalImage = document.getElementById("modalImage");
-        modalImage.src = image.src;
-        modal.style.display = "block";
-    }
-
-    function closeModal() {
-        // Menutup modal saat tombol close di klik
-        var modal = document.getElementById("imageModal");
-        modal.style.display = "none";
-    }
-
-    function deleteImage(imageId) {
-        // Meminta konfirmasi pengguna sebelum menghapus gambar
-        var confirmDelete = confirm("Apakah Anda yakin ingin menghapus gambar ini?");
-        if (confirmDelete) {
-            // Lakukan tindakan penghapusan (Anda dapat menggantikan dengan pemanggilan AJAX untuk menghapus dari database)
-            console.log("Menghapus gambar dengan ID:", imageId);
-        }
-    }
+        / Menangani klik tombol konfirmasi delete
+        document.getElementById('confirmDelete').addEventListener('click', function() {
+            // Kirim permintaan AJAX untuk menghapus gambar
+            fetch('/admin/dashboard/hapusGambar/{id}', {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Terjadi kesalahan saat menghapus gambar.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data); // Log respons dari backend (opsional)
+                // Sembunyikan modal konfirmasi delete
+                $('#deleteModal').modal('hide');
+                // Refresh halaman atau lakukan tindakan lain yang sesuai
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Tampilkan pesan kesalahan kepada pengguna (opsional)
+            });
+        });
+    });
 </script>
 
 @endsection
