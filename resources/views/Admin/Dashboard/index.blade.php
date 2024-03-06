@@ -119,9 +119,9 @@
                         {{-- card gambar --}}
                         @foreach($images as $image)
                           <div class="col-lg-2 text-center mt-5 mt-lg-0">
-                              <div class="bg-gradient-primary border-radius-lg position-relative">
+                              <div class="border-radius-lg position-relative">
                                   <!-- Tambahkan tombol maximize dan hapus -->
-                                  <div class="position-absolute top-0 end-0 p-2">
+                                  <div class="position-absolute top-0 end-0 p-2" style="z-index: 999;">
                                       <button class="btn btn-transparent" onclick="maximizeImage({{ $image->id }})">
                                           <i class="fa fa-expand"></i>
                                       </button>
@@ -138,6 +138,11 @@
                               </div>
                           </div>
                         @endforeach 
+                        {{-- Modal Maximize --}}
+                        <div id="imageModal" class="modal">
+                            <span class="close" onclick="closeModal()">&times;</span>
+                            <img class="modal-content" id="modalImage">
+                        </div>
                       </div>
                     </div>
 
@@ -189,19 +194,33 @@
     </footer>
 </div>
 
-<!-- Script untuk fungsi tombol maximize dan hapus -->
+{{-- Function Maximize dan Delete --}}
 <script>
-  // Fungsi untuk tombol maximize
-  function maximizeImage(imageId) {
-      // Tambahkan logika sesuai dengan kebutuhan Anda
-      console.log("Maximize image with ID: " + imageId);
-  }
+    function maximizeImage(imageId) {
+        // Mendapatkan gambar berdasarkan ID
+        var image = document.getElementById("image_" + imageId);
 
-  // Fungsi untuk tombol hapus
-  function deleteImage(imageId) {
-      // Tambahkan logika sesuai dengan kebutuhan Anda
-      console.log("Delete image with ID: " + imageId);
-  }
+        // Menampilkan modal dengan gambar yang dipilih
+        var modal = document.getElementById("imageModal");
+        var modalImage = document.getElementById("modalImage");
+        modalImage.src = image.src;
+        modal.style.display = "block";
+    }
+
+    function closeModal() {
+        // Menutup modal saat tombol close di klik
+        var modal = document.getElementById("imageModal");
+        modal.style.display = "none";
+    }
+
+    function deleteImage(imageId) {
+        // Meminta konfirmasi pengguna sebelum menghapus gambar
+        var confirmDelete = confirm("Apakah Anda yakin ingin menghapus gambar ini?");
+        if (confirmDelete) {
+            // Lakukan tindakan penghapusan (Anda dapat menggantikan dengan pemanggilan AJAX untuk menghapus dari database)
+            console.log("Menghapus gambar dengan ID:", imageId);
+        }
+    }
 </script>
 
 @endsection
