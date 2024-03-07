@@ -72,21 +72,37 @@
     </div>
 
     {{-- Chart Jumlah Pengunjung --}}
+    <div class="row mt-3">
+        <div class="col-lg-12 mb-lg-0 mb-4">
+            <div class="card">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="d-flex flex-column h-100">
+                              {{-- Button Tambah Gambar --}}
+                              <h5 class="font-weight-bolder p-2">Grafik Jumlah Pengunjung Pemancingan</h5>  
+                              {{-- <div class="card mb-3"> --}}
+                                <div class="card-body p-3">
+                                  <div class="chart">
+                                    <canvas id="line-chart" class="chart-canvas" height="300px"></canvas>
+                                  </div>
+                                </div>
+                              {{-- </div>                             --}}
+                            </div>                            
+                        </div>                                                
+                      </div>
+                    </div>                  
+                </div>
+            </div>
+        </div>
+
+{{-- 
     <div class="row mt-4">
         <div class="col-lg-12">
             <div class="card z-index-2">
-                <div class="card-body p-3">
-                    <div class="bg-gradient-dark border-radius-lg py-3 pe-1 mb-3">
-                        <div class="chart">
-                            <canvas id="chart-bars" class="chart-canvas"></canvas>
-                        </div>
-                    </div>
+                <div class="card-body">
                     <div class="card-header pb-0">
-                        <h6 class="mb-3">Sales Overview</h6>
-                        <p class="text-sm">
-                            <i class="fa fa-arrow-up text-success me-1"></i>
-                            <span class="font-weight-bold">4% more</span> in 2021
-                        </p>
+                        <h5 class="font-weight-bolder p-2">Grafik Jumlah Pengunjung Pemancingan</h5>
                     </div>
                     <div class="chart">
                         <canvas id="chart-line" class="chart-canvas" height="300"></canvas>
@@ -94,7 +110,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
         
     {{-- Galeri --}}
     <div class="row mt-3">
@@ -105,11 +121,11 @@
                         <div class="col-lg-12">
                             <div class="d-flex flex-column h-100">
                               {{-- Button Tambah Gambar --}}
-                              <h5 class="font-weight-bolder">Galeri Pemancingan</h5>
+                              <h5 class="font-weight-bolder p-2">Galeri Pemancingan</h5>
                                 <form action="/admin/dashboard/uploadGambar" method="POST" enctype="multipart/form-data">
                                   @csrf
                                   <div class="col-12 text-end mb-3">
-                                    <button class="btn btn-outline-primary mb-0 " type="button" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Upload</button>
+                                    <button class="btn btn-outline-primary mb-0" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Upload</button>
                                   </div>  
                                 <!-- Modal Upload Gambar -->
                                 <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
