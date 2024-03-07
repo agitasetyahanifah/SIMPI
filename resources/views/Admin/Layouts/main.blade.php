@@ -25,6 +25,9 @@
 
   <link href="/assets/css/nucleo.css" rel="stylesheet">
 
+  {{-- Chart --}}
+  <script src="../../assets/js/plugins/chartjs.min.js"></script>
+
   {{-- Style --}}
   <style>
     .btn-transparent {

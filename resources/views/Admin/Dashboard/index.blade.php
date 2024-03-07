@@ -71,8 +71,17 @@
         </div>
     </div>
 
+    {{-- Chart Jumlah Pengunjung --}}
+    <div class="card mt-3 mb-3">
+        <div class="card-body p-3">
+          <div class="chart">
+            <canvas id="line-chart" class="chart-canvas" height="300px"></canvas>
+          </div>
+        </div>
+    </div>
+
     {{-- Galeri --}}
-    <div class="row mt-4">
+    <div class="row mt-3">
         <div class="col-lg-12 mb-lg-0 mb-4">
             <div class="card">
                 <div class="card-body p-3">
@@ -226,6 +235,7 @@
     </footer>
 </div>
 
+{{-- Javascript Menu Galeri --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
