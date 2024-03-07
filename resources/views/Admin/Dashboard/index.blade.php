@@ -125,7 +125,7 @@
                                       <button class="btn btn-transparent maximize" data-image="{{ asset('images/' . $image->filename) }}">
                                           <i class="fa fa-expand"></i>
                                       </button>
-                                      <button class="btn btn-transparent delete" data-image-id="{{ $image->id }}">
+                                      <button class="btn btn-transparent delete" data-imageId="{{ $image->id }}">
                                           <i class="fa fa-trash"></i>
                                       </button>
                                   </div>
@@ -164,12 +164,17 @@
                                         Apakah Anda yakin ingin menghapus gambar ini?
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                        <button type="submit" class="btn btn-danger" id="confirmDelete">Hapus</button>
-                                    </div>
+                                        <form id="deleteForm" action="/admin/dashboard/hapusGambar/{id}" method="post">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="image_id" id="deleteImageId"> <!-- Tambahkan input hidden untuk image_id -->
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                            <button type="submit" class="btn btn-danger" id="confirmDelete">Hapus</button>
+                                        </form>
+                                    </div>                                    
                                 </div>
                             </div>
-                        </div>                        
+                        </div>                         
                       </div>
                     </div>
 
@@ -232,33 +237,15 @@
         });
 
         // Menangani klik tombol delete
-        $('.delete').on('click', function() {
-            const imageId = $(this).data('imageId');
+        $(document).on('click', '.delete', function() {
+            const imageId = $(this).data('imageid');
             $('#deleteModal').modal('show');
 
-            // Menangani klik tombol konfirmasi delete
-            $('#confirmDelete').on('click', function() {
-                // Kirim permintaan AJAX untuk menghapus gambar
-                $.ajax({
-                    url: '/admin/dashboard/hapusGambar/' + imageId,
-                    type: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json'
-                    },
-                    success: function(data) {
-                        console.log(data); // Log respons dari backend (opsional)
-                        // Sembunyikan modal konfirmasi delete
-                        $('#deleteModal').modal('hide');
-                        // Refresh halaman atau lakukan tindakan lain yang sesuai
-                        location.reload();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                        // Tampilkan pesan kesalahan kepada pengguna (opsional)
-                    }
-                });
-            });
+            // Mengatur nilai image_id pada input hidden
+            $('#deleteImageId').val(imageId);
+
+            // Mengubah action form berdasarkan ID gambar yang dipilih
+            $('#deleteForm').attr('action', '/admin/dashboard/hapusGambar/' + imageId);
         });
     });
 </script>

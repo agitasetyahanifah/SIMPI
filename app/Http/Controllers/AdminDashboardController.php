@@ -17,12 +17,12 @@ class AdminDashboardController extends Controller
 
     public function updatePengunjung(Request $request)
     {
-         // Validasi input
+        // Validasi input
         $request->validate([
             'jumlah' => 'required|integer'
         ]);
 
-           // Buat objek Visitor dengan data yang diterima dari request
+        // Buat objek Visitor dengan data yang diterima dari request
         $visitor = new Visitors();
         $visitor->jumlah = $request->jumlah;
 
@@ -72,17 +72,14 @@ class AdminDashboardController extends Controller
 
         if (!$image) {
             // Jika gambar tidak ditemukan, kembalikan respons dengan status 404
-            return response()->json(['message' => 'Gambar tidak ditemukan.'], 404);
+            return response()->json(['error' => 'Gambar tidak ditemukan.'], 404);
         }
-
-        // Hapus gambar dari sistem penyimpanan Anda
-        // Misalnya, jika gambar disimpan di folder 'public/images', Anda dapat menggunakan fungsi unlink() untuk menghapusnya
 
         // Hapus entri gambar dari database
         $image->delete();
 
-        // Kembalikan respons sukses
-        return response()->json(['message' => 'Gambar berhasil dihapus.']);
+        // Berikan respons dalam bentuk alert
+        return redirect()->back()->with('success', 'Gambar berhasil dihapus.');
     }
     
 }
