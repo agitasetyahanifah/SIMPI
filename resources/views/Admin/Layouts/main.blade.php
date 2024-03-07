@@ -24,10 +24,7 @@
   <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
 
   <link href="/assets/css/nucleo.css" rel="stylesheet">
-
-  {{-- Chart --}}
-  <script src="../../assets/js/plugins/chartjs.min.js"></script>
-
+  
   {{-- Style --}}
   <style>
     .btn-transparent {
