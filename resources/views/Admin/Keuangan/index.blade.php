@@ -10,6 +10,11 @@
         <div class="card mb-4">
           <div class="card-header pb-0">
             <h5 class="font-weight-bolder mb-0">Manajemen Keuangan</h5>
+            <form action="/admin/dashboard/uploadGambar" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="col-12 text-end mb-3">
+                  <button class="btn btn-outline-primary mb-0" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
+                </div> 
           </div>
           <div class="card-body ">
             <div class="table-responsive p-0">
