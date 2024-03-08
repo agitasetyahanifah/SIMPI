@@ -107,12 +107,34 @@
                                 </button>
                             </form> --}}
                             <a href="" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Update</a>
-                            <a href="" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</a>
+                            <button class="btn btn-sm btn-danger delete" data-id="{{ $keuangan->id }}"><i class="fas fa-trash"></i> Delete</button>
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
               </table>
+            </div>
+            {{-- Modal Delete --}}
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Apakah Anda yakin ingin menghapus gambar ini?
+                        </div>
+                        <div class="modal-footer">
+                            <form id="deleteForm" action="/admin/dashboard/hapusGambar/{id}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-danger" id="confirmDelete">Hapus</button>
+                            </form>
+                        </div>                                    
+                    </div>
+                </div>
             </div>
             <!-- Pagination -->
             <nav class="p-3" aria-label="Pagination">
@@ -161,4 +183,26 @@
 </footer>
 </div>
 
+{{-- Javascript Button Delete --}}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const deleteButtons = document.querySelectorAll('.delete');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.getAttribute('data-id');
+                const deleteForm = document.getElementById('deleteForm');
+                const action = `/admin/keuangan/${id}`;
+                deleteForm.setAttribute('action', action);
+
+                const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+                deleteModal.show();
+            });
+        });
+    });
+</script>
+
 @endsection
+
