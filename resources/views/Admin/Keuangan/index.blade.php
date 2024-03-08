@@ -32,12 +32,25 @@
                 <tbody>
                     @foreach ($keuangans as $key => $keuangan)
                     <tr>
-                      <td>{{ $key + 1 }}</td>
-                      <td>{{ $keuangan->tanggal_transaksi }}</td>
-                      <td>{{ $keuangan->jumlah }}</td>
-                      <td>{{ $keuangan->jenis_transaksi }}</td>
-                      <td>{{ $keuangan->keterangan }}</td>
-                      <td></td>
+                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $keuangan->tanggal_transaksi }}</td>
+                        <td>{{ $keuangan->jumlah }}</td>
+                        <td>{{ $keuangan->jenis_transaksi }}</td>
+                        <td>{{ $keuangan->keterangan }}</td>
+                        <td class="text-align-end">
+                            {{-- <a href="{{ route('keuangan.edit', $keuangan->id) }}" class="btn btn-sm btn-primary"> --}}
+                            <a href="" class="btn btn-sm btn-primary">
+                                <i class="fas fa-edit"></i> Update
+                            </a>
+                            {{-- <form action="{{ route('keuangan.destroy', $keuangan->id) }}" method="POST" style="display: inline;"> --}}
+                            <form action="" method="POST" style="display: inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
