@@ -4,17 +4,72 @@
 
 @section('content')
 
+@if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 <div class="container-fluid py-4">
     <div class="row">
       <div class="col-12">
         <div class="card">
           <div class="card-header pb-0">
             <h5 class="font-weight-bolder mb-0">Manajemen Keuangan</h5>
-            <form action="/admin/dashboard/uploadGambar" method="POST" enctype="multipart/form-data">
+            {{-- Button Tambah --}}
+            <form action="/admin/keuangan/store" method="POST">
             @csrf
                 <div class="col-12 text-end">
                   <button class="btn btn-outline-primary mb-0" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
-                </div> 
+                </div>
+          </div>
+          <!-- Modal Tambah Transaksi -->
+          <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Transaksi</h5>
+                <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="tanggal_transaksi" class="col-form-label">Tanggal Transaksi</label>
+                        <input type="date" class="form-control" id="tanggal_transaksi" name="tanggal_transaksi" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jumlah" class="col-form-label">Jumlah</label>
+                        <input type="number" class="form-control" id="jumlah" name="jumlah" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jenis_transaksi" class="col-form-label">Jenis Transaksi</label>
+                        <select class="form-select" id="jenis_transaksi" name="jenis_transaksi" required>
+                            <option value="pemasukan">Pemasukan</option>
+                            <option value="pengeluaran">Pengeluaran</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="keterangan" class="col-form-label">Keterangan</label>
+                        <textarea class="form-control" id="keterangan" name="keterangan" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn bg-gradient-primary">Tambah</button>
+                </div>
+            </div>
+            </div>
           </div>
           <div class="card-body ">
             <div class="table-responsive p-0">

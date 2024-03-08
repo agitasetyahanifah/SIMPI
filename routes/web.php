@@ -29,3 +29,4 @@ Route::post('/admin/dashboard/updatePengunjung', [AdminDashboardController::clas
 Route::post('/admin/dashboard/uploadGambar', [AdminDashboardController::class, 'uploadGambar'])->name('admin.dashboard.uploadGambar');
 Route::delete('/admin/dashboard/hapusGambar/{id}', [AdminDashboardController::class, 'hapusGambar'])->name('admin.dashboard.hapusGambar');
 Route::get('/admin/keuangan', [AdminKeuanganController::class, 'index'])->name('admin.keuangan.index');
+Route::post('admin/keuangan/store', [AdminKeuanganController::class, 'store'])->name('admin.keuangan.store');
