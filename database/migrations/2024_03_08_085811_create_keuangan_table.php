@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('keuangan', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal_transaksi');
-            $table->decimal('jumlah', 10, 2);
+            $table->integer('jumlah');
             $table->enum('jenis_transaksi', ['pemasukan', 'pengeluaran']);
             $table->string('keterangan')->nullable();
             $table->timestamps();

@@ -89,7 +89,7 @@
                     <tr>
                         <td>{{ $key + 1 }}</td>
                         <td>{{ $keuangan->tanggal_transaksi }}</td>
-                        <td>{{ $keuangan->jumlah }}</td>
+                        <td>{{ number_format($keuangan->jumlah, 0, ',', '.') }}</td>
                         <td>{{ $keuangan->jenis_transaksi }}</td>
                         <td>{{ $keuangan->keterangan }}</td>
                         <td class="text-align-end">
