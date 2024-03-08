@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminKeuanganController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,5 +28,4 @@ Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name
 Route::post('/admin/dashboard/updatePengunjung', [AdminDashboardController::class, 'updatePengunjung'])->name('admin.dashboard.updatePengunjung');
 Route::post('/admin/dashboard/uploadGambar', [AdminDashboardController::class, 'uploadGambar'])->name('admin.dashboard.uploadGambar');
 Route::delete('/admin/dashboard/hapusGambar/{id}', [AdminDashboardController::class, 'hapusGambar'])->name('admin.dashboard.hapusGambar');
-
-
+Route::get('/admin/keuangan', [AdminKeuanganController::class, 'index'])->name('admin.keuangan.index');

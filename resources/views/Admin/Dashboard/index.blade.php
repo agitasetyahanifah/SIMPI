@@ -72,7 +72,7 @@
     </div>
 
     {{-- Chart Jumlah Pengunjung --}}
-    <div class="row mt-3">
+    {{-- <div class="row mt-3">
         <div class="col-lg-12 mb-lg-0 mb-4">
             <div class="card">
                 <div class="card-body p-3">
@@ -80,16 +80,17 @@
                         <div class="col-lg-12">
                             <div class="d-flex flex-column h-100">
                               {{-- Button Tambah Gambar --}}
-                              <h5 class="font-weight-bolder p-2">Grafik Jumlah Pengunjung Pemancingan</h5>  
+                              {{-- <h5 class="font-weight-bolder p-2">Grafik Jumlah Pengunjung Pemancingan</h5>   --}}
                               {{--  kode chart --}}
-                            </div>                            
+                            {{-- </div>                            
                         </div>                                                
                       </div>
                     </div>                  
                 </div>
             </div>
-        </div>
-        
+        </div>   
+    </div>     --}} 
+    
     {{-- Galeri --}}
     <div class="row mt-3">
         <div class="col-lg-12 mb-lg-0 mb-4">
@@ -99,7 +100,7 @@
                         <div class="col-lg-12">
                             <div class="d-flex flex-column h-100">
                               {{-- Button Tambah Gambar --}}
-                              <h5 class="font-weight-bolder p-2">Galeri Pemancingan</h5>
+                              <h5 class="font-weight-bolder">Galeri Pemancingan</h5>
                                 <form action="/admin/dashboard/uploadGambar" method="POST" enctype="multipart/form-data">
                                   @csrf
                                   <div class="col-12 text-end mb-3">
@@ -221,13 +222,26 @@
                           </li>
                       </ul>
                     </nav>
-                    {{-- End Pagination --}}
-                  
+                    {{-- End Pagination --}}                 
+            </div>
+        </div>
+    </div>
+
+    {{-- Forum Pemancingan --}}
+    <div class="row mt-3">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body p-3">
+                    <div class="d-flex flex-column">
+                        <h5 class="font-weight-bolder mb-0">Forum Pemancingan</h5>
+                        
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+</div>
     {{-- Footer --}}
     <footer class="footer pt-3  ">
         <div class="container-fluid">
@@ -271,7 +285,7 @@
 </script>
 
 {{-- Grafik Jumlah Pengunjung --}}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     // Data untuk grafik (contoh data)
     var data = {
@@ -303,6 +317,6 @@
         data: data,
         options: options
     });
-</script>
+</script> --}}
 
 @endsection
