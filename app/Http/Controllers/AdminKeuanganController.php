@@ -9,8 +9,9 @@ class AdminKeuanganController extends Controller
 {
     public function index()
     {
-        $keuangans = Keuangan::all();
-        return view('admin.keuangan.index', compact('keuangans'));
+        $keuangans = Keuangan::orderBy('created_at', 'desc')->paginate(30);
+        $lastItem = $keuangans->lastItem();
+        return view('admin.keuangan.index', compact('keuangans', 'lastItem'));
     }
 
     public function store(Request $request)

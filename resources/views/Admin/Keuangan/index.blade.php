@@ -85,9 +85,12 @@
                   </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $currentNumber = $lastItem - $keuangans->count() + 1;
+                    @endphp
                     @foreach ($keuangans as $key => $keuangan)
                     <tr>
-                        <td>{{ $key + 1 }}</td>
+                        <td>{{ $currentNumber++ }}</td>
                         <td>{{ $keuangan->tanggal_transaksi }}</td>
                         <td>{{ number_format($keuangan->jumlah, 0, ',', '.') }}</td>
                         <td>{{ $keuangan->jenis_transaksi }}</td>
@@ -103,7 +106,6 @@
                                     <i class="fas fa-trash"></i> Delete
                                 </button>
                             </form> --}}
-
                             <a href="" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Update</a>
                             <a href="" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Delete</a>
                         </td>
@@ -112,6 +114,30 @@
                 </tbody>
               </table>
             </div>
+            <!-- Pagination -->
+            <nav class="p-3" aria-label="Pagination">
+                <ul class="pagination">
+                    <li class="page-item {{ $keuangans->onFirstPage() ? 'disabled' : '' }}">
+                        <a class="page-link" href="{{ $keuangans->previousPageUrl() ?? '#' }}" tabindex="-1">
+                            <i class="fa fa-angle-left"></i>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    <!-- Tampilkan nomor halaman -->
+                    @for ($i = 1; $i <= $keuangans->lastPage(); $i++)
+                        <li class="page-item {{ $keuangans->currentPage() == $i ? 'active' : '' }}">
+                            <a class="page-link" href="{{ $keuangans->url($i) }}">{{ $i }}</a>
+                        </li>
+                    @endfor
+                    <li class="page-item {{ $keuangans->hasMorePages() ? '' : 'disabled' }}">
+                        <a class="page-link" href="{{ $keuangans->nextPageUrl() ?? '#' }}">
+                            <i class="fa fa-angle-right"></i>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- End Pagination -->
           </div>
         </div>
       </div>
