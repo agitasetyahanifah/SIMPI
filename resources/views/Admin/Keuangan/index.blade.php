@@ -106,8 +106,8 @@
                                     <i class="fas fa-trash"></i> Delete
                                 </button>
                             </form> --}}
-                            <a href="" class="btn btn-sm btn-primary"><i class="fas fa-edit"></i> Update</a>
-                            <button class="btn btn-sm btn-danger delete" data-id="{{ $keuangan->id }}"><i class="fas fa-trash"></i> Delete</button>
+                            <a href="" class="btn btn-primary"><i class="fas fa-edit"></i></a>
+                            <button class="btn btn-danger delete" data-id="{{ $keuangan->id }}"><i class="fas fa-trash"></i></button>
                         </td>
                     </tr>
                     @endforeach

@@ -91,4 +91,4 @@
         <div class="full-background" style="background-image: url('../assets/img/curved-images/white-curved.jpg')"></div>
       </div>
     </div>
-  </aside>
+</aside>
