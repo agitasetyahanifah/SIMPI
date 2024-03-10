@@ -179,8 +179,25 @@
     <!-- End Navbar -->
 
     @yield('content')
+    
+    {{-- Footer --}}
+    <footer class="footer pl-4 pb-4">
+      <div class="container-fluid">
+          <div class="row align-items-center justify-content-lg-between">
+              <div class="col-lg-6 mb-lg-0 mb-4">
+                  <div class="copyright text-center text-sm text-muted text-lg-start">
+                      © <script>
+                          document.write(new Date().getFullYear())
+                      </script>,
+                      SIMPI | Sistem Manajemen Pemancingan Ikan
+                  </div>
+              </div>
+          </div>
+      </div>
+    </footer>
 
   </main>
+
     
   <!--   Core JS Files   -->
   <script src="../assets/js/core/popper.min.js"></script>

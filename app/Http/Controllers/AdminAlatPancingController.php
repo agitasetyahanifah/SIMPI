@@ -29,7 +29,32 @@ class AdminAlatPancingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validasi data yang diterima dari request
+        $request->validate([
+            'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:10048',
+            'nama_alat' => 'required|string',
+            'harga' => 'required|numeric',
+            'jumlah' => 'required|numeric',
+            'status' => 'required|string|in:available,not available',
+            'spesifikasi' => 'nullable|string',
+        ]);
+
+        // Menyimpan foto ke dalam direktori public/images
+        $fotoFileName = $request->file('foto')->getClientOriginalName(); // Mendapatkan nama file
+        $request->file('foto')->move(public_path('images'), $fotoFileName);
+
+        // Membuat entri baru dalam tabel alat_pancing
+        AlatPancing::create([
+            'foto' => $fotoFileName, // Nama file foto
+            'nama_alat' => $request->nama_alat, // Nama alat
+            'harga' => $request->harga, // Harga
+            'jumlah' => $request->jumlah, // Jumlah
+            'status' => $request->status, // Status
+            'spesifikasi' => $request->spesifikasi, // Spesifikasi (opsional)
+        ]);
+
+        // Redirect kembali ke halaman dengan pesan sukses
+        return redirect()->back()->with('success', 'Alat pancing berhasil ditambahkan.');
     }
 
     /**
