@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class AlatPancing extends Model
 {
     use HasFactory;
+
+    protected $table = 'alat_pancing';
+
+    protected $guarded = ['id'];
 }

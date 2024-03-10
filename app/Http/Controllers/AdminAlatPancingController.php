@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AlatPancing;
 use Illuminate\Http\Request;
 
 class AdminAlatPancingController extends Controller
@@ -11,7 +12,8 @@ class AdminAlatPancingController extends Controller
      */
     public function index()
     {
-        return view('admin.alatpancing.index');
+        $alatPancing = AlatPancing::latest()->get();
+        return view('admin.alatpancing.index', compact('alatPancing'));
     }
 
     /**

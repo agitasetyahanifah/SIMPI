@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('alat_pancing', function (Blueprint $table) {
             $table->id();
+            $table->string('foto')->nullable();
+            $table->string('nama_alat');
+            $table->integer('harga');
+            $table->integer('jumlah');
+            $table->enum('status', ['available', 'not available'])->default('available');
+            $table->text('spesifikasi');
             $table->timestamps();
         });
     }
