@@ -29,7 +29,7 @@
                     <div class="row">
                         <div class="col-8">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-capitalize font-weight-bold">Jumlah Pengunjung Pemancingan</p>
+                                <p class="text-sm mb-0 text-capitalize font-weight-bold mb-1">Pengunjung Pemancingan</p>
                                 <h5 class="font-weight-bolder mb-0">
                                     {{ isset($visitors) ? $visitors->jumlah : 0 }}
                                 </h5>
@@ -54,7 +54,7 @@
                                 <form method="post" action="/admin/dashboard/updatePengunjung">
                                     @csrf
                                     <div class="input-group p-1 col-8">
-                                        <input name="jumlah" id="jumlah" type="number" class="form-control" placeholder="Update Jumlah Pengunjung">
+                                        <input name="jumlah" id="jumlah" type="number" class="form-control" placeholder="Update Jumlah Pengunjung Pemancingan">
                                         <button class="btn btn-outline-primary mb-0" type="submit">Update</button>
                                     </div>
                                     @if(isset($visitors) && $visitors->updated_at)
@@ -262,7 +262,6 @@
 </div>
 
 {{-- Javascript Menu Galeri --}}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
         // Menangani klik tombol maximize
