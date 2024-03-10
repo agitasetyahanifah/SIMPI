@@ -27,7 +27,7 @@
           <div class="card-header pb-0">
             <h5 class="font-weight-bolder mb-0">Manajemen Keuangan</h5>
             {{-- Button Tambah --}}
-            <form action="/admin/keuangan/store" method="POST">
+            <form action="/admin/keuangan/store" method="post">
             @csrf
                 <div class="col-12 text-end">
                   <button class="btn btn-outline-primary mb-0" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
@@ -96,25 +96,14 @@
                         <td>{{ $keuangan->jenis_transaksi }}</td>
                         <td>{{ $keuangan->keterangan }}</td>
                         <td class="text-align-end">
-                            {{-- <a href="{{ route('keuangan.edit', $keuangan->id) }}" class="btn btn-sm btn-primary">
-                                <i class="fas fa-edit"></i> Update
-                            </a>
-                            <form action="{{ route('keuangan.destroy', $keuangan->id) }}" method="POST" style="display: inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
-                            </form> --}}
-                            <a href="" class="btn btn-primary"><i class="fas fa-edit"></i></a>
-                            <button class="btn btn-danger delete" data-id="{{ $keuangan->id }}"><i class="fas fa-trash"></i></button>
+                            <button class="btn btn-danger delete" data-transaksiid="{{ $keuangan->id }}"><i class="fas fa-trash"></i></button>                            
                         </td>
                     </tr>
                     @endforeach
                 </tbody>
               </table>
             </div>
-            {{-- Modal Delete --}}
+            <!-- Modal Delete -->
             <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -123,10 +112,10 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Apakah Anda yakin ingin menghapus gambar ini?
+                            Apakah Anda yakin ingin menghapus transaksi ini?
                         </div>
                         <div class="modal-footer">
-                            <form id="deleteForm" action="/admin/dashboard/hapusGambar/{id}" method="post">
+                            <form id="deleteForm" action="/admin/keuangan/{id}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -136,6 +125,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- Pagination -->
             <nav class="p-3" aria-label="Pagination">
                 <ul class="pagination">
@@ -183,23 +173,17 @@
 </footer>
 </div>
 
-{{-- Javascript Button Delete --}}
+<!-- Javascript Button Delete -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const deleteButtons = document.querySelectorAll('.delete');
+    $(document).ready(function() {
+        // Menangani button delete
+        $(document).on('click', '.delete', function() {
+            const transaksiId = $(this).data('transaksiid'); // Perhatikan penggunaan snake_case di sini
+            $('#deleteModal').modal('show');
 
-        deleteButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const id = this.getAttribute('data-id');
-                const deleteForm = document.getElementById('deleteForm');
-                const action = `/admin/keuangan/${id}`;
-                deleteForm.setAttribute('action', action);
-
-                const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
-                deleteModal.show();
-            });
+            // Mengubah action form berdasarkan ID transaksi yang dipilih
+            $('#deleteForm').attr('action', '/admin/keuangan/' + transaksiId);
         });
     });
 </script>

@@ -186,7 +186,7 @@
                                         Apakah Anda yakin ingin menghapus gambar ini?
                                     </div>
                                     <div class="modal-footer">
-                                        <form id="deleteForm" action="/admin/dashboard/hapusGambar/{id}" method="post">
+                                        <form id="deleteForm" action="/admin/dashboard/{id}" method="post">
                                             @csrf
                                             @method('DELETE')
                                             <input type="hidden" name="image_id" id="deleteImageId"> <!-- Tambahkan input hidden untuk image_id -->
@@ -281,7 +281,7 @@
             $('#deleteImageId').val(imageId);
 
             // Mengubah action form berdasarkan ID gambar yang dipilih
-            $('#deleteForm').attr('action', '/admin/dashboard/hapusGambar/' + imageId);
+            $('#deleteForm').attr('action', '/admin/dashboard/' + imageId);
         });
     });
 </script>

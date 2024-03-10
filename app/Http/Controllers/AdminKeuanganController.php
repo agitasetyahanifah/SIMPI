@@ -30,4 +30,13 @@ class AdminKeuanganController extends Controller
         // Redirect atau response sesuai kebutuhan
         return redirect()->route('admin.keuangan.index')->with('success', 'Transaksi berhasil ditambahkan!');
     }
+
+    public function destroy($id)
+    {
+        $keuangan = Keuangan::findOrFail($id);
+        $keuangan->delete();
+
+        return redirect()->back()->with('success', 'Transaksi berhasil dihapus.');
+    }
+
 }
