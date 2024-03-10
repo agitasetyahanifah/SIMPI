@@ -27,10 +27,10 @@
           <div class="card-header pb-0">
             <h5 class="font-weight-bolder mb-0">Manajemen Keuangan</h5>
             {{-- Button Tambah --}}
-            <form action="/admin/keuangan/store" method="post">
-            @csrf
+            <form action="{{ route('admin.keuangan.store') }}" method="post">
+                @csrf
                 <div class="col-12 text-end">
-                  <button class="btn btn-outline-primary mb-0" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
+                    <button class="btn btn-outline-primary mb-0" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
                 </div>
           </div>
           <!-- Modal Tambah Transaksi -->
