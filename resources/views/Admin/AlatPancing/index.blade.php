@@ -95,11 +95,14 @@
                   </tr>
                 </thead>
                 <tbody>
+                  @php
+                    $currentNumber = $lastItem - $alatPancing->count() + 1;
+                  @endphp
                   @if($alatPancing->count() > 0)
                     @foreach($alatPancing as $key => $alat)
                     <tr>
                       <td>
-                        <p class="text-sm font-weight-bold mb-0 ps-4">{{ $key + 1 }}</p>
+                        <p class="text-sm font-weight-bold mb-0 ps-4">{{ $currentNumber++ }}</p>
                       </td>
                       <td>
                         <div class="d-flex px-2 py-1">
@@ -121,7 +124,7 @@
                       <td class="align-middle text-center">
                           <button class="btn btn-success"><i class="fas fa-eye"></i></button>
                           <button class="btn btn-warning"><i class="fas fa-edit"></i></button>
-                          <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                          <button class="btn btn-danger delete" data-alatId="{{ $alat->id }}"><i class="fas fa-trash"></i></button>
                       </td>
                     </tr>
                     @endforeach
@@ -132,12 +135,73 @@
                   @endif
                 </tbody>
               </table>
+              <!-- Modal Delete -->
+              <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Apakah Anda yakin ingin menghapus transaksi ini?
+                        </div>
+                        <div class="modal-footer">
+                          <form id="deleteForm" action="/admin/alatPancing/{alatPancing}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-danger" id="confirmDelete">Hapus</button>
+                        </form>                        
+                        </div>                                    
+                    </div>
+                </div>
+              </div>
             </div>
           </div>
+        
+          <!-- Pagination -->
+          <nav class="p-3" aria-label="Pagination">
+            <ul class="pagination">
+                <li class="page-item {{ $alatPancing->onFirstPage() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $alatPancing->previousPageUrl() ?? '#' }}" tabindex="-1">
+                        <i class="fa fa-angle-left"></i>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+                <!-- Tampilkan nomor halaman -->
+                @for ($i = 1; $i <= $alatPancing->lastPage(); $i++)
+                    <li class="page-item {{ $alatPancing->currentPage() == $i ? 'active' : '' }}">
+                        <a class="page-link" href="{{ $alatPancing->url($i) }}">{{ $i }}</a>
+                    </li>
+                @endfor
+                <li class="page-item {{ $alatPancing->hasMorePages() ? '' : 'disabled' }}">
+                    <a class="page-link" href="{{ $alatPancing->nextPageUrl() ?? '#' }}">
+                        <i class="fa fa-angle-right"></i>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            </ul>
+          </nav>
+          <!-- End Pagination -->
         </div>
       </div>
     </div>
   </div>
+
+<!-- Javascript Button Delete -->
+<script>
+  $(document).ready(function() {
+      // Menangani button delete
+      $(document).on('click', '.delete', function() {
+          const alatPancing = $(this).data('alatid'); 
+          $('#deleteModal').modal('show');
+
+          // Mengubah action form berdasarkan ID transaksi yang dipilih
+          $('#deleteForm').attr('action', '/admin/alatPancing/' + alatPancing);
+      });
+  });
+</script>
 
 @endsection
 

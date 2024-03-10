@@ -12,8 +12,9 @@ class AdminAlatPancingController extends Controller
      */
     public function index()
     {
-        $alatPancing = AlatPancing::latest()->get();
-        return view('admin.alatpancing.index', compact('alatPancing'));
+        $alatPancing = AlatPancing::orderBy('created_at', 'desc')->paginate(20);
+        $lastItem = $alatPancing->lastItem();
+        return view('admin.alatpancing.index', compact('alatPancing', 'lastItem'));
     }
 
     /**
@@ -86,6 +87,12 @@ class AdminAlatPancingController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $alatPancing = AlatPancing::findOrFail($id);
+            
+        // Hapus alat pancing dari database
+        $alatPancing->delete();
+            
+        // Redirect kembali ke halaman daftar alat pancing dengan pesan sukses
+        return redirect()->back()->with('success', 'Alat pancing berhasil dihapus.');
     }
 }
