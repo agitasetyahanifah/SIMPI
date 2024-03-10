@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminKeuanganController;
+use App\Http\Controllers\AdminAlatPancingController;
+use Database\Seeders\AdminDashboardSeeder;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,3 +29,6 @@ Route::delete('/admin/dashboard/{id}', [AdminDashboardController::class, 'hapusG
 Route::get('/admin/keuangan', [AdminKeuanganController::class, 'index'])->name('admin.keuangan.index');
 Route::post('/admin/keuangan/store', [AdminKeuanganController::class, 'store'])->name('admin.keuangan.store');
 Route::delete('/admin/keuangan/{id}', [AdminKeuanganController::class, 'destroy'])->name('admin.keuangan.destroy');
+Route::get('/admin/keuangan/edit/{id}', [AdminKeuanganController::class, 'edit'])->name('admin.keuangan.edit');
+Route::put('/admin/keuangan/update/{id}', [AdminKeuanganController::class, 'update'])->name('admin.keuangan.update');
+Route::resource('/admin/alatPancing', AdminAlatPancingController::class);

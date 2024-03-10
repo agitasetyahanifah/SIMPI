@@ -97,7 +97,7 @@
                         <td>{{ $keuangan->jenis_transaksi }}</td>
                         <td>{{ $keuangan->keterangan }}</td>
                         <td class="text-align-end">
-                            <a href="/admin/keuangan/edit/{id}" class="btn btn-primary"><i class="fas fa-edit"></i></a>                            
+                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $keuangan->id }}"><i class="fas fa-edit"></i></a>
                             <button class="btn btn-danger delete" data-transaksiid="{{ $keuangan->id }}"><i class="fas fa-trash"></i></button>                            
                         </td>
                     </tr>
@@ -115,7 +115,7 @@
                             <h5 class="modal-title" id="editModalLabel{{ $keuangan->id }}">Edit Transaksi</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <form action="/admin/keuangan/edit/{{ $keuangan->id }}" method="post">
+                        <form action="/admin/keuangan/update/{{ $keuangan->id }}" method="post">
                             @csrf
                             @method('PUT')
                             <div class="modal-body">

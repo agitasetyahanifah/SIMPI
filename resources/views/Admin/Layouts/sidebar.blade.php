@@ -30,7 +30,7 @@
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-box-2"></i>
             </div>
-            <span class="nav-link-text ms-1">Penyewaan Alat Pancing</span>
+            <span class="nav-link-text ms-1">Daftar Alat Pancing</span>
           </a>
         </li>
         <li class="nav-item">
@@ -38,7 +38,7 @@
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-bullet-list-67"></i>
             </div>
-            <span class="nav-link-text ms-1">Peminjam Alat Pancing</span>
+            <span class="nav-link-text ms-1">Penyewaan Alat Pancing</span>
           </a>
         </li>
         <li class="nav-item">
