@@ -1,6 +1,6 @@
 @extends('Admin.Layouts.main')
 
-@section('title', 'Daftar Alat Pancing')
+@section('title', 'Penyewaan Alat Pancing')
 
 @section('content')
 
@@ -25,25 +25,25 @@
       <div class="col-12">
         <div class="card mb-0">
           <div class="card-header pb-0">
-            <h5 class="font-weight-bolder mb-0">Daftar Alat Pancing</h5>
+            <h5 class="font-weight-bolder mb-0">Penyewaan Alat Pancing</h5>
             {{-- Button Tambah Alat Pancing --}}
-            <form action="/admin/alatPancing" method="post" enctype="multipart/form-data">
+            <form action="/admin/penyewaanAlat" method="post">
               @csrf
               <div class="col-12 text-end">
                   <button class="btn btn-outline-primary mb-1" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
               </div>
           </div>
-          {{-- Modal Tambah Alat Pancing --}}
+          {{-- Modal Tambah Penyewaan Alat Pancing --}}
           <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Tambah Alat Pancing</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Penyewaan Alat Pancing</h5>
                         <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <form action="/admin/alatPancing" method="POST" enctype="multipart/form-data">
+                    <form action="/admin/penyewaanAlat" method="POST">
                         @csrf
                         <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                             <div class="form-group">
@@ -86,17 +86,18 @@
             <div class="table-responsive p-0">
               <table class="table align-items-center mb-0">
                 <thead>
-                  <tr>
-                    <th>No</th>
-                    <th>Alat Pancing</th>
-                    <th class="text-center">Jumlah</th>
-                    <th class="text-center">Status</th>
-                    <th class="text-center">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Pelanggan</th>
+                        <th>Alat Pancing</th>
+                        <th>Tanggal Pinjam</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>                
+                {{-- <tbody>
                   @php
-                    $currentNumber = $lastItem - $alatPancing->count() + 1;
+                    $currentNumber = $lastItem - $sewaAlat->count() + 1;
                   @endphp
                   @if($alatPancing->count() > 0)
                     @foreach($alatPancing as $key => $alat)
@@ -129,10 +130,10 @@
                     </tr>
                     @endforeach
                   @endif
-                </tbody>
+                </tbody> --}}
               </table>
               <!-- Modal Delete -->
-              <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+              {{-- <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -152,10 +153,10 @@
                         </div>                                    
                     </div>
                 </div>
-              </div>
+              </div> --}}
               <!-- Modal Edit Alat Pancing -->
-              @foreach($alatPancing as $alat)
-              <div class="modal fade" id="editModal{{ $alat->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $alat->id }}" aria-hidden="true">
+              {{-- @foreach($alatPancing as $alat) --}}
+              {{-- <div class="modal fade" id="editModal{{ $alat->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $alat->id }}" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                       <div class="modal-content">
                           <div class="modal-header">
@@ -203,11 +204,11 @@
                           </form>
                       </div>
                   </div>
-              </div>
-              @endforeach
+              </div> --}}
+              {{-- @endforeach --}}
               <!-- Modal Detail Alat Pancing -->
-              @foreach($alatPancing as $alat)
-              <div class="modal fade" id="detailModal{{ $alat->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $alat->id }}" aria-hidden="true">
+              {{-- @foreach($alatPancing as $alat) --}}
+              {{-- <div class="modal fade" id="detailModal{{ $alat->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $alat->id }}" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
                       <div class="modal-content">
                           <div class="modal-header">
@@ -235,18 +236,18 @@
                           </div>
                       </div>
                   </div>
-              </div>
-              @endforeach
+              </div> --}}
+              {{-- @endforeach --}}
             </div>
           </div>
           
           {{-- Cek ada data atau kosong --}}
-          @if($alatPancing->isEmpty())
+          {{-- @if($alatPancing->isEmpty())
             <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
-          @endif
+          @endif --}}
         
           <!-- Pagination -->
-          <nav class="p-3" aria-label="Pagination">
+          {{-- <nav class="p-3" aria-label="Pagination">
             <ul class="pagination">
                 <li class="page-item {{ $alatPancing->onFirstPage() ? 'disabled' : '' }}">
                     <a class="page-link" href="{{ $alatPancing->previousPageUrl() ?? '#' }}" tabindex="-1">
@@ -267,26 +268,12 @@
                     </a>
                 </li>
             </ul>
-          </nav>
+          </nav> --}}
           <!-- End Pagination -->
         </div>
       </div>
     </div>
   </div>
-
-<!-- Javascript Button Delete -->
-<script>
-  $(document).ready(function() {
-      // Menangani button delete
-      $(document).on('click', '.delete', function() {
-          const alatPancing = $(this).data('alatid'); 
-          $('#deleteModal').modal('show');
-
-          // Mengubah action form berdasarkan ID transaksi yang dipilih
-          $('#deleteForm').attr('action', '/admin/alatPancing/' + alatPancing);
-      });
-  });
-</script>
 
 @endsection
 

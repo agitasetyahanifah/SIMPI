@@ -74,10 +74,10 @@
           </div>
           <div class="card-body ">
             <div class="table-responsive p-0">
-              <table class="table table-striped table-hover">
+              <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th>Nomor</th>
+                    <th class="text-center">No</th>
                     <th>Tanggal Transaksi</th>
                     <th>Jumlah</th>
                     <th>Jenis Transaksi</th>
@@ -91,11 +91,11 @@
                     @endphp
                     @foreach ($keuangans as $key => $keuangan)
                     <tr>
-                        <td>{{ $currentNumber++ }}</td>
+                        <td class="text-center">{{ $currentNumber++ }}</td>
                         <td>{{ $keuangan->tanggal_transaksi }}</td>
                         <td>{{ number_format($keuangan->jumlah, 0, ',', '.') }}</td>
                         <td>{{ $keuangan->jenis_transaksi }}</td>
-                        <td>{{ $keuangan->keterangan }}</td>
+                        <td class="keterangan-column">{{ $keuangan->keterangan }}</td>
                         <td class="text-align-end">
                             <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $keuangan->id }}"><i class="fas fa-edit"></i></a>
                             <button class="btn btn-danger delete" data-transaksiid="{{ $keuangan->id }}"><i class="fas fa-trash"></i></button>                            

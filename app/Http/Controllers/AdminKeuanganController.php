@@ -21,7 +21,7 @@ class AdminKeuanganController extends Controller
             'tanggal_transaksi' => 'required|date',
             'jumlah' => 'required|numeric',
             'jenis_transaksi' => 'required|in:pemasukan,pengeluaran',
-            'keterangan' => 'nullable|string',
+            'keterangan' => 'nullable|string|max:255',
         ]);
 
         // Simpan data ke database
@@ -55,7 +55,7 @@ class AdminKeuanganController extends Controller
             'edit_tanggal_transaksi' => 'required|date',
             'edit_jumlah' => 'required|numeric',
             'edit_jenis_transaksi' => 'required|in:pemasukan,pengeluaran',
-            'edit_keterangan' => 'nullable|string',
+            'edit_keterangan' => 'nullable|string|max:255',
         ]);
 
         // Mengambil data transaksi keuangan berdasarkan ID

@@ -51,6 +51,13 @@
       object-fit: contain;
   }
 
+  .keterangan-column {
+    max-width: 300px; /* Atur lebar maksimum kolom keterangan */
+    overflow: hidden; /* Teks yang melebihi lebar akan disembunyikan */
+    text-overflow: ellipsis; /* Teks yang disembunyikan akan ditampilkan sebagai elipsis (...) */
+    white-space: nowrap; /* Tekst tidak akan mematahkan baris */
+  }
+
   </style>
 </head>
 
