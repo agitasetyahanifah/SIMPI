@@ -69,17 +69,56 @@ class AdminAlatPancingController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        // Temukan data alat pancing berdasarkan ID
+        $alatPancing = AlatPancing::findOrFail($id);
+
+        // Tampilkan view untuk form edit dengan data alat pancing yang ditemukan
+        return view('Admin.AlatPancing.edit', compact('alatPancing'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        // Validasi data yang dikirim dari form
+        $request->validate([
+            'nama_alat' => 'required|string',
+            'harga' => 'required|numeric',
+            'jumlah' => 'required|numeric',
+            'status' => 'required|in:available,not available',
+            'spesifikasi' => 'nullable|string',
+        ]);
+
+        // Cari data alat pancing berdasarkan ID
+        $alatPancing = AlatPancing::findOrFail($id);
+
+        // Perbarui data alat pancing
+        $alatPancing->nama_alat = $request->nama_alat;
+        $alatPancing->harga = $request->harga;
+        $alatPancing->jumlah = $request->jumlah;
+        $alatPancing->status = $request->status;
+        $alatPancing->spesifikasi = $request->spesifikasi;
+
+        // Cek apakah ada file foto yang dikirim
+        if ($request->hasFile('foto')) {
+            // Hapus foto lama jika ada
+            if ($alatPancing->foto) {
+                unlink(public_path('images/' . $alatPancing->foto));
+            }
+
+            // Simpan foto baru
+            $foto = $request->file('foto');
+            $namaFoto = time() . '_' . $foto->getClientOriginalName();
+            $foto->move(public_path('images/'), $namaFoto);
+
+            $alatPancing->foto = $namaFoto;
+        }
+
+        // Simpan perubahan data
+        $alatPancing->save();
+
+        // Redirect dengan pesan sukses
+        return redirect()->back()->with('success', 'Data alat pancing berhasil diperbarui');
     }
 
     /**

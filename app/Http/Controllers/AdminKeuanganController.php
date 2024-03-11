@@ -9,7 +9,7 @@ class AdminKeuanganController extends Controller
 {
     public function index()
     {
-        $keuangans = Keuangan::orderBy('created_at', 'desc')->paginate(30);
+        $keuangans = Keuangan::orderBy('tanggal_transaksi', 'desc')->paginate(30);
         $lastItem = $keuangans->lastItem();
         return view('admin.keuangan.index', compact('keuangans', 'lastItem'));
     }

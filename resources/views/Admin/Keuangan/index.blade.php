@@ -105,9 +105,14 @@
                 </tbody>
               </table>
             </div>
+            
+            {{-- Cek ada data atau kosong --}}
+            @if($keuangans->isEmpty())
+                <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+            @endif 
 
-            @foreach ($keuangans as $keuangan)
             <!-- Modal Edit Transaksi -->
+            @foreach ($keuangans as $keuangan)
             <div class="modal fade" id="editModal{{ $keuangan->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $keuangan->id }}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">

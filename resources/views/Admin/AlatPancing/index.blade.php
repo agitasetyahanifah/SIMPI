@@ -122,16 +122,12 @@
                         <span class="badge badge-sm {{ $alat->status == 'available' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $alat->status }}</span>
                       </td>
                       <td class="align-middle text-center">
-                          <button class="btn btn-success"><i class="fas fa-eye"></i></button>
-                          <button class="btn btn-warning"><i class="fas fa-edit"></i></button>
+                          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#detailModal{{ $alat->id }}"><i class="fas fa-eye"></i></button>
+                          <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ $alat->id }}"><i class="fas fa-edit"></i></button>
                           <button class="btn btn-danger delete" data-alatId="{{ $alat->id }}"><i class="fas fa-trash"></i></button>
                       </td>
                     </tr>
                     @endforeach
-                  @else
-                    <tr>
-                      <td colspan="4" class="text-center">Tidak ada data tersedia.</td>
-                    </tr>
                   @endif
                 </tbody>
               </table>
@@ -157,8 +153,97 @@
                     </div>
                 </div>
               </div>
+              <!-- Modal Edit Alat Pancing -->
+              @foreach($alatPancing as $alat)
+              <div class="modal fade" id="editModal{{ $alat->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $alat->id }}" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="editModalLabel{{ $alat->id }}">Edit Alat Pancing</h5>
+                              <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">×</span>
+                              </button>
+                          </div>
+                          <form action="/admin/alatPancing/{{ $alat->id }}" method="POST" enctype="multipart/form-data">
+                              @csrf
+                              @method('PUT')
+                              <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                                  <div class="form-group">
+                                      <label for="foto{{ $alat->id }}" class="col-form-label">Foto</label>
+                                      <input type="file" class="form-control" id="foto{{ $alat->id }}" name="foto" accept="image/*">
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="nama_alat{{ $alat->id }}" class="col-form-label">Nama Alat</label>
+                                      <input type="text" class="form-control" id="nama_alat{{ $alat->id }}" name="nama_alat" value="{{ $alat->nama_alat }}" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="harga{{ $alat->id }}" class="col-form-label">Harga</label>
+                                      <input type="number" class="form-control" id="harga{{ $alat->id }}" name="harga" value="{{ $alat->harga }}" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="jumlah{{ $alat->id }}" class="col-form-label">Jumlah</label>
+                                      <input type="number" class="form-control" id="jumlah{{ $alat->id }}" name="jumlah" value="{{ $alat->jumlah }}" required>
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="status{{ $alat->id }}" class="col-form-label">Status</label>
+                                      <select class="form-select" id="status{{ $alat->id }}" name="status" required>
+                                          <option value="available" {{ $alat->status == 'available' ? 'selected' : '' }}>Available</option>
+                                          <option value="not available" {{ $alat->status == 'not available' ? 'selected' : '' }}>Not Available</option>
+                                      </select>
+                                  </div>
+                                  <div class="form-group">
+                                      <label for="spesifikasi{{ $alat->id }}" class="col-form-label">Spesifikasi</label>
+                                      <textarea class="form-control" id="spesifikasi{{ $alat->id }}" name="spesifikasi" rows="3">{{ $alat->spesifikasi }}</textarea>
+                                  </div>
+                              </div>
+                              <div class="modal-footer">
+                                  <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn bg-gradient-primary">Update</button>
+                              </div>
+                          </form>
+                      </div>
+                  </div>
+              </div>
+              @endforeach
+              <!-- Modal Detail Alat Pancing -->
+              @foreach($alatPancing as $alat)
+              <div class="modal fade" id="detailModal{{ $alat->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $alat->id }}" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="detailModalLabel{{ $alat->id }}">Detail Alat Pancing</h5>
+                              <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">×</span>
+                              </button>
+                          </div>
+                          <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                              <div class="row">
+                                  <div class="col-md-6">
+                                      <img src="{{ asset('images/' . $alat->foto) }}" class="img-fluid" alt="Foto Alat Pancing">
+                                  </div>
+                                  <div class="col-md-6">
+                                      <h5>{{ $alat->nama_alat }}</h5>
+                                      <p>Harga: {{ number_format($alat->harga, 0, ',', '.') }} /hari</p>
+                                      <p>Jumlah: {{ $alat->jumlah }}</p>
+                                      <p>Status: <span class="badge {{ $alat->status == 'available' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $alat->status }}</span></p>
+                                      <p>Spesifikasi: </p><p>{!! nl2br(e($alat->spesifikasi)) !!}</p>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              @endforeach
             </div>
           </div>
+          
+          {{-- Cek ada data atau kosong --}}
+          @if($alatPancing->isEmpty())
+            <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+          @endif
         
           <!-- Pagination -->
           <nav class="p-3" aria-label="Pagination">
