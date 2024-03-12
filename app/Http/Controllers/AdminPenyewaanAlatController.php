@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PenyewaanAlat;
 use App\Models\AlatPancing;
+use Illuminate\Support\Facades\DB;
 
 class AdminPenyewaanAlatController extends Controller
 {
@@ -32,41 +33,47 @@ class AdminPenyewaanAlatController extends Controller
     public function store(Request $request)
     {
         // Validasi input
-        $request->validate([
-            'nama_pelanggan' => 'required',
+        $validatedData = $request->validate([
+            'nama_pelanggan' => 'required|string|max:255',
             'alat_pancing_id' => 'required|array',
             'alat_pancing_id.*' => 'exists:alat_pancing,id',
             'tanggal_pinjam' => 'required|date',
-            'masa_pinjam' => 'required|numeric',
+            'masa_pinjam' => 'required|numeric|min:1',
         ]);
-
-        // Inisialisasi hargaTotal
+    
+        // Inisialisasi harga total
         $hargaTotal = 0;
 
-        // Iterasi melalui setiap id alat pancing yang dipilih
+        // Iterasi melalui setiap ID alat pancing yang dipilih
         foreach ($request->alat_pancing_id as $idAlat) {
-            // Cari alat pancing berdasarkan id
+            // Cari alat pancing berdasarkan ID
             $alatPancing = AlatPancing::findOrFail($idAlat);
 
             // Tambahkan harga alat pancing ke harga total
             $hargaTotal += $alatPancing->harga;
         }
 
-        // Simpan hargaTotal ke dalam input harga_alat untuk diakses oleh JavaScript
-        $request->merge(['harga_alat' => $hargaTotal]);
-
         // Hitung biaya sewa
         $biayaSewa = $hargaTotal * $request->masa_pinjam;
 
-        // Proses penyimpanan data penyewaan alat
-        PenyewaanAlat::create([
-            'nama_pelanggan' => $request->nama_pelanggan,
-            'alat_pancing_id' => $request->alat_pancing_id, // Ubah dari 'alat_pancing' menjadi 'alat_pancing_id'
-            'tanggal_pinjam' => $request->tanggal_pinjam,
-            'masa_pinjam' => $request->masa_pinjam,
-            'biaya_sewa' => $biayaSewa,
-        ]);
+        // Mulai transaksi database
+        DB::beginTransaction();
 
+        // Simpan data penyewaan alat ke dalam database
+        $penyewaanAlat = new PenyewaanAlat();
+        $penyewaanAlat->nama_pelanggan = $validatedData['nama_pelanggan'];
+        $penyewaanAlat->tgl_pinjam = $validatedData['tanggal_pinjam'];
+        $penyewaanAlat->tgl_kembali = date('Y-m-d', strtotime($validatedData['tanggal_pinjam'] . ' + ' . $validatedData['masa_pinjam'] . ' days'));
+        $penyewaanAlat->biaya_sewa = $biayaSewa;
+        $penyewaanAlat->save();
+
+        // Lampirkan alat pancing yang disewa ke penyewaan alat
+        $penyewaanAlat->alatPancing()->attach($validatedData['alat_pancing_id']);
+
+        // Commit transaksi jika tidak ada masalah
+        DB::commit();
+
+        // Redirect kembali dengan pesan sukses
         return redirect()->back()->with('success', 'Data Penyewaan alat berhasil ditambahkan.');
     }
 

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nama_pelanggan');
             $table->date('tgl_pinjam');
             $table->date('tgl_kembali');
+            $table->decimal('biaya_sewa', 10, 2)->default(0.00);
             $table->foreignId('alat_pancing_id')->constrained('alat_pancing');
             $table->timestamps();
         });

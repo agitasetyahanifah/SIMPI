@@ -75,7 +75,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="biaya_sewa" class="col-form-label">Biaya Sewa</label>
-                                <input type="number" class="form-control" id="biaya_sewa" name="biaya_sewa" onclick="hitungBiayaSewa()" value="" required readonly>
+                                <input type="number" class="form-control" id="biaya_sewa" name="biaya_sewa" onclick="hitungBiayaSewa()" required readonly>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -312,13 +312,41 @@
 
 {{-- Untuk kolom biaya sewa --}}
 <script>
+    function tambahKolomAlatPancing() {
+        var alatPancingContainer = document.getElementById('alat_pancing_container');
+        var newAlatPancingInput = document.createElement('div');
+        newAlatPancingInput.classList.add('form-group');
+        newAlatPancingInput.classList.add('mt-3');
+
+        newAlatPancingInput.innerHTML = `
+            <div class="input-group col-md-11">
+                <select class="form-select" name="alat_pancing_id[]" required>
+                    @foreach($alatPancing->sortBy('nama_alat') as $alat)
+                        @if($alat->status == 'available')
+                            <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}">{{ $alat->nama_alat }}</option>
+                        @endif
+                    @endforeach
+                </select> 
+                <a class="p-2" onclick="hapusKolomAlatPancing(this)">
+                    <i class="fas fa-trash"></i>
+                </a>
+            </div>
+        `;
+        alatPancingContainer.appendChild(newAlatPancingInput);
+    }
+
+    function hapusKolomAlatPancing(button) {
+        button.parentElement.remove();
+        hitungBiayaSewa(); // Panggil kembali fungsi hitungBiayaSewa setelah menghapus kolom
+    }
+
     // Fungsi untuk menghitung biaya sewa
     function hitungBiayaSewa() {
         var masaPinjam = parseInt(document.getElementById('masa_pinjam').value);
         var totalBiayaSewa = 0; // Variabel untuk menyimpan total biaya sewa
 
         // Loop melalui setiap alat pancing yang dipilih
-        var alatPancingInputs = document.getElementsByName('alat_pancing[]');
+        var alatPancingInputs = document.getElementsByName('alat_pancing_id[]');
         alatPancingInputs.forEach(function(input) {
             var hargaAlat = parseInt(input.options[input.selectedIndex].getAttribute('data-harga'));
             totalBiayaSewa += hargaAlat; // Tambahkan harga alat ke total biaya sewa
@@ -327,20 +355,24 @@
         // Hitung total biaya sewa
         var biayaSewa = masaPinjam * totalBiayaSewa;
 
-        // Mengisi nilai biaya sewa pada input
-        document.getElementById('biaya_sewa').value = biayaSewa;
+        // Mengisi nilai biaya sewa pada input dengan format angka ribuan
+        document.getElementById('biaya_sewa').value = formatRibuan(biayaSewa);
+    }
+
+    // Fungsi untuk memformat angka dengan pemisah ribuan titik (.) dan tanpa koma desimal
+    function formatRibuan(angka) {
+        return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
     // Panggil fungsi hitungBiayaSewa saat nilai masa pinjam berubah
     document.getElementById('masa_pinjam').addEventListener('change', hitungBiayaSewa);
     // Panggil fungsi hitungBiayaSewa saat nilai alat pancing berubah
-    var alatPancingInputs = document.getElementsByName('alat_pancing[]');
+    var alatPancingInputs = document.getElementsByName('alat_pancing_id[]');
     alatPancingInputs.forEach(function(input) {
         input.addEventListener('change', hitungBiayaSewa);
     });
 
 </script>
-
 
 @endsection
 
