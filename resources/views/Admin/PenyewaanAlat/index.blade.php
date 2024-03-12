@@ -290,11 +290,13 @@
 
         newAlatPancingInput.innerHTML = `
             <div class="input-group col-md-11">
-                <select class="form-select" name="alat_pancing[]" required>
-                    @foreach($alatPancing as $alat)
-                        <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}">{{ $alat->nama_alat }}</option>
+                <select class="form-select" name="alat_pancing_id[]" required>
+                    @foreach($alatPancing->sortBy('nama_alat') as $alat)
+                        @if($alat->status == 'available')
+                            <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}">{{ $alat->nama_alat }}</option>
+                        @endif
                     @endforeach
-                </select>
+                </select> 
                 <a class="p-2" onclick="hapusKolomAlatPancing(this)">
                     <i class="fas fa-trash"></i>
                 </a>
