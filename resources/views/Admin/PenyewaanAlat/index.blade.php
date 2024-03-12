@@ -47,31 +47,35 @@
                         @csrf
                         <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                             <div class="form-group">
-                                <label for="foto" class="col-form-label">Foto</label>
-                                <input type="file" class="form-control" id="foto" name="foto" required accept="image/*">
+                                <label for="nama_pelanggan" class="col-form-label">Nama Pelanggan</label>
+                                <input type="text" class="form-control" id="nama_pelanggan" name="nama_pelanggan" required>
                             </div>
                             <div class="form-group">
-                                <label for="nama_alat" class="col-form-label">Nama Alat</label>
-                                <input type="text" class="form-control" id="nama_alat" name="nama_alat" required>
+                                <label for="alat_pancing" class="col-form-label">Alat Pancing</label>
+                                <div id="alat_pancing_container">
+                                    <select class="form-select" name="alat_pancing_id[]" required>
+                                        @foreach($alatPancing->sortBy('nama_alat') as $alat)
+                                            @if($alat->status == 'available')
+                                                <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}">{{ $alat->nama_alat }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>                                    
+                                </div>
+                            </div>                            
+                            <button type="button" class="btn btn-primary" onclick="tambahKolomAlatPancing()">
+                                <i class="fas fa-plus"></i> Tambah Alat Pancing
+                            </button>                                                        
+                            <div class="form-group">
+                                <label for="tanggal_pinjam" class="col-form-label">Tanggal Pinjam</label>
+                                <input type="date" class="form-control" id="tanggal_pinjam" name="tanggal_pinjam" required>
                             </div>
                             <div class="form-group">
-                                <label for="harga" class="col-form-label">Harga</label>
-                                <input type="number" class="form-control" id="harga" name="harga" required>
+                                <label for="masa_pinjam" class="col-form-label">Masa Pinjam (hari)</label>
+                                <input type="number" class="form-control" id="masa_pinjam" name="masa_pinjam" required>
                             </div>
                             <div class="form-group">
-                                <label for="jumlah" class="col-form-label">Jumlah</label>
-                                <input type="number" class="form-control" id="jumlah" name="jumlah" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="status" class="col-form-label">Status</label>
-                                <select class="form-select" id="status" name="status" required>
-                                    <option value="available">Available</option>
-                                    <option value="not available">Not Available</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="spesifikasi" class="col-form-label">Spesifikasi</label>
-                                <textarea class="form-control" id="spesifikasi" name="spesifikasi" rows="3"></textarea>
+                                <label for="biaya_sewa" class="col-form-label">Biaya Sewa</label>
+                                <input type="number" class="form-control" id="biaya_sewa" name="biaya_sewa" onclick="hitungBiayaSewa()" value="" required readonly>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -274,6 +278,67 @@
       </div>
     </div>
   </div>
+
+
+{{-- Untuk tambah kolom alat pancing --}}
+<script>
+    function tambahKolomAlatPancing() {
+        var alatPancingContainer = document.getElementById('alat_pancing_container');
+        var newAlatPancingInput = document.createElement('div');
+        newAlatPancingInput.classList.add('form-group');
+        newAlatPancingInput.classList.add('mt-3');
+
+        newAlatPancingInput.innerHTML = `
+            <div class="input-group col-md-11">
+                <select class="form-select" name="alat_pancing[]" required>
+                    @foreach($alatPancing as $alat)
+                        <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}">{{ $alat->nama_alat }}</option>
+                    @endforeach
+                </select>
+                <a class="p-2" onclick="hapusKolomAlatPancing(this)">
+                    <i class="fas fa-trash"></i>
+                </a>
+            </div>
+        `;
+        alatPancingContainer.appendChild(newAlatPancingInput);
+    }
+
+    function hapusKolomAlatPancing(button) {
+        button.parentElement.remove();
+    }
+</script>
+
+{{-- Untuk kolom biaya sewa --}}
+<script>
+    // Fungsi untuk menghitung biaya sewa
+    function hitungBiayaSewa() {
+        var masaPinjam = parseInt(document.getElementById('masa_pinjam').value);
+        var totalBiayaSewa = 0; // Variabel untuk menyimpan total biaya sewa
+
+        // Loop melalui setiap alat pancing yang dipilih
+        var alatPancingInputs = document.getElementsByName('alat_pancing[]');
+        alatPancingInputs.forEach(function(input) {
+            var hargaAlat = parseInt(input.options[input.selectedIndex].getAttribute('data-harga'));
+            totalBiayaSewa += hargaAlat; // Tambahkan harga alat ke total biaya sewa
+        });
+
+        // Hitung total biaya sewa
+        var biayaSewa = masaPinjam * totalBiayaSewa;
+
+        // Mengisi nilai biaya sewa pada input
+        document.getElementById('biaya_sewa').value = biayaSewa;
+    }
+
+    // Panggil fungsi hitungBiayaSewa saat nilai masa pinjam berubah
+    document.getElementById('masa_pinjam').addEventListener('change', hitungBiayaSewa);
+    // Panggil fungsi hitungBiayaSewa saat nilai alat pancing berubah
+    var alatPancingInputs = document.getElementsByName('alat_pancing[]');
+    alatPancingInputs.forEach(function(input) {
+        input.addEventListener('change', hitungBiayaSewa);
+    });
+
+</script>
+
 
 @endsection
 
