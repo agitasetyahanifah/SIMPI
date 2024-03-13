@@ -40,26 +40,26 @@ class AdminPenyewaanAlatController extends Controller
             'tanggal_pinjam' => 'required|date',
             'masa_pinjam' => 'required|numeric|min:1',
         ]);
-
+    
         // Mulai transaksi database
         DB::beginTransaction();
-
+    
         try {
             // Inisialisasi harga total
             $hargaTotal = 0;
-
+    
             // Iterasi melalui setiap ID alat pancing yang dipilih
             foreach ($validatedData['alat_pancing_id'] as $idAlat) {
                 // Cari alat pancing berdasarkan ID
                 $alatPancing = AlatPancing::findOrFail($idAlat);
-
+    
                 // Tambahkan harga alat pancing ke harga total
                 $hargaTotal += $alatPancing->harga;
             }
-
+    
             // Hitung biaya sewa
             $biayaSewa = $hargaTotal * $validatedData['masa_pinjam'];
-
+    
             // Simpan data penyewaan alat ke dalam database
             $penyewaanAlat = new PenyewaanAlat();
             $penyewaanAlat->nama_pelanggan = $validatedData['nama_pelanggan'];
@@ -67,23 +67,25 @@ class AdminPenyewaanAlatController extends Controller
             $penyewaanAlat->tgl_kembali = date('Y-m-d', strtotime($validatedData['tanggal_pinjam'] . ' + ' . $validatedData['masa_pinjam'] . ' days'));
             $penyewaanAlat->biaya_sewa = $biayaSewa;
             $penyewaanAlat->save();
-
+    
             // Lampirkan alat pancing yang disewa ke penyewaan alat
             $penyewaanAlat->alatPancing()->attach($validatedData['alat_pancing_id']);
-
+    
             // Commit transaksi jika tidak ada masalah
             DB::commit();
-
+    
             // Redirect kembali dengan pesan sukses
             return redirect()->back()->with('success', 'Data Penyewaan alat berhasil ditambahkan.');
         } catch (\Exception $e) {
+            dd($e->getMessage());
             // Rollback transaksi jika terjadi kesalahan
             DB::rollback();
-
+    
             // Redirect kembali dengan pesan error
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
         }
     }
+    
 
     /**
      * Display the specified resource.

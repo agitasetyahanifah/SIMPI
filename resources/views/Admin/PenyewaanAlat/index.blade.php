@@ -27,12 +27,12 @@
           <div class="card-header pb-0">
             <h5 class="font-weight-bolder mb-0">Penyewaan Alat Pancing</h5>
             {{-- Button Tambah Alat Pancing --}}
-            <form action="/admin/penyewaanAlat" method="post">
-              @csrf
+            <form action="/admin/penyewaanAlat" method="POST">
+                @csrf
               <div class="col-12 text-end">
                   <button class="btn btn-outline-primary mb-1" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
               </div>
-          </div>
+            </div>
           {{-- Modal Tambah Penyewaan Alat Pancing --}}
           <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -280,37 +280,7 @@
   </div>
 
 
-{{-- Untuk tambah kolom alat pancing --}}
-<script>
-    function tambahKolomAlatPancing() {
-        var alatPancingContainer = document.getElementById('alat_pancing_container');
-        var newAlatPancingInput = document.createElement('div');
-        newAlatPancingInput.classList.add('form-group');
-        newAlatPancingInput.classList.add('mt-3');
-
-        newAlatPancingInput.innerHTML = `
-            <div class="input-group col-md-11">
-                <select class="form-select" name="alat_pancing_id[]" required>
-                    @foreach($alatPancing->sortBy('nama_alat') as $alat)
-                        @if($alat->status == 'available')
-                            <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}">{{ $alat->nama_alat }}</option>
-                        @endif
-                    @endforeach
-                </select> 
-                <a class="p-2" onclick="hapusKolomAlatPancing(this)">
-                    <i class="fas fa-trash"></i>
-                </a>
-            </div>
-        `;
-        alatPancingContainer.appendChild(newAlatPancingInput);
-    }
-
-    function hapusKolomAlatPancing(button) {
-        button.parentElement.remove();
-    }
-</script>
-
-{{-- Untuk kolom biaya sewa --}}
+{{-- Untuk tambah kolom alat pancing dan biaya sewa --}}
 <script>
     function tambahKolomAlatPancing() {
         var alatPancingContainer = document.getElementById('alat_pancing_container');
