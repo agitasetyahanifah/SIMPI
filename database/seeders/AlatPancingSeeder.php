@@ -13,6 +13,6 @@ class AlatPancingSeeder extends Seeder
      */
     public function run(): void
     {
-        AlatPancing::factory()->count(20)->create(); // Create 20 records using the factory
+        AlatPancing::factory()->count(10)->create(); // Create 20 records using the factory
     }
 }
