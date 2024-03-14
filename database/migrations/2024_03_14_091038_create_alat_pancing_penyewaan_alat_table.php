@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('penyewaan_alat_id')->constrained('penyewaan_alat')->onDelete('cascade');
             $table->foreignId('alat_pancing_id')->constrained('alat_pancing')->onDelete('cascade');
             $table->timestamps();
-        });        
+        });
     }
 
     /**
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('penyewaan_alat_alat_pancing');
+        Schema::dropIfExists('alat_pancing_penyewaan_alat');
     }
 };

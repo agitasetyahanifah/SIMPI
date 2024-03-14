@@ -68,9 +68,13 @@ class AdminPenyewaanAlatController extends Controller
             $penyewaanAlat->tgl_kembali = date('Y-m-d', strtotime($validatedData['tanggal_pinjam'] . ' + ' . $validatedData['masa_pinjam'] . ' days'));
             $penyewaanAlat->biaya_sewa = $biayaSewa;
             // $penyewaanAlat->alat_pancing_id = $validatedData['alat_pancing_id'][0];
-            $penyewaanAlat->alatPancing()->attach($validatedData['alat_pancing_id']);
             $penyewaanAlat->status = 'sewa';
             $penyewaanAlat->save();
+
+            // Simpan data alat pancing yang terkait dengan penyewaan alat
+            foreach ($validatedData['alat_pancing_id'] as $alatPancingId) {
+                $penyewaanAlat->alatPancing()->attach($alatPancingId);
+            }
     
             // Commit transaksi jika tidak ada masalah
             DB::commit();
