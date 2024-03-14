@@ -54,7 +54,7 @@
                                 <label for="alat_pancing" class="col-form-label">Alat Pancing</label>
                                 <div id="alat_pancing_container">
                                     <select class="form-select" name="alat_pancing_id[]" required>
-                                        @foreach($penyewaanAlat->sortBy('nama_alat') as $alat)
+                                        @foreach($alatPancing->sortBy('nama_alat') as $alat)
                                             @if($alat->status == 'available')
                                                 <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}">{{ $alat->nama_alat }}</option>
                                             @endif
@@ -110,7 +110,7 @@
                       <td>{{ $sewaAlat->nama_pelanggan }}</td>
                       <td>
                         @foreach($sewaAlat->alat_pancing as $alat)
-                            {{ $alat->nama }}<br>
+                            {{ $alat->nama_alat }}<br>
                         @endforeach
                      </td>                      
                      <td>{{ $sewaAlat->tanggal_pinjam }}</td>
@@ -271,7 +271,7 @@
 
 {{-- Untuk tambah kolom alat pancing dan biaya sewa --}}
 <script>
-    function tambahKolompenyewaanAlat() {
+    function tambahKolomAlatPancing() {
         var penyewaanAlatContainer = document.getElementById('alat_pancing_container');
         var newpenyewaanAlatInput = document.createElement('div');
         newpenyewaanAlatInput.classList.add('form-group');
@@ -280,7 +280,7 @@
         newpenyewaanAlatInput.innerHTML = `
             <div class="input-group col-md-11">
                 <select class="form-select" name="alat_pancing_id[]" required>
-                    @foreach($penyewaanAlat->sortBy('nama_alat') as $alat)
+                    @foreach($alatPancing->sortBy('nama_alat') as $alat)
                         @if($alat->status == 'available')
                             <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}">{{ $alat->nama_alat }}</option>
                         @endif

@@ -17,7 +17,7 @@ class AdminPenyewaanAlatController extends Controller
         $alatPancing = AlatPancing::all();
         $penyewaanAlat = PenyewaanAlat::orderBy('created_at', 'desc')->paginate(20);
         $lastItem = $penyewaanAlat->lastItem();
-        return view('admin.penyewaanalat.index', compact('penyewaanAlat', 'alatPancing', 'lastItem'));
+        return view('admin.penyewaanalat.index', compact('penyewaanAlat', 'alatPancing','lastItem'));
     }
 
     /**
