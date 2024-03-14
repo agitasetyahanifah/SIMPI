@@ -16,7 +16,7 @@ class PenyewaanAlat extends Model
     // Relasi dengan model AlatPancing
     public function alatPancing()
     {
-        return $this->belongsToMany(AlatPancing::class);
+        return $this->belongsTo(AlatPancing::class);
     }
 
 }
