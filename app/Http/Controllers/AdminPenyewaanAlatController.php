@@ -15,8 +15,9 @@ class AdminPenyewaanAlatController extends Controller
     public function index()
     {
         $alatPancing = AlatPancing::all();
-        $penyewaanAlat = PenyewaanAlat::latest()->get();
-        return view('admin.penyewaanalat.index', compact('penyewaanAlat', 'alatPancing'));
+        $penyewaanAlat = PenyewaanAlat::orderBy('created_at', 'desc')->paginate(20);
+        $lastItem = $penyewaanAlat->lastItem();
+        return view('admin.penyewaanalat.index', compact('penyewaanAlat', 'alatPancing', 'lastItem'));
     }
 
     /**
@@ -67,6 +68,7 @@ class AdminPenyewaanAlatController extends Controller
             $penyewaanAlat->tgl_kembali = date('Y-m-d', strtotime($validatedData['tanggal_pinjam'] . ' + ' . $validatedData['masa_pinjam'] . ' days'));
             $penyewaanAlat->biaya_sewa = $biayaSewa;
             $penyewaanAlat->alat_pancing_id = $validatedData['alat_pancing_id'][0];
+            $penyewaanAlat->status = 'sewa';
             $penyewaanAlat->save();
     
             // Commit transaksi jika tidak ada masalah
@@ -75,7 +77,7 @@ class AdminPenyewaanAlatController extends Controller
             // Redirect kembali dengan pesan sukses
             return redirect()->back()->with('success', 'Data Penyewaan alat berhasil ditambahkan.');
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            // dd($e->getMessage());
             // Rollback transaksi jika terjadi kesalahan
             DB::rollback();
     
@@ -83,7 +85,6 @@ class AdminPenyewaanAlatController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
         }
     }
-    
 
     /**
      * Display the specified resource.

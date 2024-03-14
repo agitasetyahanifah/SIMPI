@@ -54,7 +54,7 @@
                                 <label for="alat_pancing" class="col-form-label">Alat Pancing</label>
                                 <div id="alat_pancing_container">
                                     <select class="form-select" name="alat_pancing_id[]" required>
-                                        @foreach($alatPancing->sortBy('nama_alat') as $alat)
+                                        @foreach($penyewaanAlat->sortBy('nama_alat') as $alat)
                                             @if($alat->status == 'available')
                                                 <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}">{{ $alat->nama_alat }}</option>
                                             @endif
@@ -99,42 +99,31 @@
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>                
-                {{-- <tbody>
+                <tbody>
                   @php
-                    $currentNumber = $lastItem - $sewaAlat->count() + 1;
+                    $currentNumber = $lastItem - $penyewaanAlat->count() + 1;
                   @endphp
-                  @if($alatPancing->count() > 0)
-                    @foreach($alatPancing as $key => $alat)
+                  @if($penyewaanAlat->count() > 0)
+                    @foreach($penyewaanAlat as $key => $sewaAlat)
                     <tr>
+                      <td><p class="text-sm font-weight-bold mb-0 ps-4">{{ $currentNumber++ }}</p></td>
+                      <td>{{ $sewaAlat->nama_pelanggan }}</td>
                       <td>
-                        <p class="text-sm font-weight-bold mb-0 ps-4">{{ $currentNumber++ }}</p>
-                      </td>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="{{ asset('images/' . $alat->foto) }}" class="avatar avatar-xl me-3" alt="Alat Pancing">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">{{ $alat->nama_alat }}</h6>
-                            <p class="text-xl text-secondary mb-0">{{ number_format($alat->harga, 0, ',', '.') }} /hari</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-sm text-center font-weight-bold mb-0">{{ $alat->jumlah }}</p>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm {{ $alat->status == 'available' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $alat->status }}</span>
-                      </td>
-                      <td class="align-middle text-center">
-                          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#detailModal{{ $alat->id }}"><i class="fas fa-eye"></i></button>
-                          <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ $alat->id }}"><i class="fas fa-edit"></i></button>
-                          <button class="btn btn-danger delete" data-alatId="{{ $alat->id }}"><i class="fas fa-trash"></i></button>
+                        @foreach($sewaAlat->alat_pancing as $alat)
+                            {{ $alat->nama }}<br>
+                        @endforeach
+                     </td>                      
+                     <td>{{ $sewaAlat->tanggal_pinjam }}</td>
+                     <td>{{ $sewaAlat->status }}</td>
+                     <td class="align-middle text-center">
+                          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#detailModal{{ $sewaAlat->id }}"><i class="fas fa-eye"></i></button>
+                          <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ $sewaAlat->id }}"><i class="fas fa-edit"></i></button>
+                          <button class="btn btn-danger delete" data-sewaId="{{ $sewaAlat->id }}"><i class="fas fa-trash"></i></button>
                       </td>
                     </tr>
                     @endforeach
                   @endif
-                </tbody> --}}
+                </tbody>
               </table>
               <!-- Modal Delete -->
               {{-- <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -148,7 +137,7 @@
                             Apakah Anda yakin ingin menghapus transaksi ini?
                         </div>
                         <div class="modal-footer">
-                          <form id="deleteForm" action="/admin/alatPancing/{alatPancing}" method="post">
+                          <form id="deleteForm" action="/admin/penyewaanAlat/{penyewaanAlat}" method="post">
                             @csrf
                             @method('DELETE')
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -159,7 +148,7 @@
                 </div>
               </div> --}}
               <!-- Modal Edit Alat Pancing -->
-              {{-- @foreach($alatPancing as $alat) --}}
+              {{-- @foreach($penyewaanAlat as $alat) --}}
               {{-- <div class="modal fade" id="editModal{{ $alat->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $alat->id }}" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                       <div class="modal-content">
@@ -169,7 +158,7 @@
                                   <span aria-hidden="true">×</span>
                               </button>
                           </div>
-                          <form action="/admin/alatPancing/{{ $alat->id }}" method="POST" enctype="multipart/form-data">
+                          <form action="/admin/penyewaanAlat/{{ $alat->id }}" method="POST" enctype="multipart/form-data">
                               @csrf
                               @method('PUT')
                               <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
@@ -211,7 +200,7 @@
               </div> --}}
               {{-- @endforeach --}}
               <!-- Modal Detail Alat Pancing -->
-              {{-- @foreach($alatPancing as $alat) --}}
+              {{-- @foreach($penyewaanAlat as $alat) --}}
               {{-- <div class="modal fade" id="detailModal{{ $alat->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $alat->id }}" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
                       <div class="modal-content">
@@ -246,33 +235,33 @@
           </div>
           
           {{-- Cek ada data atau kosong --}}
-          {{-- @if($alatPancing->isEmpty())
+          @if($penyewaanAlat->isEmpty())
             <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
-          @endif --}}
+          @endif
         
           <!-- Pagination -->
-          {{-- <nav class="p-3" aria-label="Pagination">
+          <nav class="p-3" aria-label="Pagination">
             <ul class="pagination">
-                <li class="page-item {{ $alatPancing->onFirstPage() ? 'disabled' : '' }}">
-                    <a class="page-link" href="{{ $alatPancing->previousPageUrl() ?? '#' }}" tabindex="-1">
+                <li class="page-item {{ $penyewaanAlat->onFirstPage() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $penyewaanAlat->previousPageUrl() ?? '#' }}" tabindex="-1">
                         <i class="fa fa-angle-left"></i>
                         <span class="sr-only">Previous</span>
                     </a>
                 </li>
                 <!-- Tampilkan nomor halaman -->
-                @for ($i = 1; $i <= $alatPancing->lastPage(); $i++)
-                    <li class="page-item {{ $alatPancing->currentPage() == $i ? 'active' : '' }}">
-                        <a class="page-link" href="{{ $alatPancing->url($i) }}">{{ $i }}</a>
+                @for ($i = 1; $i <= $penyewaanAlat->lastPage(); $i++)
+                    <li class="page-item {{ $penyewaanAlat->currentPage() == $i ? 'active' : '' }}">
+                        <a class="page-link" href="{{ $penyewaanAlat->url($i) }}">{{ $i }}</a>
                     </li>
                 @endfor
-                <li class="page-item {{ $alatPancing->hasMorePages() ? '' : 'disabled' }}">
-                    <a class="page-link" href="{{ $alatPancing->nextPageUrl() ?? '#' }}">
+                <li class="page-item {{ $penyewaanAlat->hasMorePages() ? '' : 'disabled' }}">
+                    <a class="page-link" href="{{ $penyewaanAlat->nextPageUrl() ?? '#' }}">
                         <i class="fa fa-angle-right"></i>
                         <span class="sr-only">Next</span>
                     </a>
                 </li>
             </ul>
-          </nav> --}}
+          </nav>
           <!-- End Pagination -->
         </div>
       </div>
@@ -282,30 +271,30 @@
 
 {{-- Untuk tambah kolom alat pancing dan biaya sewa --}}
 <script>
-    function tambahKolomAlatPancing() {
-        var alatPancingContainer = document.getElementById('alat_pancing_container');
-        var newAlatPancingInput = document.createElement('div');
-        newAlatPancingInput.classList.add('form-group');
-        newAlatPancingInput.classList.add('mt-3');
+    function tambahKolompenyewaanAlat() {
+        var penyewaanAlatContainer = document.getElementById('alat_pancing_container');
+        var newpenyewaanAlatInput = document.createElement('div');
+        newpenyewaanAlatInput.classList.add('form-group');
+        newpenyewaanAlatInput.classList.add('mt-3');
 
-        newAlatPancingInput.innerHTML = `
+        newpenyewaanAlatInput.innerHTML = `
             <div class="input-group col-md-11">
                 <select class="form-select" name="alat_pancing_id[]" required>
-                    @foreach($alatPancing->sortBy('nama_alat') as $alat)
+                    @foreach($penyewaanAlat->sortBy('nama_alat') as $alat)
                         @if($alat->status == 'available')
                             <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}">{{ $alat->nama_alat }}</option>
                         @endif
                     @endforeach
                 </select> 
-                <a class="p-2" onclick="hapusKolomAlatPancing(this)">
+                <a class="p-2" onclick="hapusKolompenyewaanAlat(this)">
                     <i class="fas fa-trash"></i>
                 </a>
             </div>
         `;
-        alatPancingContainer.appendChild(newAlatPancingInput);
+        penyewaanAlatContainer.appendChild(newpenyewaanAlatInput);
     }
 
-    function hapusKolomAlatPancing(button) {
+    function hapusKolompenyewaanAlat(button) {
         button.parentElement.remove();
         hitungBiayaSewa(); // Panggil kembali fungsi hitungBiayaSewa setelah menghapus kolom
     }
@@ -316,8 +305,8 @@
         var totalBiayaSewa = 0; // Variabel untuk menyimpan total biaya sewa
 
         // Loop melalui setiap alat pancing yang dipilih
-        var alatPancingInputs = document.getElementsByName('alat_pancing_id[]');
-        alatPancingInputs.forEach(function(input) {
+        var penyewaanAlatInputs = document.getElementsByName('alat_pancing_id[]');
+        penyewaanAlatInputs.forEach(function(input) {
             var hargaAlat = parseInt(input.options[input.selectedIndex].getAttribute('data-harga'));
             totalBiayaSewa += hargaAlat; // Tambahkan harga alat ke total biaya sewa
         });
@@ -337,8 +326,8 @@
     // Panggil fungsi hitungBiayaSewa saat nilai masa pinjam berubah
     document.getElementById('masa_pinjam').addEventListener('change', hitungBiayaSewa);
     // Panggil fungsi hitungBiayaSewa saat nilai alat pancing berubah
-    var alatPancingInputs = document.getElementsByName('alat_pancing_id[]');
-    alatPancingInputs.forEach(function(input) {
+    var penyewaanAlatInputs = document.getElementsByName('alat_pancing_id[]');
+    penyewaanAlatInputs.forEach(function(input) {
         input.addEventListener('change', hitungBiayaSewa);
     });
 
