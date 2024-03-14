@@ -106,15 +106,19 @@
                   @if($penyewaanAlat->count() > 0)
                     @foreach($penyewaanAlat as $key => $sewaAlat)
                     <tr>
-                      <td><p class="text-sm font-weight-bold mb-0 ps-4">{{ $currentNumber++ }}</p></td>
-                      <td>{{ $sewaAlat->nama_pelanggan }}</td>
-                      <td>
-                        @foreach($sewaAlat->alat_pancing as $alat)
-                            {{ $alat->nama_alat }}<br>
-                        @endforeach
+                     <td><p class="text-sm font-weight-bold mb-0 ps-4">{{ $currentNumber++ }}</p></td>
+                     <td>{{ $sewaAlat->nama_pelanggan }}</td>
+                     <td>
+                        @if(isset($sewaAlat->alat_pancing))
+                            @foreach($sewaAlat->alat_pancing as $alat)
+                                {{ $alat->nama_alat }}<br>
+                            @endforeach
+                        @endif
                      </td>                      
-                     <td>{{ $sewaAlat->tanggal_pinjam }}</td>
-                     <td>{{ $sewaAlat->status }}</td>
+                     <td>{{ $sewaAlat->tgl_pinjam }}</td>
+                     <td>
+                        <span class="badge badge-sm {{ $sewaAlat->status == 'sewa' ? 'bg-gradient-secondary' : 'bg-gradient-success' }}">{{ $sewaAlat->status }}</span>
+                     </td>
                      <td class="align-middle text-center">
                           <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#detailModal{{ $sewaAlat->id }}"><i class="fas fa-eye"></i></button>
                           <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ $sewaAlat->id }}"><i class="fas fa-edit"></i></button>

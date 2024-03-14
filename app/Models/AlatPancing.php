@@ -12,4 +12,9 @@ class AlatPancing extends Model
     protected $table = 'alat_pancing';
 
     protected $guarded = ['id'];
+
+    public function penyewaanAlat()
+    {
+        return $this->belongsToMany(PenyewaanAlat::class)->withTimestamps();
+    }
 }

@@ -13,10 +13,8 @@ class PenyewaanAlat extends Model
 
     protected $guarded = ['id'];
 
-    // Relasi dengan model AlatPancing
     public function alatPancing()
     {
-        return $this->belongsTo(AlatPancing::class);
+        return $this->belongsToMany(AlatPancing::class)->withTimestamps();
     }
-
 }

@@ -67,7 +67,8 @@ class AdminPenyewaanAlatController extends Controller
             $penyewaanAlat->tgl_pinjam = $validatedData['tanggal_pinjam'];
             $penyewaanAlat->tgl_kembali = date('Y-m-d', strtotime($validatedData['tanggal_pinjam'] . ' + ' . $validatedData['masa_pinjam'] . ' days'));
             $penyewaanAlat->biaya_sewa = $biayaSewa;
-            $penyewaanAlat->alat_pancing_id = $validatedData['alat_pancing_id'][0];
+            // $penyewaanAlat->alat_pancing_id = $validatedData['alat_pancing_id'][0];
+            $penyewaanAlat->alatPancing()->attach($validatedData['alat_pancing_id']);
             $penyewaanAlat->status = 'sewa';
             $penyewaanAlat->save();
     
@@ -77,7 +78,7 @@ class AdminPenyewaanAlatController extends Controller
             // Redirect kembali dengan pesan sukses
             return redirect()->back()->with('success', 'Data Penyewaan alat berhasil ditambahkan.');
         } catch (\Exception $e) {
-            // dd($e->getMessage());
+            dd($e->getMessage());
             // Rollback transaksi jika terjadi kesalahan
             DB::rollback();
     
