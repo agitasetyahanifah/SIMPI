@@ -75,6 +75,7 @@ class AdminPenyewaanAlatController extends Controller
             foreach ($validatedData['alat_pancing_id'] as $alatPancingId) {
                 $penyewaanAlat->alatPancing()->attach($alatPancingId);
             }
+            $penyewaanAlat->save();
     
             // Commit transaksi jika tidak ada masalah
             DB::commit();
