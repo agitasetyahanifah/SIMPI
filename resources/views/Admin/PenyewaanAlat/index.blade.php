@@ -53,7 +53,7 @@
                             <div class="form-group">
                                 <label for="alat_pancing" class="col-form-label">Alat Pancing</label>
                                 <div id="alat_pancing_container">
-                                    <select class="form-select" name="alat_pancing_id[]" required>
+                                    <select class="form-select" name="alat_pancing_id[]" multiple required>
                                         @foreach($alatPancing->sortBy('nama_alat') as $alat)
                                             @if($alat->status == 'available')
                                                 <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}">{{ $alat->nama_alat }}</option>
