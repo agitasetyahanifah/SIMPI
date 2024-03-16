@@ -18,7 +18,6 @@ return new class extends Migration
             $table->date('tgl_kembali');
             $table->integer('biaya_sewa');
             $table->enum('status', ['sewa', 'selesai'])->default('sewa');
-            // $table->foreignId('alat_pancing_id')->constrained('alat_pancing');
             $table->foreignId('denda_id')->nullable()->constrained('denda');
             $table->timestamps();
         });

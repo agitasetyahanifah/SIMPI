@@ -53,7 +53,7 @@
                             <div class="form-group">
                                 <label for="alat_pancing" class="col-form-label">Alat Pancing</label>
                                 <div id="alat_pancing_container">
-                                    <select class="form-select" name="alat_pancing_id[]" multiple required>
+                                    <select class="form-select" name="alat_pancing_id[]" required>
                                         @foreach($alatPancing->sortBy('nama_alat') as $alat)
                                             @if($alat->status == 'available')
                                                 <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}">{{ $alat->nama_alat }}</option>
@@ -320,9 +320,26 @@
 
         // Mengisi nilai biaya sewa pada input dengan format angka ribuan
         document.getElementById('biaya_sewa').value = formatRibuan(biayaSewa);
+    
+        // Kirim data ke backend menggunakan AJAX
+        var formData = new FormData(document.getElementById('form_penyewaan_alat'));
+            formData.append('biaya_sewa', biayaSewa); // Tambahkan biaya sewa ke dalam formData
+
+            // Kirim data ke backend menggunakan AJAX
+            fetch('/admin/penyewaanAlat', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.message); // Tampilkan pesan dari backend
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     }
 
-    // Fungsi untuk memformat angka dengan pemisah ribuan titik (.) dan tanpa koma desimal
+    // // Fungsi untuk memformat angka dengan pemisah ribuan titik (.) dan tanpa koma desimal
     function formatRibuan(angka) {
         return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
