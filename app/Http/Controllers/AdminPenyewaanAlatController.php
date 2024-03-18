@@ -166,9 +166,6 @@ class AdminPenyewaanAlatController extends Controller
             // Simpan relasi alat pancing yang dipilih ke dalam tabel pivot
             $penyewaanAlat->alatPancing()->attach($validatedData['alat_pancing_id']);
     
-            // Simpan data alat pancing yang terkait dengan penyewaan alat
-            // $penyewaanAlat->alatPancing()->attach($validatedData['alat_pancing_id']);
-    
             // Commit transaksi jika tidak ada masalah
             DB::commit();
     
