@@ -61,7 +61,8 @@
                                         @endforeach
                                     </select>   
                                 </div>
-                            </div>                            
+                            </div>        
+                            <input type="hidden" name="alat_pancing_ids" value="{{ json_encode($alatPancingIds) }}">                    
                             <button type="button" class="btn btn-primary" onclick="tambahKolomAlatPancing()">
                                 <i class="fas fa-plus"></i> Tambah Alat Pancing
                             </button>                                                        
@@ -122,15 +123,15 @@
                      <td class="align-middle text-center">
                           <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#detailModal{{ $sewaAlat->id }}"><i class="fas fa-eye"></i></button>
                           <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ $sewaAlat->id }}"><i class="fas fa-edit"></i></button>
-                          <button class="btn btn-danger delete" data-sewaId="{{ $sewaAlat->id }}"><i class="fas fa-trash"></i></button>
-                      </td>
+                          <button class="btn btn-danger delete" data-bs-toggle="modal" data-bs-target="#deleteModal" data-sewaId="{{ $sewaAlat->id }}"><i class="fas fa-trash"></i></button>
+                        </td>
                     </tr>
                     @endforeach
                   @endif
                 </tbody>
               </table>
               <!-- Modal Delete -->
-              {{-- <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+              <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -150,7 +151,7 @@
                         </div>                                    
                     </div>
                 </div>
-              </div> --}}
+              </div>
               <!-- Modal Edit Alat Pancing -->
               {{-- @foreach($penyewaanAlat as $alat) --}}
               {{-- <div class="modal fade" id="editModal{{ $alat->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $alat->id }}" aria-hidden="true">
@@ -281,9 +282,11 @@
         newpenyewaanAlatInput.classList.add('form-group');
         newpenyewaanAlatInput.classList.add('mt-3');
 
+        var newIndex = penyewaanAlatContainer.querySelectorAll('select[name^="alat_pancing_id"]').length + 1;
+
         newpenyewaanAlatInput.innerHTML = `
             <div class="input-group col-md-11">
-                <select class="form-select" name="alat_pancing_id[]" required>
+                <select class="form-select" name="alat_pancing_id[${newIndex}]" required>
                     @foreach($alatPancing->sortBy('nama_alat') as $alat)
                         @if($alat->status == 'available')
                             <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}">{{ $alat->nama_alat }}</option>
@@ -304,36 +307,82 @@
     }
 
     // Fungsi untuk menghitung biaya sewa
+    // function hitungBiayaSewa() {
+    //     var masaPinjam = parseInt(document.getElementById('masa_pinjam').value);
+    //     var totalBiayaSewa = 0; // Variabel untuk menyimpan total biaya sewa
+
+    //     // Loop melalui setiap alat pancing yang dipilih
+    //     // var penyewaanAlatInputs = document.getElementsByName('alat_pancing_id[]');
+    //     var penyewaanAlatInputs = document.querySelectorAll('select[name^="alat_pancing_id"]');
+    //     penyewaanAlatInputs.forEach(function(input) {
+    //         var hargaAlat = parseInt(input.options[input.selectedIndex].getAttribute('data-harga'));
+    //         totalBiayaSewa += hargaAlat; // Tambahkan harga alat ke total biaya sewa
+    //     });
+
+    //     // Hitung total biaya sewa
+    //     var biayaSewa = masaPinjam * totalBiayaSewa;
+
+    //     // Mengisi nilai biaya sewa pada input dengan format angka ribuan
+    //     document.getElementById('biaya_sewa').value = formatRibuan(biayaSewa);
+    
+    //     // Kirim data ke backend menggunakan AJAX
+    //     var formData = new FormData(document.getElementById('form_penyewaan_alat'));
+    //         formData.append('biaya_sewa', biayaSewa);
+
+    //         // Kirim data ke backend menggunakan AJAX
+    //         fetch('/admin/penyewaanAlat', {
+    //             method: 'POST',
+    //             body: formData
+    //         })
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             console.log(data.message); // Tampilkan pesan dari backend
+    //         })
+    //         .catch(error => {
+    //             console.error('Error:', error);
+    //         });
+    // }
+
     function hitungBiayaSewa() {
         var masaPinjam = parseInt(document.getElementById('masa_pinjam').value);
         var totalBiayaSewa = 0; // Variabel untuk menyimpan total biaya sewa
 
         // Loop melalui setiap alat pancing yang dipilih
-        var penyewaanAlatInputs = [];
-        var penyewaanAlatInputs = document.getElementsByName('alat_pancing_id[]');
+        // var penyewaanAlatInputs = document.getElementsByName('alat_pancing_id[]');
+        var selectedAlatPancing = [];
+        var penyewaanAlatInputs = document.querySelectorAll('select[name^="alat_pancing_id"]');
         penyewaanAlatInputs.forEach(function(input) {
             var hargaAlat = parseInt(input.options[input.selectedIndex].getAttribute('data-harga'));
-            var idAlat = parseInt(input.options[input.selectedIndex].getAttribute('value'));
             totalBiayaSewa += hargaAlat; // Tambahkan harga alat ke total biaya sewa
+
+            // Simpan ID alat pancing yang dipilih
+            selectedAlatPancing.push(input.value);
         });
 
         // Hitung total biaya sewa
         var biayaSewa = masaPinjam * totalBiayaSewa;
-
-        var alat_pancing_id = idAlat;
 
         // Mengisi nilai biaya sewa pada input dengan format angka ribuan
         document.getElementById('biaya_sewa').value = formatRibuan(biayaSewa);
     
         // Kirim data ke backend menggunakan AJAX
         var formData = new FormData(document.getElementById('form_penyewaan_alat'));
-            formData.append('biaya_sewa', biayaSewa); // Tambahkan biaya sewa ke dalam formData
-            formData.append('alat_pancing_id', idAlat);
+            formData.append('biaya_sewa', biayaSewa);
 
             // Kirim data ke backend menggunakan AJAX
             fetch('/admin/penyewaanAlat', {
                 method: 'POST',
-                body: formData
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+                body: JSON.stringify({
+                    nama_pelanggan: document.getElementById('nama_pelanggan').value,
+                    alat_pancing_id: selectedAlatPancing,
+                    tanggal_pinjam: document.getElementById('tanggal_pinjam').value,
+                    masa_pinjam: document.getElementById('masa_pinjam').value,
+                    biaya_sewa: document.getElementById('biaya_sewa').value,
+                }),
             })
             .then(response => response.json())
             .then(data => {
@@ -346,17 +395,32 @@
 
     // // Fungsi untuk memformat angka dengan pemisah ribuan titik (.) dan tanpa koma desimal
     function formatRibuan(angka) {
-        return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return angka.toLocaleString('id-ID', { maximumFractionDigits: 0 });
     }
 
     // Panggil fungsi hitungBiayaSewa saat nilai masa pinjam berubah
     document.getElementById('masa_pinjam').addEventListener('change', hitungBiayaSewa);
     // Panggil fungsi hitungBiayaSewa saat nilai alat pancing berubah
-    var penyewaanAlatInputs = document.getElementsByName('alat_pancing_id[]');
+    var penyewaanAlatInputs = document.querySelectorAll('select[name^="alat_pancing_id"]');
+    // var penyewaanAlatInputs = document.getElementsByName('alat_pancing_id[]');
     penyewaanAlatInputs.forEach(function(input) {
         input.addEventListener('change', hitungBiayaSewa);
     });
 
+</script>
+
+<!-- Javascript Button Delete -->
+<script>
+    $(document).ready(function() {
+        // Menangani button delete
+        $(document).on('click', '.delete', function() {
+            const sewaId = $(this).data('sewaid'); 
+            $('#deleteModal').modal('show');
+  
+            // Mengubah action form berdasarkan ID transaksi yang dipilih
+            $('#deleteForm').attr('action', '/admin/penyewaanAlat/' + sewaId);
+        });
+    });
 </script>
 
 @endsection
