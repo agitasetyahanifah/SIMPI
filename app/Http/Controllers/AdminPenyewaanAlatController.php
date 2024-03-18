@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\PenyewaanAlat;
 use App\Models\AlatPancing;
+use App\Models\AlatPancingPenyewaanAlat;
 use Illuminate\Support\Facades\DB;
 
 class AdminPenyewaanAlatController extends Controller
@@ -138,6 +139,9 @@ class AdminPenyewaanAlatController extends Controller
 
     public function store(Request $request)
     {
+         // Mendapatkan data dari request
+         $data = $request->all();
+
         // Validasi input
         $validatedData = $request->validate([
             'nama_pelanggan' => 'required|string|max:255',
@@ -147,26 +151,59 @@ class AdminPenyewaanAlatController extends Controller
             'masa_pinjam' => 'required|numeric|min:1',
             'biaya_sewa' => 'required|numeric|min:0',
         ]);
+    
+        // Mulai transaksi database
+        DB::beginTransaction();
 
-        // Proses penyimpanan data ke dalam database
-        foreach ($validatedData['alat_pancing_id'] as $alatId) {
+        try {
+            // Simpan data penyewaan alat ke dalam database
             $penyewaanAlat = new PenyewaanAlat();
             $penyewaanAlat->nama_pelanggan = $validatedData['nama_pelanggan'];
             $penyewaanAlat->tgl_pinjam = $validatedData['tanggal_pinjam'];
-            $penyewaanAlat->tgl_kembali = date('Y-m-d', strtotime($validatedData['tanggal_pinjam'] . ' + ' . $validatedData['masa_pinjam'] . ' days'));
-            $penyewaanAlat->biaya_sewa = str_replace('.', '', $validatedData['biaya_sewa']);
+            $penyewaanAlat->tgl_kembali = date('Y-m-d', strtotime($validatedData['tanggal_pinjam']. ' + '. $validatedData['masa_pinjam']. ' days'));
+            $penyewaanAlat->biaya_sewa = str_replace('.', '', $validatedData['biaya_sewa']); // Hapus titik pada format ribuan
+            $penyewaanAlat->status = 'sewa';
             $penyewaanAlat->save();
-            
-            // Simpan data alat pancing yang dipilih
-            foreach ($validatedData['alat_pancing_id'] as $alatPancingId) {
-                $penyewaanAlat->alatPancing()->attach($alatPancingId);
+
+            // Mengubah data alat_pancing_ids menjadi integer
+            // $alat_pancing_ids = array_map('intval', json_decode($data['alat_pancing_id']));
+
+            // Ubah data alat_pancing_ids menjadi integer
+            $alat_pancing_ids = [];
+            dd($alat_pancing_ids);
+            foreach ($data['alat_pancing_id'] as $id) {
+                $alat_pancing_ids[] = intval($id);
             }
+
+            // Pengecekan apakah $alatPancingIds adalah array atau objek yang valid
+            if (!is_array($alat_pancing_ids) && !is_object($alat_pancing_ids)) {
+                throw new \Exception("Data alat pancing tidak valid");
+            }
+
+            foreach ($alat_pancing_ids as $alatPancingId) {
+                $alatPancingPenyewaanAlat = new AlatPancingPenyewaanAlat();
+                $alatPancingPenyewaanAlat->alat_pancing_id = $alatPancingId;
+                $alatPancingPenyewaanAlat->penyewaan_alat_id = $penyewaanAlat->id; // Sesuaikan dengan ID penyewaan alat yang sedang diproses
+                $alatPancingPenyewaanAlat->save();
+            }
+
+            // Commit transaksi jika tidak ada masalah
+            DB::commit();
+
+            // Redirect kembali dengan pesan sukses
+            return redirect()->back()->with('success', 'Data Penyewaan alat berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollback();
+
+            // Tampilkan pesan error
+            dd($e->getMessage());
+
+            // Redirect kembali dengan pesan error
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
         }
-
-        // Redirect kembali dengan pesan sukses
-        return redirect()->back()->with('success', 'Data penyewaan alat berhasil ditambahkan.');
-
-    }      
+    }
+       
 
     /**
      * Display the specified resource.

@@ -59,7 +59,7 @@
                                                 <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}">{{ $alat->nama_alat }}</option>
                                             @endif
                                         @endforeach
-                                    </select>                                    
+                                    </select>   
                                 </div>
                             </div>                            
                             <button type="button" class="btn btn-primary" onclick="tambahKolomAlatPancing()">
@@ -309,14 +309,18 @@
         var totalBiayaSewa = 0; // Variabel untuk menyimpan total biaya sewa
 
         // Loop melalui setiap alat pancing yang dipilih
+        var penyewaanAlatInputs = [];
         var penyewaanAlatInputs = document.getElementsByName('alat_pancing_id[]');
         penyewaanAlatInputs.forEach(function(input) {
             var hargaAlat = parseInt(input.options[input.selectedIndex].getAttribute('data-harga'));
+            var idAlat = parseInt(input.options[input.selectedIndex].getAttribute('value'));
             totalBiayaSewa += hargaAlat; // Tambahkan harga alat ke total biaya sewa
         });
 
         // Hitung total biaya sewa
         var biayaSewa = masaPinjam * totalBiayaSewa;
+
+        var alat_pancing_id = idAlat;
 
         // Mengisi nilai biaya sewa pada input dengan format angka ribuan
         document.getElementById('biaya_sewa').value = formatRibuan(biayaSewa);
@@ -324,6 +328,7 @@
         // Kirim data ke backend menggunakan AJAX
         var formData = new FormData(document.getElementById('form_penyewaan_alat'));
             formData.append('biaya_sewa', biayaSewa); // Tambahkan biaya sewa ke dalam formData
+            formData.append('alat_pancing_id', idAlat);
 
             // Kirim data ke backend menggunakan AJAX
             fetch('/admin/penyewaanAlat', {
