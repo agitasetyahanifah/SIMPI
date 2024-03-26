@@ -16,7 +16,7 @@ class AdminPengelolaanIkanController extends Controller
         $ikanMasuk = IkanMasuk::all();
         $ikanKeluar = IkanKeluar::all();
 
-        return view('admin.ikan.index', compact('ikanMasuk', 'ikanKeluar'));
+        return view('admin.pengelolaanIkan.index', compact('ikanMasuk', 'ikanKeluar'));
     }
 
     /**

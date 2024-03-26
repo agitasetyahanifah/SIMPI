@@ -1,6 +1,6 @@
 @extends('Admin.Layouts.main')
 
-@section('title', 'Keuangan')
+@section('title', 'Pengelolaan Ikan')
 
 @section('content')
 
@@ -20,39 +20,29 @@
     </div>
 @endif
 
-    <h1>Daftar Ikan</h1>
-    <a href="{{ route('ikans.create') }}" class="btn btn-success mb-3">Tambah Ikan</a>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Nama</th>
-                <th scope="col">Jenis</th>
-                <th scope="col">Berat</th>
-                <th scope="col">Tanggal Masuk</th>
-                <th scope="col">Tanggal Tangkap</th>
-                <th scope="col">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($ikans as $ikan)
-                <tr>
-                    <th scope="row">{{ $ikan->id }}</th>
-                    <td>{{ $ikan->nama }}</td>
-                    <td>{{ $ikan->jenis }}</td>
-                    <td>{{ $ikan->berat }}</td>
-                    <td>{{ $ikan->tanggal_masuk }}</td>
-                    <td>{{ $ikan->tanggal_tangkap }}</td>
-                    <td>
-                        <a href="{{ route('ikans.edit', $ikan->id) }}" class="btn btn-primary">Edit</a>
-                        <form action="{{ route('ikans.destroy', $ikan->id) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+<div class="container">
+    <ul class="nav nav-pills mb-3" role="tablist">
+        <li class="nav-item">
+            <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-home" aria-controls="navs-pills-top-home" aria-selected="true">Data Ikan Masuk</button>
+        </li>
+        <li class="nav-item">
+            <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-pills-top-profile" aria-controls="navs-pills-top-profile" aria-selected="false">Data Ikan Keluar</button>
+        </li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="navs-pills-top-home" role="tabpanel">
+            Content for Data Ikan Masuk
+        </div>
+        <div class="tab-pane fade" id="navs-pills-top-profile" role="tabpanel">
+            Content for Data Ikan Keluar
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
 @endsection
