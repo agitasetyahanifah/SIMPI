@@ -53,7 +53,7 @@
                             <div class="form-group">
                                 <label for="alat_pancing" class="col-form-label">Alat Pancing</label>
                                 <div id="alat_pancing_container">
-                                    <select class="form-select" name="alat_pancing_id[][id]" required>
+                                    <select class="form-select" name="alat_pancing_id[0][id]" required>
                                         @foreach($alatPancing->sortBy('nama_alat') as $alat)
                                             @if($alat->status == 'available')
                                                 <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}">{{ $alat->nama_alat }}</option>
@@ -360,20 +360,21 @@
 </script> --}}
 
 <script>
+    var i = 0;
     function tambahKolomAlatPancing() {
         var penyewaanAlatContainer = document.getElementById('alat_pancing_container');
         var newpenyewaanAlatInput = document.createElement('div');
         newpenyewaanAlatInput.classList.add('form-group');
         newpenyewaanAlatInput.classList.add('mt-3');
 
-        var kolomAlatPancing = penyewaanAlatContainer.children.length + 1; // Menghitung jumlah kolom secara manual
+        ++i;
 
         newpenyewaanAlatInput.innerHTML = `
         <div class="input-group col-md-11">
-            <select class="form-select" name="alat_pancing_id[${kolomAlatPancing}][id]" required>
+            <select class="form-select" name="alat_pancing_id[${i}][id]" required>
                 @foreach($alatPancing->sortBy('nama_alat') as $alat)
                     @if($alat->status == 'available')
-                        <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}">{{ $alat->nama_alat }}</option>
+                        <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}" data-penyewaan-alat-id="{{ $penyewaanAlatId }}">{{ $alat->nama_alat }}</option>
                     @endif
                 @endforeach
             </select> 

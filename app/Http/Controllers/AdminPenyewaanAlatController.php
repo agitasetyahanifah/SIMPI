@@ -56,10 +56,13 @@ class AdminPenyewaanAlatController extends Controller
             $penyewaanAlat->biaya_sewa = str_replace('.', '', $validatedData['biaya_sewa']);
             $penyewaanAlat->status = 'sewa';
             $penyewaanAlat->save();
-    
-            // Simpan data alat pancing yang terkait dengan penyewaan alat
-            foreach ($validatedData['alat_pancing_id'] as $alatId) {
-                $penyewaanAlat->alatPancing()->attach($alatId['id']);
+
+            // Simpan detail penyewaan alat pancing
+            foreach ($validatedData['alat_pancing_id'] as $alat) {
+                AlatPancingPenyewaanAlat::create([
+                    'penyewaan_alat_id' => $penyewaanAlat->id,
+                    'alat_pancing_id' => $alat['id'],
+                ]);
             }
     
             // Commit transaksi jika tidak ada masalah

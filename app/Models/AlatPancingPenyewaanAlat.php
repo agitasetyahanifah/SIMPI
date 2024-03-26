@@ -13,4 +13,9 @@ class AlatPancingPenyewaanAlat extends Model
 
     protected $guarded = ['id'];
 
+    public function penyewaanAlat()
+    {
+        return $this->belongsTo(PenyewaanAlat::class, 'penyewaan_alat_id');
+    }    
+
 }

@@ -15,6 +15,12 @@ class PenyewaanAlat extends Model
 
     public function alatPancing()
     {
-        return $this->belongsToMany(AlatPancing::class)->withTimestamps();
+        return $this->hasMany(AlatPancingPenyewaanAlat::class);
     }
+
+    public function alatPancingPenyewaanAlat()
+    {
+        return $this->hasMany(AlatPancingPenyewaanAlat::class, 'penyewaan_alat_id');
+    }
+
 }
