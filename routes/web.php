@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminKeuanganController;
 use App\Http\Controllers\AdminAlatPancingController;
 use App\Http\Controllers\AdminPenyewaanAlatController;
+use App\Http\Controllers\AdminPengelolaanIkanController;
 use Database\Seeders\AdminDashboardSeeder;
 use Illuminate\Support\Facades\Route;
 
@@ -34,3 +35,13 @@ Route::get('/admin/keuangan/edit/{id}', [AdminKeuanganController::class, 'edit']
 Route::put('/admin/keuangan/update/{id}', [AdminKeuanganController::class, 'update'])->name('admin.keuangan.update');
 Route::resource('/admin/alatPancing', AdminAlatPancingController::class);
 Route::resource('/admin/penyewaanAlat', AdminPenyewaanAlatController::class);
+
+
+
+
+Route::get('admin/pengelolaanIkan', [AdminPengelolaanIkanController::class, 'index'])->name('admin.ikan.index');
+Route::get('/pengelolaanIkan/create', [AdminPengelolaanIkanController::class, 'create'])->name('admin.ikan.create');
+Route::post('/pengelolaanIkan', [AdminPengelolaanIkanController::class, 'store'])->name('admin.ikan.store');
+Route::get('/pengelolaanIkan/{ikanMasuk}/edit', [AdminPengelolaanIkanController::class, 'edit'])->name('admin.ikan.edit');
+Route::put('/pengelolaanIkan/{ikanMasuk}', [AdminPengelolaanIkanController::class, 'update'])->name('admin.ikan.update');
+Route::delete('/pengelolaanIkan/{ikanMasuk}', [AdminPengelolaanIkanController::class, 'destroy'])->name('admin.ikan.destroy');
