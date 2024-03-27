@@ -35,13 +35,14 @@ Route::get('/admin/keuangan/edit/{id}', [AdminKeuanganController::class, 'edit']
 Route::put('/admin/keuangan/update/{id}', [AdminKeuanganController::class, 'update'])->name('admin.keuangan.update');
 Route::resource('/admin/alatPancing', AdminAlatPancingController::class);
 Route::resource('/admin/penyewaanAlat', AdminPenyewaanAlatController::class);
+// Rute untuk menampilkan halaman utama pengelolaan ikan
+Route::get('/admin/pengelolaanIkan', [AdminPengelolaanIkanController::class, 'index'])->name('admin.pengelolaanIkan.index');
+// Rute CRUD untuk ikan masuk
+Route::post('/admin/pengelolaanIkan/ikan-masuk/store', [AdminPengelolaanIkanController::class, 'storeIkanMasuk'])->name('admin.pengelolaan_ikan.ikan_masuk.store');
+Route::put('/admin/pengelolaanIkan/ikan-masuk/{id}/update', [AdminPengelolaanIkanController::class, 'updateIkanMasuk'])->name('admin.pengelolaan_ikan.ikan_masuk.update');
+Route::delete('/admin/pengelolaanIkan/ikan-masuk/{id}/delete', [AdminPengelolaanIkanController::class, 'deleteIkanMasuk'])->name('admin.pengelolaan_ikan.ikan_masuk.delete');
+// Rute CRUD untuk ikan keluar
+Route::post('/admin/pengelolaanIkan/ikan-keluar/store', [AdminPengelolaanIkanController::class, 'storeIkanKeluar'])->name('admin.pengelolaan_ikan.ikan_keluar.store');
+Route::put('/admin/pengelolaanIkan/ikan-keluar/{id}/update', [AdminPengelolaanIkanController::class, 'updateIkanKeluar'])->name('admin.pengelolaan_ikan.ikan_keluar.update');
+Route::delete('/admin/pengelolaanIkan/ikan-keluar/{id}/delete', [AdminPengelolaanIkanController::class, 'deleteIkanKeluar'])->name('admin.pengelolaan_ikan.ikan_keluar.delete');
 
-
-
-
-Route::get('admin/pengelolaanIkan', [AdminPengelolaanIkanController::class, 'index'])->name('admin.ikan.index');
-Route::get('/pengelolaanIkan/create', [AdminPengelolaanIkanController::class, 'create'])->name('admin.ikan.create');
-Route::post('/pengelolaanIkan', [AdminPengelolaanIkanController::class, 'store'])->name('admin.ikan.store');
-Route::get('/pengelolaanIkan/{ikanMasuk}/edit', [AdminPengelolaanIkanController::class, 'edit'])->name('admin.ikan.edit');
-Route::put('/pengelolaanIkan/{ikanMasuk}', [AdminPengelolaanIkanController::class, 'update'])->name('admin.ikan.update');
-Route::delete('/pengelolaanIkan/{ikanMasuk}', [AdminPengelolaanIkanController::class, 'destroy'])->name('admin.ikan.destroy');

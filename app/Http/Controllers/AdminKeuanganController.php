@@ -31,14 +31,6 @@ class AdminKeuanganController extends Controller
         return redirect()->route('admin.keuangan.index')->with('success', 'Transaksi berhasil ditambahkan!');
     }
 
-    public function destroy($id)
-    {
-        $keuangan = Keuangan::findOrFail($id);
-        $keuangan->delete();
-
-        return redirect()->back()->with('success', 'Transaksi berhasil dihapus.');
-    }
-
     public function edit($id)
     {
         // Mengambil data transaksi keuangan berdasarkan ID
@@ -70,6 +62,14 @@ class AdminKeuanganController extends Controller
 
         // Redirect kembali ke halaman index dengan pesan sukses
         return redirect()->route('admin.keuangan.index')->with('success', 'Transaksi berhasil diperbarui.');
+    }
+
+    public function destroy($id)
+    {
+        $keuangan = Keuangan::findOrFail($id);
+        $keuangan->delete();
+
+        return redirect()->back()->with('success', 'Transaksi berhasil dihapus.');
     }
 
 }

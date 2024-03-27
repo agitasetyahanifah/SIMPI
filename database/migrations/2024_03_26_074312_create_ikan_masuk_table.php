@@ -14,7 +14,18 @@ return new class extends Migration
         Schema::create('ikan_masuk', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal');
-            $table->string('jenis_ikan');
+            $table->enum('jenis_ikan', [
+                'Ikan Lele',
+                'Ikan Mas',
+                'Ikan Nila',
+                'Ikan Gurame',
+                'Ikan Patin',
+                'Ikan Gabus',
+                'Ikan Bawal',
+                'Ikan Kakap',
+                'Ikan Bandeng',
+                'Ikan Kerapu',
+            ])->default('Ikan Mas');
             $table->integer('jumlah');
             $table->text('catatan')->nullable();
             $table->timestamps();
