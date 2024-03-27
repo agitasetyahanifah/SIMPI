@@ -12,7 +12,7 @@ class AdminAlatPancingController extends Controller
      */
     public function index()
     {
-        $alatPancing = AlatPancing::orderBy('created_at', 'desc')->paginate(20);
+        $alatPancing = AlatPancing::orderBy('created_at', 'desc')->paginate(25);
         $lastItem = $alatPancing->lastItem();
         return view('admin.alatpancing.index', compact('alatPancing', 'lastItem'));
     }

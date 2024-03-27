@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminKeuanganController;
 use App\Http\Controllers\AdminAlatPancingController;
+use App\Http\Controllers\AdminBlogController;
 use App\Http\Controllers\AdminPenyewaanAlatController;
 use App\Http\Controllers\AdminPengelolaanIkanController;
 use Database\Seeders\AdminDashboardSeeder;
@@ -49,4 +50,5 @@ Route::delete('/admin/pengelolaanIkan/ikan-masuk/{id}/delete', [AdminPengelolaan
 Route::post('/admin/pengelolaanIkan/ikan-keluar/store', [AdminPengelolaanIkanController::class, 'storeIkanKeluar'])->name('admin.pengelolaan_ikan.ikan_keluar.store');
 Route::put('/admin/pengelolaanIkan/ikan-keluar/{id}/update', [AdminPengelolaanIkanController::class, 'updateIkanKeluar'])->name('admin.pengelolaan_ikan.ikan_keluar.update');
 Route::delete('/admin/pengelolaanIkan/ikan-keluar/{id}/delete', [AdminPengelolaanIkanController::class, 'deleteIkanKeluar'])->name('admin.pengelolaan_ikan.ikan_keluar.delete');
-
+// Rute blog
+Route::resource('/admin/blog', AdminBlogController::class);

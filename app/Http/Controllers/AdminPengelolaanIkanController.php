@@ -13,9 +13,9 @@ class AdminPengelolaanIkanController extends Controller
      */
     public function index()
     {
-        $ikanMasuk = IkanMasuk::orderBy('tanggal', 'desc')->paginate(30);
+        $ikanMasuk = IkanMasuk::orderBy('tanggal', 'desc')->paginate(25);
         $lastItem1 = $ikanMasuk->lastItem();
-        $ikanKeluar = IkanKeluar::orderBy('tanggal', 'desc')->paginate(30);
+        $ikanKeluar = IkanKeluar::orderBy('tanggal', 'desc')->paginate(25);
         $lastItem2 = $ikanKeluar->lastItem();
 
         return view('admin.pengelolaanIkan.index', compact('ikanMasuk', 'ikanKeluar', 'lastItem1', 'lastItem2'));
