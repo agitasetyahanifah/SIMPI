@@ -25,7 +25,7 @@
       <div class="col-12">
         <div class="card mb-0">
           <div class="card-header pb-0">
-            <h5 class="font-weight-bolder mb-0">Daftar Alat Pancing</h5>
+            <h4 class="font-weight-bolder mb-0">Daftar Alat Pancing</h4>
             {{-- Button Tambah Alat Pancing --}}
             <form action="/admin/alatPancing" method="post" enctype="multipart/form-data">
               @csrf

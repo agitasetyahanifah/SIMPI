@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('ikan_keluar', function (Blueprint $table) {
             $table->id();
+            $table->date('tanggal');
+            $table->string('jenis_ikan');
+            $table->integer('jumlah');
+            $table->string('kondisi_ikan');
+            $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }

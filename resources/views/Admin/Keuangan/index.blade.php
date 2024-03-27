@@ -25,7 +25,7 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header pb-0">
-            <h5 class="font-weight-bolder mb-0">Manajemen Keuangan</h5>
+            <h4 class="font-weight-bolder mb-0">Manajemen Keuangan</h4>
             {{-- Button Tambah --}}
             <form action="/admin/keuangan/store" method="post">
                 @csrf

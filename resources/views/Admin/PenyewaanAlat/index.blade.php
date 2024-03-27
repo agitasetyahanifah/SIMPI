@@ -25,7 +25,7 @@
       <div class="col-12">
         <div class="card mb-0">
           <div class="card-header pb-0">
-            <h5 class="font-weight-bolder mb-0">Penyewaan Alat Pancing</h5>
+            <h4 class="font-weight-bolder mb-0">Penyewaan Alat Pancing</h4>
             {{-- Button Tambah Alat Pancing --}}
             <form action="/admin/penyewaanAlat" method="POST">
                 @csrf
