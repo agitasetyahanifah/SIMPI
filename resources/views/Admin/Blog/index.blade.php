@@ -77,15 +77,13 @@
               <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th class="text-center">No</th>
+                    <th>No</th>
                     <th>Judul</th>
-                    <th>Jumlah</th>
-                    <th>Jenis Transaksi</th>
-                    <th>Keterangan</th>
+                    <th>Kategori</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
-                <tbody>
+                {{-- <tbody>
                     @php
                         $currentNumber = $lastItem - $keuangans->count() + 1;
                     @endphp
@@ -102,17 +100,17 @@
                         </td>
                     </tr>
                     @endforeach
-                </tbody>
+                </tbody> --}}
               </table>
             </div>
             
             {{-- Cek ada data atau kosong --}}
-            @if($keuangans->isEmpty())
+            {{-- @if($keuangans->isEmpty())
                 <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
-            @endif 
+            @endif  --}}
 
             <!-- Modal Edit Transaksi -->
-            @foreach ($keuangans as $keuangan)
+            {{-- @foreach ($keuangans as $keuangan)
             <div class="modal fade" id="editModal{{ $keuangan->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $keuangan->id }}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -152,9 +150,10 @@
                     </div>
                 </div>
             </div>
-            @endforeach        
+            @endforeach         --}}
+
             <!-- Modal Delete -->
-            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            {{-- <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -174,10 +173,10 @@
                         </div>                                    
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Pagination -->
-            <nav class="p-3" aria-label="Pagination">
+            {{-- <nav class="p-3" aria-label="Pagination">
                 <ul class="pagination">
                     <li class="page-item {{ $keuangans->onFirstPage() ? 'disabled' : '' }}">
                         <a class="page-link" href="{{ $keuangans->previousPageUrl() ?? '#' }}" tabindex="-1">
@@ -198,7 +197,7 @@
                         </a>
                     </li>
                 </ul>
-            </nav>
+            </nav> --}}
             <!-- End Pagination -->
           </div>
         </div>
@@ -208,7 +207,7 @@
 </div>
 
 <!-- Javascript Button Delete -->
-<script>
+{{-- <script>
     $(document).ready(function() {
         // Menangani button delete
         $(document).on('click', '.delete', function() {
@@ -219,7 +218,7 @@
             $('#deleteForm').attr('action', '/admin/keuangan/' + transaksiId);
         });
     });
-</script>
+</script> --}}
 
 @endsection
 

@@ -87,7 +87,7 @@
               <table class="table align-items-center mb-0">
                 <thead>
                   <tr>
-                    <th>No</th>
+                    <th class="text-center">No</th>
                     <th>Alat Pancing</th>
                     <th class="text-center">Jumlah</th>
                     <th class="text-center">Status</th>
@@ -102,7 +102,7 @@
                     @foreach($alatPancing as $key => $alat)
                     <tr>
                       <td>
-                        <p class="text-sm font-weight-bold mb-0 ps-4">{{ $currentNumber++ }}</p>
+                        <p class="text-center">{{ $currentNumber++ }}</p>
                       </td>
                       <td>
                         <div class="d-flex px-2 py-1">
