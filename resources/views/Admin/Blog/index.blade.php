@@ -77,37 +77,36 @@
               <table class="table table-hover">
                 <thead>
                   <tr>
-                    <th>No</th>
+                    <th class="text-center">No</th>
                     <th>Judul</th>
                     <th>Kategori</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
-                {{-- <tbody>
+                <tbody>
                     @php
-                        $currentNumber = $lastItem - $keuangans->count() + 1;
+                        $currentNumber = $lastItem - $blogs->count() + 1;
                     @endphp
-                    @foreach ($keuangans as $key => $keuangan)
+                    @foreach ($blogs as $key => $blog)
                     <tr>
                         <td class="text-center">{{ $currentNumber++ }}</td>
-                        <td>{{ $keuangan->tanggal_transaksi }}</td>
-                        <td>{{ number_format($keuangan->jumlah, 0, ',', '.') }}</td>
-                        <td>{{ $keuangan->jenis_transaksi }}</td>
-                        <td class="keterangan-column">{{ $keuangan->keterangan }}</td>
+                        <td>{{ $blog->judul }}</td>
+                        <td>{{ $blog->kategori }}</td>
                         <td class="text-align-end">
-                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $keuangan->id }}"><i class="fas fa-edit"></i></a>
-                            <button class="btn btn-danger delete" data-transaksiid="{{ $keuangan->id }}"><i class="fas fa-trash"></i></button>                            
+                            <a class="btn btn-info"><i class="fas fa-eye"></i></a>
+                            <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $blog->id }}"><i class="fas fa-edit"></i></a>
+                            <button class="btn btn-danger delete" data-transaksiid="{{ $blog->id }}"><i class="fas fa-trash"></i></button>                            
                         </td>
                     </tr>
                     @endforeach
-                </tbody> --}}
+                </tbody>
               </table>
             </div>
             
             {{-- Cek ada data atau kosong --}}
-            {{-- @if($keuangans->isEmpty())
+            @if($blogs->isEmpty())
                 <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
-            @endif  --}}
+            @endif 
 
             <!-- Modal Edit Transaksi -->
             {{-- @foreach ($keuangans as $keuangan)

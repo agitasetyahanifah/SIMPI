@@ -14,7 +14,8 @@ class AdminBlogController extends Controller
     public function index()
     {
         $blogs = Blog::latest()->paginate(25);
-        return view('admin.blog.index', compact('blogs'));
+        $lastItem = $blogs->lastItem();
+        return view('admin.blog.index', compact('blogs','lastItem'));
     }
 
     /**
