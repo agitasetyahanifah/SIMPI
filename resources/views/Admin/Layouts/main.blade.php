@@ -62,8 +62,14 @@
     text-overflow: ellipsis; /* Teks yang disembunyikan akan ditampilkan sebagai elipsis (...) */
     white-space: nowrap; /* Tekst tidak akan mematahkan baris */
   }
-
   </style>
+
+  <style>
+      trix-toolbar [data-trix-button-group="file-tools"] {
+      display: none;
+    }
+  </style>
+  
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
