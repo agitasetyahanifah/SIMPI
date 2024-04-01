@@ -27,41 +27,48 @@
           <div class="card-header pb-0">
             <h4 class="font-weight-bolder mb-0">Blog/Artikel Pemancingan</h4>
             {{-- Button Tambah --}}
-            <form action="#" method="post">
+            <form action="/admin/blog" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="col-12 text-end">
                   <button class="btn btn-outline-primary mb-0" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
                 </div>
           </div>
           <!-- Modal Tambah Transaksi -->
-          {{-- <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Transaksi</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Blog/Artikel Pemancingan</h5>
                 <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="tanggal_transaksi" class="col-form-label">Tanggal Transaksi</label>
-                        <input type="date" class="form-control" id="tanggal_transaksi" name="tanggal_transaksi" required>
+                        <label for="judul" class="col-form-label">Judul</label>
+                        <input type="text" class="form-control" id="judul" name="judul" required>
                     </div>
                     <div class="form-group">
-                        <label for="jumlah" class="col-form-label">Jumlah</label>
-                        <input type="number" class="form-control" id="jumlah" name="jumlah" required>
+                        <label for="slug" class="col-form-label">slug</label>
+                        <input type="text" class="form-control" id="slug" name="slug" required>
                     </div>
                     <div class="form-group">
-                        <label for="jenis_transaksi" class="col-form-label">Jenis Transaksi</label>
-                        <select class="form-select" id="jenis_transaksi" name="jenis_transaksi" required>
-                            <option value="pemasukan">Pemasukan</option>
-                            <option value="pengeluaran">Pengeluaran</option>
+                        <label for="kategori" class="col-form-label">Kategori</label>
+                        <select class="form-select" id="kategori" name="kategori" required>
+                            <option value="Pemancingan">Pemancingan</option>
+                            <option value="Tips & Trik">Tips & Trik</option>
+                            <option value="Jenis-Jenis Ikan">Jenis-Jenis Ikan</option>
+                            <option value="Alat Pancing">Alat Pancing</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="keterangan" class="col-form-label">Keterangan</label>
-                        <textarea class="form-control" id="keterangan" name="keterangan" rows="3"></textarea>
+                        <label for="image" class="col-form-label">Upload Image</label>
+                        <input type="file" class="form-control" id="image" name="image" required accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label for="body" class="col-form-label">Body</label>
+                        <input type="hidden" class="form-control" id="body" name="body" required>
+                        <trix-editor input="body"></trix-editor>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -71,7 +78,7 @@
             </form>
             </div>
             </div>
-          </div> --}}
+          </div>
           <div class="card-body ">
             <div class="table-responsive p-0">
               <table class="table table-hover">
