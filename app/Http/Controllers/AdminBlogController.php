@@ -43,10 +43,14 @@ class AdminBlogController extends Controller
 
         $blog = new Blog();
         $blog->judul = $validated['judul'];
-        $blog->slug = Str::slug($validated['judul']); // Use Str::slug directly without \
+        $blog->slug = Str::slug($validated['judul']);
         $blog->kategori = $validated['kategori'];
         $blog->image = $imagePath;
-        $blog->body = $validated['body'];
+
+        // Strip tags from body content
+        $cleanedBody = strip_tags($validated['body']);
+
+        $blog->body = $cleanedBody;
         $blog->save();
 
         return redirect()->back()->with('success', 'Blog berhasil ditambahkan.');

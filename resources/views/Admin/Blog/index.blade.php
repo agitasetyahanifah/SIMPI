@@ -115,48 +115,57 @@
                 <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
             @endif 
 
-            <!-- Modal Edit Transaksi -->
-            {{-- @foreach ($keuangans as $keuangan)
-            <div class="modal fade" id="editModal{{ $keuangan->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $keuangan->id }}" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
+            <!-- Modal Edit Blog -->
+            @foreach ($blogs as $blog)
+            <div class="modal fade" id="editModal{{ $blog->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $blog->id }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="editModalLabel{{ $keuangan->id }}">Edit Transaksi</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <h5 class="modal-title" id="editModalTitle">Edit Blog/Artikel Pemancingan</h5>
+                            <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
                         </div>
-                        <form action="/admin/keuangan/update/{{ $keuangan->id }}" method="post">
-                            @csrf
-                            @method('PUT')
-                            <div class="modal-body">
+                        <div class="modal-body">
+                            <form action="/admin/blog/{{ $blog->id }}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                @method('PUT')
                                 <div class="form-group">
-                                    <label for="edit_tanggal_transaksi">Tanggal Transaksi</label>
-                                    <input type="date" class="form-control" id="edit_tanggal_transaksi" name="edit_tanggal_transaksi" value="{{ $keuangan->tanggal_transaksi }}" required>
+                                    <label for="edit_judul" class="col-form-label">Judul</label>
+                                    <input type="text" class="form-control" id="edit_judul" name="judul" value="{{ $blog->judul }}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="edit_jumlah">Jumlah</label>
-                                    <input type="number" class="form-control" id="edit_jumlah" name="edit_jumlah" value="{{ $keuangan->jumlah }}" required>
+                                    <label for="edit_slug" class="col-form-label">Slug</label>
+                                    <input type="text" class="form-control" id="edit_slug" name="slug" value="{{ $blog->slug }}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="edit_jenis_transaksi">Jenis Transaksi</label>
-                                    <select class="form-select" id="edit_jenis_transaksi" name="edit_jenis_transaksi" required>
-                                        <option value="pemasukan" {{ $keuangan->jenis_transaksi == 'pemasukan' ? 'selected' : '' }}>Pemasukan</option>
-                                        <option value="pengeluaran" {{ $keuangan->jenis_transaksi == 'pengeluaran' ? 'selected' : '' }}>Pengeluaran</option>
+                                    <label for="edit_kategori" class="col-form-label">Kategori</label>
+                                    <select class="form-select" id="edit_kategori" name="kategori" required>
+                                        <option value="Pemancingan" {{ $blog->kategori === 'Pemancingan' ? 'selected' : '' }}>Pemancingan</option>
+                                        <option value="Tips & Trik" {{ $blog->kategori === 'Tips & Trik' ? 'selected' : '' }}>Tips & Trik</option>
+                                        <option value="Jenis-Jenis Ikan" {{ $blog->kategori === 'Jenis-Jenis Ikan' ? 'selected' : '' }}>Jenis-Jenis Ikan</option>
+                                        <option value="Alat Pancing" {{ $blog->kategori === 'Alat Pancing' ? 'selected' : '' }}>Alat Pancing</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="edit_keterangan">Keterangan</label>
-                                    <textarea class="form-control" id="edit_keterangan" name="edit_keterangan" rows="3">{{ $keuangan->keterangan }}</textarea>
+                                    <label for="edit_image" class="col-form-label">Upload Image</label>
+                                    <input type="file" class="form-control" id="edit_image" name="image" accept="image/*">
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="submit" class="btn btn-primary">Simpan</button>
-                            </div>
+                                <div class="form-group">
+                                    <label for="body" class="col-form-label">Body</label>
+                                    <input type="hidden" class="form-control" id="body" name="body" value="{!! nl2br(e($blog->body)) !!}">
+                                    <trix-editor input="body"></trix-editor>
+                                </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn bg-gradient-primary">Update</button>
+                        </div>
                         </form>
                     </div>
                 </div>
-            </div>
-            @endforeach         --}}
+            </div>            
+            @endforeach        
 
             <!-- Modal Delete -->
             <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">

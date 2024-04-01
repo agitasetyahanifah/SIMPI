@@ -71,11 +71,7 @@ class AdminAlatPancingController extends Controller
      */
     public function edit($id)
     {
-        // Temukan data alat pancing berdasarkan ID
-        $alatPancing = AlatPancing::findOrFail($id);
-
-        // Tampilkan view untuk form edit dengan data alat pancing yang ditemukan
-        return view('Admin.AlatPancing.edit', compact('alatPancing'));
+        //
     }
 
     public function update(Request $request, $id)
