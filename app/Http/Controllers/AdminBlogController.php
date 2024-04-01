@@ -35,7 +35,7 @@ class AdminBlogController extends Controller
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
             'kategori' => 'required|string',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10048',
             'body' => 'required|string',
         ]);
 
@@ -95,11 +95,15 @@ class AdminBlogController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Blog $blog)
+    public function destroy(String $id)
     {
-        $blog->delete();
+        $blogs = Blog::findOrFail($id);
 
-        return redirect()->route('blogs.index')->with('success', 'Blog berhasil dihapus.');
+        // Hapus blog dari database
+        $blogs->delete();
+
+        // Redirect kembali ke halaman ddaftar blog dengan pesan sukses
+        return redirect()->back()->with('success', 'Blog berhasil dihapus.');
     }
 
     public function checkSlug(Request $request)

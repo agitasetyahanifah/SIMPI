@@ -102,7 +102,7 @@
                         <td class="text-align-end">
                             <a class="btn btn-info"><i class="fas fa-eye"></i></a>
                             <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $blog->id }}"><i class="fas fa-edit"></i></a>
-                            <button class="btn btn-danger delete" data-transaksiid="{{ $blog->id }}"><i class="fas fa-trash"></i></button>                            
+                            <button class="btn btn-danger delete" data-blogid="{{ $blog->id }}"><i class="fas fa-trash"></i></button>                            
                         </td>
                     </tr>
                     @endforeach
@@ -159,7 +159,7 @@
             @endforeach         --}}
 
             <!-- Modal Delete -->
-            {{-- <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -179,31 +179,31 @@
                         </div>                                    
                     </div>
                 </div>
-            </div> --}}
+            </div>
 
             <!-- Pagination -->
-            {{-- <nav class="p-3" aria-label="Pagination">
+            <nav class="p-3" aria-label="Pagination">
                 <ul class="pagination">
-                    <li class="page-item {{ $keuangans->onFirstPage() ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ $keuangans->previousPageUrl() ?? '#' }}" tabindex="-1">
+                    <li class="page-item {{ $blogs->onFirstPage() ? 'disabled' : '' }}">
+                        <a class="page-link" href="{{ $blogs->previousPageUrl() ?? '#' }}" tabindex="-1">
                             <i class="fa fa-angle-left"></i>
                             <span class="sr-only">Previous</span>
                         </a>
                     </li>
                     <!-- Tampilkan nomor halaman -->
-                    @for ($i = 1; $i <= $keuangans->lastPage(); $i++)
-                        <li class="page-item {{ $keuangans->currentPage() == $i ? 'active' : '' }}">
-                            <a class="page-link" href="{{ $keuangans->url($i) }}">{{ $i }}</a>
+                    @for ($i = 1; $i <= $blogs->lastPage(); $i++)
+                        <li class="page-item {{ $blogs->currentPage() == $i ? 'active' : '' }}">
+                            <a class="page-link" href="{{ $blogs->url($i) }}">{{ $i }}</a>
                         </li>
                     @endfor
-                    <li class="page-item {{ $keuangans->hasMorePages() ? '' : 'disabled' }}">
-                        <a class="page-link" href="{{ $keuangans->nextPageUrl() ?? '#' }}">
+                    <li class="page-item {{ $blogs->hasMorePages() ? '' : 'disabled' }}">
+                        <a class="page-link" href="{{ $blogs->nextPageUrl() ?? '#' }}">
                             <i class="fa fa-angle-right"></i>
                             <span class="sr-only">Next</span>
                         </a>
                     </li>
                 </ul>
-            </nav> --}}
+            </nav>
             <!-- End Pagination -->
           </div>
         </div>
@@ -213,18 +213,18 @@
 </div>
 
 <!-- Javascript Button Delete -->
-{{-- <script>
+<script>
     $(document).ready(function() {
         // Menangani button delete
         $(document).on('click', '.delete', function() {
-            const transaksiId = $(this).data('transaksiid'); // Perhatikan penggunaan snake_case di sini
+            const blogId = $(this).data('blogid');
             $('#deleteModal').modal('show');
 
-            // Mengubah action form berdasarkan ID transaksi yang dipilih
-            $('#deleteForm').attr('action', '/admin/keuangan/' + transaksiId);
+            // Mengubah action form berdasarkan ID blog yang dipilih
+            $('#deleteForm').attr('action', '/admin/blog/' + blogId);
         });
     });
-</script> --}}
+</script>
 
 
 <!-- Javascript untuk Mengisi Slug Otomatis -->
