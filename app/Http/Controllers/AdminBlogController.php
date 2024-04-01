@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Blog;
+use Cviebrock\EloquentSluggable\Services\SlugService;
 
 class AdminBlogController extends Controller
 {
@@ -48,7 +49,7 @@ class AdminBlogController extends Controller
         $blog->body = $validated['body'];
         $blog->save();
 
-        return redirect()->route('blogs.index')->with('success', 'Blog berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Blog berhasil ditambahkan.');
     }
 
     /**
@@ -99,5 +100,11 @@ class AdminBlogController extends Controller
         $blog->delete();
 
         return redirect()->route('blogs.index')->with('success', 'Blog berhasil dihapus.');
+    }
+
+    public function checkSlug(Request $request)
+    {
+        $slug = SlugService::createSlug(Blog::class, 'slug', $request->judul);
+        return response()->json(['slug' => $slug]);
     }
 }

@@ -51,4 +51,5 @@ Route::post('/admin/pengelolaanIkan/ikan-keluar/store', [AdminPengelolaanIkanCon
 Route::put('/admin/pengelolaanIkan/ikan-keluar/{id}/update', [AdminPengelolaanIkanController::class, 'updateIkanKeluar'])->name('admin.pengelolaan_ikan.ikan_keluar.update');
 Route::delete('/admin/pengelolaanIkan/ikan-keluar/{id}/delete', [AdminPengelolaanIkanController::class, 'deleteIkanKeluar'])->name('admin.pengelolaan_ikan.ikan_keluar.delete');
 // Rute blog
+Route::get('/admin/blog/checkSlug', [AdminBlogController::class, 'checkSlug'])->name('admin.blog.checkSlug');
 Route::resource('/admin/blog', AdminBlogController::class);

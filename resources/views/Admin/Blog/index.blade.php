@@ -226,6 +226,32 @@
     });
 </script> --}}
 
+
+<!-- Javascript untuk Mengisi Slug Otomatis -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const judul = document.querySelector('#judul');
+        const slug = document.querySelector('#slug');
+
+        judul.addEventListener('input', function() {
+            const judulValue = judul.value.trim(); // Menghapus spasi di awal dan akhir judul
+            const slugValue = slugify(judulValue); // Mengubah judul menjadi slug
+
+            slug.value = slugValue; // Mengisi nilai slug input dengan slug yang dihasilkan
+        });
+
+        // Fungsi untuk mengubah teks menjadi slug
+        function slugify(text) {
+            return text.toString().toLowerCase()
+                .replace(/\s+/g, '-')           // Ganti spasi dengan -
+                .replace(/[^\w\-]+/g, '')       // Hapus karakter selain huruf, angka, dan -
+                .replace(/\-\-+/g, '-')         // Ganti beberapa - berurutan dengan satu -
+                .replace(/^-+/, '')             // Hapus - di awal teks
+                .replace(/-+$/, '');            // Hapus - di akhir teks
+        }
+    });
+</script>
+
 @endsection
 
 
