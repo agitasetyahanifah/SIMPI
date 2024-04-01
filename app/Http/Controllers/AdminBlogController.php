@@ -46,11 +46,7 @@ class AdminBlogController extends Controller
         $blog->slug = Str::slug($validated['judul']);
         $blog->kategori = $validated['kategori'];
         $blog->image = $imagePath;
-
-        // Strip tags from body content
-        $cleanedBody = strip_tags($validated['body']);
-
-        $blog->body = $cleanedBody;
+        $blog->body = $validated['body'];
         $blog->save();
 
         return redirect()->back()->with('success', 'Blog berhasil ditambahkan.');
@@ -94,7 +90,7 @@ class AdminBlogController extends Controller
         $blog->body = $validated['body'];
         $blog->save();
 
-        return redirect()->route('blogs.index')->with('success', 'Blog berhasil diperbarui.');
+        return redirect()->back()->with('success', 'Blog berhasil diperbarui.');
     }
     /**
      * Remove the specified resource from storage.

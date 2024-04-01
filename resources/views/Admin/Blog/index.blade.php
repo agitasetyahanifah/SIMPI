@@ -100,7 +100,7 @@
                         <td>{{ $blog->judul }}</td>
                         <td>{{ $blog->kategori }}</td>
                         <td class="text-align-end">
-                            <a class="btn btn-info"><i class="fas fa-eye"></i></a>
+                            <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailModal{{ $blog->id }}"><i class="fas fa-eye"></i></a>
                             <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $blog->id }}"><i class="fas fa-edit"></i></a>
                             <button class="btn btn-danger delete" data-blogid="{{ $blog->id }}"><i class="fas fa-trash"></i></button>                            
                         </td>
@@ -152,9 +152,9 @@
                                     <input type="file" class="form-control" id="edit_image" name="image" accept="image/*">
                                 </div>
                                 <div class="form-group">
-                                    <label for="body" class="col-form-label">Body</label>
-                                    <input type="hidden" class="form-control" id="body" name="body" value="{!! nl2br(e($blog->body)) !!}">
-                                    <trix-editor input="body"></trix-editor>
+                                    <label for="edit_body" class="col-form-label">Body</label>
+                                    <input type="hidden" id="edit_body" name="body" value="{{ $blog->body }}">
+                                    <trix-editor input="edit_body"></trix-editor>
                                 </div>
                         </div>
                         <div class="modal-footer">
@@ -165,7 +165,44 @@
                     </div>
                 </div>
             </div>            
-            @endforeach        
+            @endforeach   
+            
+            {{-- Modal Detail Blog --}}
+            @foreach ($blogs as $blog)
+            <div class="modal fade" id="detailModal{{ $blog->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $blog->id }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="detailModalTitle">Detail Blog/Artikel Pemancingan</h5>
+                            <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="detail_judul" class="col-form-label">Judul</label>
+                                <input type="text" class="form-control" id="detail_judul" name="judul" value="{{ $blog->judul }}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="detail_slug" class="col-form-label">Slug</label>
+                                <input type="text" class="form-control" id="detail_slug" name="slug" value="{{ $blog->slug }}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="detail_kategori" class="col-form-label">Kategori</label>
+                                <input type="text" class="form-control" id="detail_kategori" name="kategori" value="{{ $blog->kategori }}" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="detail_body" class="col-form-label">Body</label>
+                                <textarea class="form-control" id="detail_body" name="body" rows="10" readonly>{{ $blog->body }}</textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
 
             <!-- Modal Delete -->
             <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
