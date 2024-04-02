@@ -31,9 +31,33 @@
             <form action="/admin/pengelolaanIkan/tambahIkan" method="post">
                 @csrf
                 <div class="col-12 text-end">
-                  <button class="btn btn-outline-primary mb-0" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
+                  <button class="btn btn-outline-primary mb-0" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal">Tambah</button>
                 </div>
           </div>
+
+          {{-- Modal Tambah Jenis Ikan --}}
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Tambah Jenis Ikan</h5>
+                    <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="jenis_ikan" class="col-form-label">Jenis Ikan</label>
+                            <input type="text" class="form-control" id="jenis_ikan" name="jenis_ikan" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn bg-gradient-primary">Simpan</button>
+                    </div>
+                </div>
+                </div>
+            </div>
 
           <div class="card-body ">
             <div class="table-responsive p-0">
