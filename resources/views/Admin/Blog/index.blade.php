@@ -33,6 +33,7 @@
                   <button class="btn btn-outline-primary mb-0" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
                 </div>
           </div>
+          
           <!-- Modal Tambah Transaksi -->
           <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
@@ -79,6 +80,7 @@
             </div>
             </div>
           </div>
+
           <div class="card-body ">
             <div class="table-responsive p-0">
               <table class="table table-hover">
@@ -168,31 +170,8 @@
             @endforeach   
             
             {{-- Modal Detail Blog --}}
-            {{-- @foreach ($blogs as $blog)
-            <div class="modal fade" id="detailModal2{{ $blog->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $blog->id }}" aria-hidden="true">
-                <div class="modal-dialog modal-fullscreen" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 >Detail Blog/Artikel Pemancingan</h4>
-                            <button type="button" class="btn-close btn-close-white position-absolute top-2 end-1" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="container">
-                                <div class="row">
-                                    <h3>{{ $blog->judul }}</h3>
-                                    <a style="color: grey">Slug: {{ $blog->slug }}   |   Kategori: {{ $blog->kategori }}</a>
-                                    <img src="{{ asset('images/'.$blog->image) }}" alt="" class="img-fluid p-2">
-                                    {!! $blog->body !!}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            @endforeach --}}
-
             @foreach ($blogs as $blog)
-            <div class="modal fade" id="detailModal{{ $blog->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $blog->id }}" aria-hidden="true">
+              <div class="modal fade" id="detailModal{{ $blog->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $blog->id }}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-xl">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -217,7 +196,7 @@
                   </div>
                 </div>
               </div>
-              @endforeach
+            @endforeach
 
             <!-- Modal Delete -->
             <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">

@@ -42,6 +42,9 @@ Route::resource('/admin/alatPancing', AdminAlatPancingController::class);
 Route::resource('/admin/penyewaanAlat', AdminPenyewaanAlatController::class);
 // Rute untuk menampilkan halaman utama pengelolaan ikan
 Route::get('/admin/pengelolaanIkan', [AdminPengelolaanIkanController::class, 'index'])->name('admin.pengelolaanIkan.index');
+// Rute untuk jenis ikan
+Route::post('/admin/pengelolaanIkan/tambahIkan', [AdminPengelolaanIkanController::class, 'storeJenisIkan'])->name('admin.pengelolaan_ikan.jenis_ikan.store');
+Route::delete('/admin/pengelolaanIkan/hapusIkan/{id}/delete', [AdminPengelolaanIkanController::class, 'deleteJenisIkan'])->name('admin.pengelolaan_ikan.jenis_ikan.delete');
 // Rute CRUD untuk ikan masuk
 Route::post('/admin/pengelolaanIkan/ikan-masuk/store', [AdminPengelolaanIkanController::class, 'storeIkanMasuk'])->name('admin.pengelolaan_ikan.ikan_masuk.store');
 Route::put('/admin/pengelolaanIkan/ikan-masuk/{id}/update', [AdminPengelolaanIkanController::class, 'updateIkanMasuk'])->name('admin.pengelolaan_ikan.ikan_masuk.update');
@@ -53,3 +56,4 @@ Route::delete('/admin/pengelolaanIkan/ikan-keluar/{id}/delete', [AdminPengelolaa
 // Rute blog
 Route::get('/admin/blog/checkSlug', [AdminBlogController::class, 'checkSlug'])->name('admin.blog.checkSlug');
 Route::resource('/admin/blog', AdminBlogController::class);
+// Rute Manajemen Member

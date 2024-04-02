@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\IkanMasuk;
 use App\Models\IkanKeluar;
+use App\Models\JenisIkan;
 
 class AdminPengelolaanIkanController extends Controller
 {
@@ -17,8 +18,10 @@ class AdminPengelolaanIkanController extends Controller
         $lastItem1 = $ikanMasuk->lastItem();
         $ikanKeluar = IkanKeluar::orderBy('tanggal', 'desc')->paginate(25);
         $lastItem2 = $ikanKeluar->lastItem();
+        $jenisIkan = JenisIkan::paginate(5);
+        $lastItem3 = $jenisIkan->lastItem();
 
-        return view('admin.pengelolaanIkan.index', compact('ikanMasuk', 'ikanKeluar', 'lastItem1', 'lastItem2'));
+        return view('admin.pengelolaanIkan.index', compact('ikanMasuk', 'ikanKeluar', 'lastItem1', 'lastItem2','jenisIkan', 'lastItem3'));
     }
 
     /**
@@ -76,6 +79,22 @@ class AdminPengelolaanIkanController extends Controller
     
         // Redirect atau berikan respons sesuai kebutuhan Anda
         return redirect()->route('admin.pengelolaanIkan.index')->with('success', 'Data ikan keluar berhasil ditambahkan.');
+    }
+
+    public function storeJenisIkan(Request $request)
+    {
+        // Validasi data yang diterima dari form
+        $validatedData = $request->validate([
+            'jenis_ikan' => 'required',
+        ]);
+    
+        // Simpan data ke database
+        $jenisIkan = new JenisIkan();
+        $jenisIkan->jenis_ikan = $validatedData['jenis_ikan'];
+        $jenisIkan->save();
+    
+        // Redirect atau berikan respons sesuai kebutuhan Anda
+        return redirect()->route('admin.pengelolaanIkan.index')->with('success', 'Data jenis ikan berhasil ditambahkan.');
     }
 
     /**
@@ -172,5 +191,17 @@ class AdminPengelolaanIkanController extends Controller
     
         // Redirect atau berikan respons sesuai kebutuhan Anda
         return redirect()->route('admin.pengelolaanIkan.index')->with('success', 'Data ikan keluar berhasil dihapus.');
+    }
+
+    public function deleteJenisIkan($id)
+    {
+        // Cari data ikan masuk berdasarkan ID
+        $jenisIkan = JenisIkan::findOrFail($id);
+    
+        // Hapus data ikan masuk
+        $jenisIkan->delete();
+    
+        // Redirect atau berikan respons sesuai kebutuhan Anda
+        return redirect()->route('admin.pengelolaanIkan.index')->with('success', 'Data jenis ikan berhasil dihapus.');
     }
 }

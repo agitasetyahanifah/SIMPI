@@ -20,13 +20,112 @@
     </div>
 @endif
 
+{{-- Tambah Jenis Ikan --}}
+<div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header pb-0">
+            <h4 class="font-weight-bolder mb-0">Jenis Ikan</h4>
+            {{-- Button Tambah --}}
+            <form action="/admin/pengelolaanIkan/tambahIkan" method="post">
+                @csrf
+                <div class="col-12 text-end">
+                  <button class="btn btn-outline-primary mb-0" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
+                </div>
+          </div>
+
+          <div class="card-body ">
+            <div class="table-responsive p-0">
+              <table class="table table-hover">
+                <thead>
+                    <th>No</th>
+                    <th>Jenis Ikan</th>
+                    <th>Aksi</th>
+                </thead>
+                <tbody>
+                    @php
+                        $currentNumber = $lastItem3 - $jenisIkan->count() + 1;
+                    @endphp
+                    @foreach ($jenisIkan as $key => $jenis_ikan)
+                    <tr>
+                        <td>{{ $currentNumber++ }}</td>
+                        <td>{{ $jenis_ikan->jenis_ikan }}</td>
+                        <td class="text-align-end">
+                            <button class="btn btn-danger delete3" data-ikanid="{{ $jenis_ikan->id }}"><i class="fas fa-trash"></i></button>                            
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+              </table>
+            </div>
+            
+            {{-- Cek ada data atau kosong --}}
+            @if($jenisIkan->isEmpty())
+                <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+            @endif 
+
+            <!-- Modal Delete -->
+            <div class="modal fade" id="deleteModal3" tabindex="-1" aria-labelledby="deleteModalLabel3" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Apakah Anda yakin ingin menghapus transaksi ini?
+                        </div>
+                        <div class="modal-footer">
+                            <form id="deleteForm3" action="/admin/pengelolaanIkan/hapusIkan/{id}/delete" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-danger" id="confirmDelete">Hapus</button>
+                            </form>
+                        </div>                                    
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <nav class="p-3" aria-label="Pagination">
+                <ul class="pagination">
+                    <li class="page-item {{ $jenisIkan->onFirstPage() ? 'disabled' : '' }}">
+                        <a class="page-link" href="{{ $jenisIkan->previousPageUrl() ?? '#' }}" tabindex="-1">
+                            <i class="fa fa-angle-left"></i>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    <!-- Tampilkan nomor halaman -->
+                    @for ($i = 1; $i <= $jenisIkan->lastPage(); $i++)
+                        <li class="page-item {{ $jenisIkan->currentPage() == $i ? 'active' : '' }}">
+                            <a class="page-link" href="{{ $jenisIkan->url($i) }}">{{ $i }}</a>
+                        </li>
+                    @endfor
+                    <li class="page-item {{ $jenisIkan->hasMorePages() ? '' : 'disabled' }}">
+                        <a class="page-link" href="{{ $jenisIkan->nextPageUrl() ?? '#' }}">
+                            <i class="fa fa-angle-right"></i>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- End Pagination -->
+          </div>
+
+        </div>
+      </div>
+    </div>
+</div>
+
+{{-- Manajemen Pengelolaan Ikan --}}
 <div class="container-fluid py-4">
     <div class="row">
       <div class="col-12">
         <div class="card">
           <div class="card-header pb-0">
             <h4 class="font-weight-bolder mb-3">Manajemen Pengelolaan Ikan</h4>
-
             <div class="nav-wrapper position-relative end-0">
                 <ul class="nav nav-pills nav-fill p-1" role="tablist">
                    <li class="nav-item">
@@ -486,6 +585,16 @@
           // Mengubah action form berdasarkan ID transaksi yang dipilih
           const deleteUrl = `/admin/pengelolaanIkan/ikan-keluar/${ikankeluarid}/delete`;
           $('#deleteForm2').attr('action', deleteUrl);
+      });
+
+      // Menangani button delete untuk jenis ikan
+      $(document).on('click', '.delete3', function() {
+          const ikanid = $(this).data('ikanid'); 
+          $('#deleteModal3').modal('show');
+
+          // Mengubah action form berdasarkan ID transaksi yang dipilih
+          const deleteUrl = `/admin/pengelolaanIkan/hapusIkan/${ikanid}/delete`;
+          $('#deleteForm3').attr('action', deleteUrl);
       });
   });
 </script>
