@@ -39,13 +39,15 @@ class AdminBlogController extends Controller
             'body' => 'required|string',
         ]);
 
-        $imagePath = $request->file('image')->store('uploads', 'public');
+        // Menyimpan foto ke dalam direktori public/images
+        $imageFileName = $request->file('image')->getClientOriginalName();
+        $request->file('image')->move(public_path('images'), $imageFileName);
 
         $blog = new Blog();
         $blog->judul = $validated['judul'];
         $blog->slug = Str::slug($validated['judul']);
         $blog->kategori = $validated['kategori'];
-        $blog->image = $imagePath;
+        $blog->image = $imageFileName;
         $blog->body = $validated['body'];
         $blog->save();
 
@@ -80,8 +82,17 @@ class AdminBlogController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('uploads', 'public');
-            $blog->image = $imagePath;
+            // hapus foto lama
+            if($blog->image){
+                unlink(public_path('images/' . $blog->image));
+            }
+
+            // simpan foto baru
+            $image = $request->file('image');
+            $nameImage = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('images/'), $nameImage);
+
+            $blog->image = $nameImage;
         }
 
         $blog->judul = $validated['judul'];

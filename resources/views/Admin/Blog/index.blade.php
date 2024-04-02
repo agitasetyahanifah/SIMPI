@@ -173,31 +173,18 @@
                 <div class="modal-dialog modal-fullscreen" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="detailModalTitle">Detail Blog/Artikel Pemancingan</h5>
-                            <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
+                            <h4 >Detail Blog/Artikel Pemancingan</h4>
+                            <button type="button" class="btn-close btn-close-white position-absolute top-2 end-1" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="form-group">
-                                <label for="detail_judul" class="col-form-label">Judul</label>
-                                <input type="text" class="form-control" id="detail_judul" name="judul" value="{{ $blog->judul }}" readonly>
+                            <div class="container">
+                                <div class="row">
+                                    <h3>{{ $blog->judul }}</h3>
+                                    <a style="color: grey">Slug: {{ $blog->slug }}   |   Kategori: {{ $blog->kategori }}</a>
+                                    <img src="{{ asset('images/'.$blog->image) }}" alt="" class="img-fluid p-2">
+                                    {!! $blog->body !!}
+                                </div>
                             </div>
-                            <div class="form-group">
-                                <label for="detail_slug" class="col-form-label">Slug</label>
-                                <input type="text" class="form-control" id="detail_slug" name="slug" value="{{ $blog->slug }}" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="detail_kategori" class="col-form-label">Kategori</label>
-                                <input type="text" class="form-control" id="detail_kategori" name="kategori" value="{{ $blog->kategori }}" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="detail_body" class="col-form-label">Body</label>
-                                <textarea class="form-control" id="detail_body" name="body" rows="10" readonly>{{ $blog->body }}</textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
