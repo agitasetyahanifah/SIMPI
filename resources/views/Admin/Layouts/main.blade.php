@@ -62,6 +62,7 @@
     text-overflow: ellipsis; /* Teks yang disembunyikan akan ditampilkan sebagai elipsis (...) */
     white-space: nowrap; /* Tekst tidak akan mematahkan baris */
   }
+  
   </style>
 
   <style>
