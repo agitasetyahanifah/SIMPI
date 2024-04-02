@@ -61,7 +61,17 @@
 
           <div class="card-body ">
             <div class="table-responsive p-0">
-              <table class="table table-hover">
+                @php
+                    $currentNumber = $lastItem3 - $jenisIkan->count() + 1;
+                @endphp
+                @foreach ($jenisIkan as $key => $jenis_ikan)
+                <ul style="list-style-type:none;">
+                    <li>{{ $currentNumber++ }}</li>
+                    <li>{{ $jenis_ikan->jenis_ikan }}</li>
+                    {{-- <li><button class="btn btn-danger delete3" data-ikanid="{{ $jenis_ikan->id }}"><i class="fas fa-trash"></i></button></li> --}}
+                </ul>
+                @endforeach
+              {{-- <table class="table table-hover">
                 <thead>
                     <th>No</th>
                     <th>Jenis Ikan</th>
@@ -81,7 +91,7 @@
                     </tr>
                     @endforeach
                 </tbody>
-              </table>
+              </table> --}}
             </div>
             
             {{-- Cek ada data atau kosong --}}
