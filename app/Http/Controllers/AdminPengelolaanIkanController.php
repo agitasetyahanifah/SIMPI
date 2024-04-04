@@ -20,8 +20,9 @@ class AdminPengelolaanIkanController extends Controller
         $lastItem2 = $ikanKeluar->lastItem();
         $jenisIkan = JenisIkan::orderByDesc('created_at')->paginate(5);
         $lastItem3 = $jenisIkan->lastItem();
+        $jenisIkanOpt = JenisIkan::all();
 
-        return view('admin.pengelolaanIkan.index', compact('ikanMasuk', 'ikanKeluar', 'lastItem1', 'lastItem2','jenisIkan', 'lastItem3'));
+        return view('admin.pengelolaanIkan.index', compact('ikanMasuk', 'ikanKeluar', 'lastItem1', 'lastItem2','jenisIkan', 'lastItem3','jenisIkanOpt'));
     }
 
     /**
@@ -39,16 +40,16 @@ class AdminPengelolaanIkanController extends Controller
     {
         // Validasi data yang diterima dari form
         $validatedData = $request->validate([
-            'tanggal_transaksi' => 'required|date',
-            'jenis_ikan' => 'required',
+            'tanggal_ikan_masuk' => 'required|date',
+            'jenis_ikan' => 'required|exists:jenis_ikan,id',
             'jumlah' => 'required|numeric|min:1',
             'catatan' => 'nullable|string',
         ]);
     
         // Simpan data ke database
         $ikanMasuk = new IkanMasuk();
-        $ikanMasuk->tanggal = $validatedData['tanggal_transaksi'];
-        $ikanMasuk->jenis_ikan = $validatedData['jenis_ikan'];
+        $ikanMasuk->tanggal = $validatedData['tanggal_ikan_masuk'];
+        $ikanMasuk->jenis_ikan_id = $validatedData['jenis_ikan'];
         $ikanMasuk->jumlah = $validatedData['jumlah'];
         $ikanMasuk->catatan = $validatedData['catatan'];
         $ikanMasuk->save();
@@ -61,8 +62,8 @@ class AdminPengelolaanIkanController extends Controller
     {
         // Validasi data yang diterima dari form
         $validatedData = $request->validate([
-            'tanggal_transaksi' => 'required|date',
-            'jenis_ikan' => 'required',
+            'tanggal_ikan_keluar' => 'required|date',
+            'jenis_ikan' => 'required|exists:jenis_ikan,id',
             'jumlah' => 'required|numeric|min:1',
             'kondisi_ikan' => 'required',
             'catatan' => 'nullable|string',
@@ -70,8 +71,8 @@ class AdminPengelolaanIkanController extends Controller
     
         // Simpan data ke database
         $ikanKeluar = new IkanKeluar();
-        $ikanKeluar->tanggal = $validatedData['tanggal_transaksi'];
-        $ikanKeluar->jenis_ikan = $validatedData['jenis_ikan'];
+        $ikanKeluar->tanggal = $validatedData['tanggal_ikan_keluar'];
+        $ikanKeluar->jenis_ikan_id = $validatedData['jenis_ikan'];
         $ikanKeluar->jumlah = $validatedData['jumlah'];
         $ikanKeluar->kondisi_ikan = $validatedData['kondisi_ikan'];
         $ikanKeluar->catatan = $validatedData['catatan'];
@@ -120,8 +121,8 @@ class AdminPengelolaanIkanController extends Controller
     {
         // Validasi data yang diterima dari form
         $validatedData = $request->validate([
-            'edit_tanggal_transaksi' => 'required|date',
-            'edit_jenis_ikan' => 'required',
+            'edit_tanggal_ikan_masuk' => 'required|date',
+            'edit_jenis_ikan' => 'required|exists:jenis_ikan,id',
             'edit_jumlah' => 'required|numeric|min:1',
             'edit_catatan' => 'nullable|string',
         ]);
@@ -130,8 +131,8 @@ class AdminPengelolaanIkanController extends Controller
         $ikanMasuk = IkanMasuk::findOrFail($id);
     
         // Update data ikan masuk
-        $ikanMasuk->tanggal = $validatedData['edit_tanggal_transaksi'];
-        $ikanMasuk->jenis_ikan = $validatedData['edit_jenis_ikan'];
+        $ikanMasuk->tanggal = $validatedData['edit_tanggal_ikan_masuk'];
+        $ikanMasuk->jenis_ikan_id = $validatedData['edit_jenis_ikan'];
         $ikanMasuk->jumlah = $validatedData['edit_jumlah'];
         $ikanMasuk->catatan = $validatedData['edit_catatan'];
         $ikanMasuk->save();
@@ -144,8 +145,8 @@ class AdminPengelolaanIkanController extends Controller
     {
         // Validasi data yang diterima dari form
         $validatedData = $request->validate([
-            'edit_tanggal_transaksi' => 'required|date',
-            'edit_jenis_ikan' => 'required',
+            'edit_tanggal_ikan_keluar' => 'required|date',
+            'edit_jenis_ikan' => 'required|exists:jenis_ikan,id',
             'edit_jumlah' => 'required|numeric|min:1',
             'edit_kondisi_ikan' => 'required',
             'edit_catatan' => 'nullable|string',
@@ -155,8 +156,8 @@ class AdminPengelolaanIkanController extends Controller
         $ikanKeluar = IkanKeluar::findOrFail($id);
     
         // Update data ikan masuk
-        $ikanKeluar->tanggal = $validatedData['edit_tanggal_transaksi'];
-        $ikanKeluar->jenis_ikan = $validatedData['edit_jenis_ikan'];
+        $ikanKeluar->tanggal = $validatedData['edit_tanggal_ikan_keluar'];
+        $ikanKeluar->jenis_ikan_id = $validatedData['edit_jenis_ikan'];
         $ikanKeluar->jumlah = $validatedData['edit_jumlah'];
         $ikanKeluar->catatan = $validatedData['edit_catatan'];
         $ikanKeluar->kondisi_ikan = $validatedData['edit_kondisi_ikan'];

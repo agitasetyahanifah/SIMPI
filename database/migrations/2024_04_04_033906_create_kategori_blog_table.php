@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ikan_keluar', function (Blueprint $table) {
+        Schema::create('kategori_blog', function (Blueprint $table) {
             $table->id();
-            $table->date('tanggal');
-            $table->string('jenis_ikan');
-            $table->integer('jumlah');
-            $table->string('kondisi_ikan');
-            $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ikan_keluar');
+        Schema::dropIfExists('kategori_blog');
     }
 };

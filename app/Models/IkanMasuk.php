@@ -12,4 +12,10 @@ class IkanMasuk extends Model
     protected $table = 'ikan_masuk';
 
     protected $guarded = ['id'];
+
+    // Relasi dengan JenisIkan
+    public function jenisIkan()
+    {
+        return $this->belongsTo(JenisIkan::class, 'jenis_ikan_id');
+    }
 }

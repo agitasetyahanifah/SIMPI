@@ -170,7 +170,7 @@
                   <div class="tab-pane fade show active" id="profile-tabs-simple" role="tabpanel" aria-labelledby="profile-tabs-simple">
                       <h5>Pengelolaan Ikan Masuk</h5>
                       {{-- Button Tambah --}}
-                      <form action="{{ route('admin.pengelolaan_ikan.ikan_keluar.store') }}" method="post">
+                      <form action="{{ route('admin.pengelolaan_ikan.ikan_masuk.store') }}" method="post">
                         @csrf
                         <div class="col-12 text-end">
                           <button class="btn btn-outline-primary mb-0" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
@@ -195,18 +195,11 @@
                                         <div class="form-group">
                                           <label for="jenis_ikan" class="col-form-label">Jenis Ikan</label>
                                           <select class="form-select" id="jenis_ikan" name="jenis_ikan" required>
-                                              <option value="Ikan Lele">Ikan Lele</option>
-                                              <option value="Ikan Mas">Ikan Mas</option>
-                                              <option value="Ikan Nila">Ikan Nila</option>
-                                              <option value="Ikan Gurame">Ikan Gurame</option>
-                                              <option value="Ikan Patin">Ikan Patin</option>
-                                              <option value="Ikan Gabus">Ikan Gabus</option>
-                                              <option value="Ikan Bawal">Ikan Bawal</option>
-                                              <option value="Ikan Kakap">Ikan Kakap</option>
-                                              <option value="Ikan Bandeng">Ikan Bandeng</option>
-                                              <option value="Ikan Kerapu">Ikan Kerapu</option>
-                                          </select>
-                                      </div>                                      
+                                            @foreach($jenisIkanOpt->sortBy('jenis_ikan') as $jenis)
+                                                <option value="{{ $jenis->id }}">{{ $jenis->jenis_ikan }}</option>
+                                            @endforeach
+                                        </select>
+                                        </div>                                      
                                         <div class="form-group">
                                             <label for="jumlah" class="col-form-label">Jumlah</label>
                                             <input type="number" class="form-control" id="jumlah" name="jumlah" required>
@@ -245,7 +238,7 @@
                                 <tr>
                                     <td class="text-center">{{ $currentNumber++ }}</td>
                                     <td>{{ $ikan_masuk->tanggal }}</td>
-                                    <td>{{ $ikan_masuk->jenis_ikan }}</td>
+                                    <td>{{ $ikan_masuk->jenisIkan->jenis_ikan }}</td>
                                     <td>{{ number_format($ikan_masuk->jumlah, 0, ',', '.') }}</td>
                                     <td class="keterangan-column">{{ $ikan_masuk->catatan }}</td>
                                     <td class="text-align-end">
@@ -277,22 +270,15 @@
                                         @method('PUT')
                                         <div class="modal-body">
                                             <div class="form-group">
-                                                <label for="edit_tanggal_transaksi">Tanggal Ikan Masuk</label>
-                                                <input type="date" class="form-control" id="edit_tanggal_transaksi" name="edit_tanggal_transaksi" value="{{ $ikan_masuk->tanggal }}" required>
+                                                <label for="edit_tanggal_ikan_masuk">Tanggal Ikan Masuk</label>
+                                                <input type="date" class="form-control" id="edit_tanggal_ikan_masuk" name="edit_tanggal_ikan_masuk" value="{{ $ikan_masuk->tanggal }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="edit_jenis_ikan">Jenis Ikan</label>
                                                 <select class="form-select" id="edit_jenis_ikan" name="edit_jenis_ikan" required>
-                                                    <option value="Ikan Lele" {{ $ikan_masuk->jenis_ikan == 'Ikan Lele' ? 'selected' : '' }}>Ikan Lele</option>
-                                                    <option value="Ikan Mas" {{ $ikan_masuk->jenis_ikan == 'Ikan Mas' ? 'selected' : '' }}>Ikan Mas</option>
-                                                    <option value="Ikan Nila" {{ $ikan_masuk->jenis_ikan == 'Ikan Nila' ? 'selected' : '' }}>Ikan Nila</option>
-                                                    <option value="Ikan Gurame" {{ $ikan_masuk->jenis_ikan == 'Ikan Gurame' ? 'selected' : '' }}>Ikan Gurame</option>
-                                                    <option value="Ikan Patin" {{ $ikan_masuk->jenis_ikan == 'Ikan Patin' ? 'selected' : '' }}>Ikan Patin</option>
-                                                    <option value="Ikan Gabus" {{ $ikan_masuk->jenis_ikan == 'Ikan Gabus' ? 'selected' : '' }}>Ikan Gabus</option>
-                                                    <option value="Ikan Bawal" {{ $ikan_masuk->jenis_ikan == 'Ikan Bawal' ? 'selected' : '' }}>Ikan Bawal</option>
-                                                    <option value="Ikan Kakap" {{ $ikan_masuk->jenis_ikan == 'Ikan Kakap' ? 'selected' : '' }}>Ikan Kakap</option>
-                                                    <option value="Ikan Bandeng" {{ $ikan_masuk->jenis_ikan == 'Ikan Bandeng' ? 'selected' : '' }}>Ikan Bandeng</option>
-                                                    <option value="Ikan Kerapu" {{ $ikan_masuk->jenis_ikan == 'Ikan Kerapu' ? 'selected' : '' }}>Ikan Kerapu</option>
+                                                    @foreach($jenisIkanOpt->sortBy('jenis_ikan') as $jenis)
+                                                        <option value="{{ $jenis->id }}" @if($jenis->id == $ikan_masuk->jenis_ikan_id) selected @endif>{{ $jenis->jenis_ikan }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                             <div class="form-group">
@@ -388,23 +374,16 @@
                                     <div class="modal-body">
                                         <div class="form-group">
                                             <label for="tanggal_ikan_keluar" class="col-form-label">Tanggal Ikan Keluar</label>
-                                            <input type="date" class="form-control" id="tanggal_transaksi" name="tanggal_transaksi" required>
+                                            <input type="date" class="form-control" id="tanggal_ikan_keluar" name="tanggal_ikan_keluar" required>
                                         </div>
                                         <div class="form-group">
                                           <label for="jenis_ikan" class="col-form-label">Jenis Ikan</label>
                                           <select class="form-select" id="jenis_ikan" name="jenis_ikan" required>
-                                              <option value="Ikan Lele">Ikan Lele</option>
-                                              <option value="Ikan Mas">Ikan Mas</option>
-                                              <option value="Ikan Nila">Ikan Nila</option>
-                                              <option value="Ikan Gurame">Ikan Gurame</option>
-                                              <option value="Ikan Patin">Ikan Patin</option>
-                                              <option value="Ikan Gabus">Ikan Gabus</option>
-                                              <option value="Ikan Bawal">Ikan Bawal</option>
-                                              <option value="Ikan Kakap">Ikan Kakap</option>
-                                              <option value="Ikan Bandeng">Ikan Bandeng</option>
-                                              <option value="Ikan Kerapu">Ikan Kerapu</option>
+                                            @foreach($jenisIkanOpt->sortBy('jenis_ikan') as $jenis)
+                                                <option value="{{ $jenis->id }}">{{ $jenis->jenis_ikan }}</option>
+                                            @endforeach
                                           </select>
-                                      </div>                                      
+                                        </div>                                      
                                         <div class="form-group">
                                             <label for="jumlah" class="col-form-label">Jumlah</label>
                                             <input type="number" class="form-control" id="jumlah" name="jumlah" required>
@@ -452,7 +431,7 @@
                               <tr>
                                   <td class="text-center">{{ $currentNumber++ }}</td>
                                   <td>{{ $ikan_keluar->tanggal }}</td>
-                                  <td>{{ $ikan_keluar->jenis_ikan }}</td>
+                                  <td>{{ $ikan_keluar->jenisIkan->jenis_ikan }}</td>
                                   <td>{{ $ikan_keluar->kondisi_ikan }}</td>
                                   <td>{{ number_format($ikan_keluar->jumlah, 0, ',', '.') }}</td>
                                   <td class="keterangan-column">{{ $ikan_keluar->catatan }}</td>
@@ -485,22 +464,15 @@
                                         @method('PUT')
                                         <div class="modal-body">
                                             <div class="form-group">
-                                                <label for="edit_tanggal_transaksi">Tanggal Ikan Masuk</label>
-                                                <input type="date" class="form-control" id="edit_tanggal_transaksi" name="edit_tanggal_transaksi" value="{{ $ikan_keluar->tanggal }}" required>
+                                                <label for="edit_tanggal_ikan_keluar">Tanggal Ikan Keluar</label>
+                                                <input type="date" class="form-control" id="edit_tanggal_ikan_keluar" name="edit_tanggal_ikan_keluar" value="{{ $ikan_keluar->tanggal }}" required>
                                             </div>
                                             <div class="form-group">
                                                 <label for="edit_jenis_ikan">Jenis Ikan</label>
                                                 <select class="form-select" id="edit_jenis_ikan" name="edit_jenis_ikan" required>
-                                                    <option value="Ikan Lele" {{ $ikan_keluar->jenis_ikan == 'Ikan Lele' ? 'selected' : '' }}>Ikan Lele</option>
-                                                    <option value="Ikan Mas" {{ $ikan_keluar->jenis_ikan == 'Ikan Mas' ? 'selected' : '' }}>Ikan Mas</option>
-                                                    <option value="Ikan Nila" {{ $ikan_keluar->jenis_ikan == 'Ikan Nila' ? 'selected' : '' }}>Ikan Nila</option>
-                                                    <option value="Ikan Gurame" {{ $ikan_keluar->jenis_ikan == 'Ikan Gurame' ? 'selected' : '' }}>Ikan Gurame</option>
-                                                    <option value="Ikan Patin" {{ $ikan_keluar->jenis_ikan == 'Ikan Patin' ? 'selected' : '' }}>Ikan Patin</option>
-                                                    <option value="Ikan Gabus" {{ $ikan_keluar->jenis_ikan == 'Ikan Gabus' ? 'selected' : '' }}>Ikan Gabus</option>
-                                                    <option value="Ikan Bawal" {{ $ikan_keluar->jenis_ikan == 'Ikan Bawal' ? 'selected' : '' }}>Ikan Bawal</option>
-                                                    <option value="Ikan Kakap" {{ $ikan_keluar->jenis_ikan == 'Ikan Kakap' ? 'selected' : '' }}>Ikan Kakap</option>
-                                                    <option value="Ikan Bandeng" {{ $ikan_keluar->jenis_ikan == 'Ikan Bandeng' ? 'selected' : '' }}>Ikan Bandeng</option>
-                                                    <option value="Ikan Kerapu" {{ $ikan_keluar->jenis_ikan == 'Ikan Kerapu' ? 'selected' : '' }}>Ikan Kerapu</option>
+                                                    @foreach($jenisIkanOpt->sortBy('jenis_ikan') as $jenis)
+                                                        <option value="{{ $jenis->id }}" @if($jenis->id == $ikan_keluar->jenis_ikan_id) selected @endif>{{ $jenis->jenis_ikan }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                             <div class="form-group">

@@ -56,4 +56,7 @@ Route::delete('/admin/pengelolaanIkan/ikan-keluar/{id}/delete', [AdminPengelolaa
 // Rute blog
 Route::get('/admin/blog/checkSlug', [AdminBlogController::class, 'checkSlug'])->name('admin.blog.checkSlug');
 Route::resource('/admin/blog', AdminBlogController::class);
+// Rute untuk ketegori blog
+Route::post('/admin/blog/tambahKategori', [AdminBlogController::class, 'storeKategori'])->name('admin.blog.tambah_kategori');
+Route::delete('/admin/blog/hapusKategori/{id}/delete', [AdminBlogController::class, 'deleteKategori'])->name('admin.blog.delete_kategori');
 // Rute Manajemen Member

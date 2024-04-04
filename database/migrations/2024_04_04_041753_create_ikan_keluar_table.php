@@ -11,24 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ikan_masuk', function (Blueprint $table) {
+        Schema::create('ikan_keluar', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal');
-            $table->enum('jenis_ikan', [
-                'Ikan Lele',
-                'Ikan Mas',
-                'Ikan Nila',
-                'Ikan Gurame',
-                'Ikan Patin',
-                'Ikan Gabus',
-                'Ikan Bawal',
-                'Ikan Kakap',
-                'Ikan Bandeng',
-                'Ikan Kerapu',
-            ])->default('Ikan Mas');
+            $table->unsignedBigInteger('jenis_ikan_id'); // Kolom foreign key
             $table->integer('jumlah');
+            $table->string('kondisi_ikan');
             $table->text('catatan')->nullable();
             $table->timestamps();
+
+            // Definisi foreign key constraint
+            $table->foreign('jenis_ikan_id')->references('id')->on('jenis_ikan');
         });
     }
 
@@ -37,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ikan_masuk');
+        Schema::dropIfExists('ikan_keluar');
     }
 };
