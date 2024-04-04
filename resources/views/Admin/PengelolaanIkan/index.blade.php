@@ -53,45 +53,36 @@
                     </div>
                     <div class="modal-footer">
                     <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn bg-gradient-primary">Simpan</button>
+                    <button type="submit" class="btn bg-gradient-primary">Simpan</button>
                     </div>
                 </div>
                 </div>
             </div>
+            </form>
 
           <div class="card-body ">
             <div class="table-responsive p-0">
-                @php
-                    $currentNumber = $lastItem3 - $jenisIkan->count() + 1;
-                @endphp
-                @foreach ($jenisIkan as $key => $jenis_ikan)
-                <ul style="list-style-type:none;">
-                    <li>{{ $currentNumber++ }}</li>
-                    <li>{{ $jenis_ikan->jenis_ikan }}</li>
-                    {{-- <li><button class="btn btn-danger delete3" data-ikanid="{{ $jenis_ikan->id }}"><i class="fas fa-trash"></i></button></li> --}}
-                </ul>
-                @endforeach
-              {{-- <table class="table table-hover">
-                <thead>
-                    <th>No</th>
-                    <th>Jenis Ikan</th>
-                    <th>Aksi</th>
-                </thead>
-                <tbody>
-                    @php
-                        $currentNumber = $lastItem3 - $jenisIkan->count() + 1;
-                    @endphp
-                    @foreach ($jenisIkan as $key => $jenis_ikan)
-                    <tr>
-                        <td>{{ $currentNumber++ }}</td>
-                        <td>{{ $jenis_ikan->jenis_ikan }}</td>
-                        <td class="text-align-end">
-                            <button class="btn btn-danger delete3" data-ikanid="{{ $jenis_ikan->id }}"><i class="fas fa-trash"></i></button>                            
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-              </table> --}}
+                <table class="table table-hover">
+                    <thead>
+                        <th style="width: 5%;" class="text-center">No</th>
+                        <th>Jenis Ikan</th>
+                        <th style="width: 10%;" class="text-center">Aksi</th>
+                    </thead>
+                    <tbody>
+                        @php
+                            $currentNumber = $lastItem3 - $jenisIkan->count() + 1;
+                        @endphp
+                        @foreach ($jenisIkan as $key => $jenis_ikan)
+                        <tr>
+                            <td style="width: 5%;" class="text-center">{{ $currentNumber++ }}</td>
+                            <td>{{ $jenis_ikan->jenis_ikan }}</td>
+                            <td class="text-center" style="width: 10]%;">
+                                <button class="btn btn-danger delete3" data-ikanid="{{ $jenis_ikan->id }}"><i class="fas fa-trash"></i></button>                            
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>                
             </div>
             
             {{-- Cek ada data atau kosong --}}

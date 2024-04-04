@@ -20,6 +20,131 @@
     </div>
 @endif
 
+{{-- Tambah Kategori Blog --}}
+<div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header pb-0">
+            <h4 class="font-weight-bolder mb-0">Jenis Ikan</h4>
+            {{-- Button Tambah --}}
+            <form action="/admin/pengelolaanIkan/tambahIkan" method="post">
+                @csrf
+                <div class="col-12 text-end">
+                  <button class="btn btn-outline-primary mb-0" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal">Tambah</button>
+                </div>
+          </div>
+
+          {{-- Modal Tambah Jenis Ikan --}}
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Tambah Jenis Ikan</h5>
+                    <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="jenis_ikan" class="col-form-label">Jenis Ikan</label>
+                            <input type="text" class="form-control" id="jenis_ikan" name="jenis_ikan" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn bg-gradient-primary">Simpan</button>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </form>
+
+          <div class="card-body ">
+            <div class="table-responsive p-0">
+                <table class="table table-hover">
+                    <thead>
+                        <th style="width: 5%;" class="text-center">No</th>
+                        <th>Jenis Ikan</th>
+                        <th style="width: 10%;" class="text-center">Aksi</th>
+                    </thead>
+                    <tbody>
+                        @php
+                            $currentNumber = $lastItem3 - $jenisIkan->count() + 1;
+                        @endphp
+                        @foreach ($jenisIkan as $key => $jenis_ikan)
+                        <tr>
+                            <td style="width: 5%;" class="text-center">{{ $currentNumber++ }}</td>
+                            <td>{{ $jenis_ikan->jenis_ikan }}</td>
+                            <td class="text-center" style="width: 10]%;">
+                                <button class="btn btn-danger delete3" data-ikanid="{{ $jenis_ikan->id }}"><i class="fas fa-trash"></i></button>                            
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>                
+            </div>
+            
+            {{-- Cek ada data atau kosong --}}
+            @if($jenisIkan->isEmpty())
+                <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+            @endif 
+
+            <!-- Modal Delete -->
+            <div class="modal fade" id="deleteModal3" tabindex="-1" aria-labelledby="deleteModalLabel3" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Apakah Anda yakin ingin menghapus transaksi ini?
+                        </div>
+                        <div class="modal-footer">
+                            <form id="deleteForm3" action="/admin/pengelolaanIkan/hapusIkan/{id}/delete" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-danger" id="confirmDelete">Hapus</button>
+                            </form>
+                        </div>                                    
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <nav class="p-3" aria-label="Pagination">
+                <ul class="pagination">
+                    <li class="page-item {{ $jenisIkan->onFirstPage() ? 'disabled' : '' }}">
+                        <a class="page-link" href="{{ $jenisIkan->previousPageUrl() ?? '#' }}" tabindex="-1">
+                            <i class="fa fa-angle-left"></i>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                    <!-- Tampilkan nomor halaman -->
+                    @for ($i = 1; $i <= $jenisIkan->lastPage(); $i++)
+                        <li class="page-item {{ $jenisIkan->currentPage() == $i ? 'active' : '' }}">
+                            <a class="page-link" href="{{ $jenisIkan->url($i) }}">{{ $i }}</a>
+                        </li>
+                    @endfor
+                    <li class="page-item {{ $jenisIkan->hasMorePages() ? '' : 'disabled' }}">
+                        <a class="page-link" href="{{ $jenisIkan->nextPageUrl() ?? '#' }}">
+                            <i class="fa fa-angle-right"></i>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- End Pagination -->
+          </div>
+
+        </div>
+      </div>
+    </div>
+</div>
+
+{{-- Manajemen Blog --}}
 <div class="container-fluid py-4">
     <div class="row">
       <div class="col-12">
@@ -34,7 +159,7 @@
                 </div>
           </div>
           
-          <!-- Modal Tambah Transaksi -->
+          <!-- Modal Tambah Blog -->
           <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
@@ -249,7 +374,6 @@
         </div>
       </div>
     </div>
-</div>
 </div>
 
 <!-- Javascript Button Delete -->
