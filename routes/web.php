@@ -6,7 +6,7 @@ use App\Http\Controllers\AdminAlatPancingController;
 use App\Http\Controllers\AdminBlogController;
 use App\Http\Controllers\AdminPenyewaanAlatController;
 use App\Http\Controllers\AdminPengelolaanIkanController;
-use Database\Seeders\AdminDashboardSeeder;
+use App\Http\Controllers\AdminMemberController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -60,3 +60,4 @@ Route::resource('/admin/blog', AdminBlogController::class);
 Route::post('/admin/blog/tambahKategori', [AdminBlogController::class, 'storeKategori'])->name('admin.blog.tambah_kategori');
 Route::delete('/admin/blog/hapusKategori/{id}', [AdminBlogController::class, 'deleteKategori'])->name('admin.blog.delete_kategori');
 // Rute Manajemen Member
+Route::resource('admin/members', AdminMemberController::class);
