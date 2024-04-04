@@ -15,10 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('judul');
             $table->string('slug')->unique();
-            $table->string('kategori');
+            $table->unsignedBigInteger('kategori_id');
             $table->string('image');
             $table->text('body');
             $table->timestamps();
+
+            // Definisi foreign key constraint
+            $table->foreign('kategori_id')->references('id')->on('kategori_blog');
         });
     }
 

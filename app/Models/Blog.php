@@ -12,4 +12,10 @@ class Blog extends Model
     protected $table = 'blogs';
 
     protected $guarded = ['id'];
+
+    // Relasi dengan Kategori Blog
+    public function kategoriBlog()
+    {
+        return $this->belongsTo(KategoriBlog::class, 'kategori_id');
+    }
 }
