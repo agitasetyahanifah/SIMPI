@@ -58,5 +58,5 @@ Route::get('/admin/blog/checkSlug', [AdminBlogController::class, 'checkSlug'])->
 Route::resource('/admin/blog', AdminBlogController::class);
 // Rute untuk ketegori blog
 Route::post('/admin/blog/tambahKategori', [AdminBlogController::class, 'storeKategori'])->name('admin.blog.tambah_kategori');
-Route::delete('/admin/blog/hapusKategori/{id}/delete', [AdminBlogController::class, 'deleteKategori'])->name('admin.blog.delete_kategori');
+Route::delete('/admin/blog/hapusKategori/{id}', [AdminBlogController::class, 'deleteKategori'])->name('admin.blog.delete_kategori');
 // Rute Manajemen Member

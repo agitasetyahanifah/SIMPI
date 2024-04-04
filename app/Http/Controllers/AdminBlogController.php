@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Blog;
+use App\Models\KategoriBlog;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 
 class AdminBlogController extends Controller
@@ -16,7 +17,10 @@ class AdminBlogController extends Controller
     {
         $blogs = Blog::latest()->paginate(25);
         $lastItem = $blogs->lastItem();
-        return view('admin.blog.index', compact('blogs','lastItem'));
+        $kategoriBlog = KategoriBlog::orderByDesc('created_at')->paginate(5);
+        $lastItem2 = $kategoriBlog->lastItem();
+        $kategoriOpt = KategoriBlog::all();
+        return view('admin.blog.index', compact('blogs','lastItem','lastItem2','kategoriBlog','kategoriOpt'));
     }
 
     /**
@@ -34,7 +38,7 @@ class AdminBlogController extends Controller
     {
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
-            'kategori' => 'required|string',
+            'kategori_blog' => 'required|exists:kategori_blog,id',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10048',
             'body' => 'required|string',
         ]);
@@ -46,12 +50,25 @@ class AdminBlogController extends Controller
         $blog = new Blog();
         $blog->judul = $validated['judul'];
         $blog->slug = Str::slug($validated['judul']);
-        $blog->kategori = $validated['kategori'];
+        $blog->kategori_id = $validated['kategori_blog'];
         $blog->image = $imageFileName;
         $blog->body = $validated['body'];
         $blog->save();
 
         return redirect()->back()->with('success', 'Blog berhasil ditambahkan.');
+    }
+
+    public function storeKategori(Request $request)
+    {
+        $validated = $request->validate([
+            'kategori_blog' => 'required',
+        ]);
+
+        $kategoriBlog = new KategoriBlog();
+        $kategoriBlog->kategori_blog = $validated['kategori_blog'];
+        $kategoriBlog->save();
+
+        return redirect()->back()->with('success', 'Kategori blog berhasil ditambahkan.');
     }
 
     /**
@@ -77,7 +94,7 @@ class AdminBlogController extends Controller
     {
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
-            'kategori' => 'required|string',
+            'kategori_blog' => 'required|exists:kategori_blog,id',
             'body' => 'required|string',
         ]);
 
@@ -97,7 +114,7 @@ class AdminBlogController extends Controller
 
         $blog->judul = $validated['judul'];
         $blog->slug = Str::slug($validated['judul']); // Use Str::slug directly without \
-        $blog->kategori = $validated['kategori'];
+        $blog->kategori_id = $validated['kategori_blog'];
         $blog->body = $validated['body'];
         $blog->save();
 
@@ -115,6 +132,17 @@ class AdminBlogController extends Controller
 
         // Redirect kembali ke halaman ddaftar blog dengan pesan sukses
         return redirect()->back()->with('success', 'Blog berhasil dihapus.');
+    }
+
+    public function deleteKategori(String $id)
+    {
+        $kategoriBlog = KategoriBlog::findOrFail($id);
+
+        // Hapus blog dari database
+        $kategoriBlog->delete();
+
+        // Redirect kembali ke halaman ddaftar blog dengan pesan sukses
+        return redirect()->back()->with('success', 'Kategori blog berhasil dihapus.');
     }
 
     public function checkSlug(Request $request)

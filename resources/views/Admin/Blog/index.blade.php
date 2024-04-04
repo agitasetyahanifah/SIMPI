@@ -26,7 +26,7 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header pb-0">
-            <h4 class="font-weight-bolder mb-0">Jenis Ikan</h4>
+            <h4 class="font-weight-bolder mb-0">Kategori Blog</h4>
             {{-- Button Tambah --}}
             <form action="/admin/blog/tambahKategori" method="post">
                 @csrf
@@ -47,8 +47,8 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="kategori" class="col-form-label">Kategori Blog</label>
-                            <input type="text" class="form-control" id="kategori" name="kategori" required>
+                            <label for="kategori_blog" class="col-form-label">Kategori Blog</label>
+                            <input type="text" class="form-control" id="kategori_blog" name="kategori_blog" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -70,14 +70,14 @@
                     </thead>
                     <tbody>
                         @php
-                            $currentNumber = $lastItem3 - $jenisIkan->count() + 1;
+                            $currentNumber = $lastItem2 - $kategoriBlog->count() + 1;
                         @endphp
-                        @foreach ($jenisIkan as $key => $jenis_ikan)
+                        @foreach ($kategoriBlog as $key => $kategori)
                         <tr>
                             <td style="width: 5%;" class="text-center">{{ $currentNumber++ }}</td>
-                            <td>{{ $jenis_ikan->jenis_ikan }}</td>
+                            <td>{{ $kategori->kategori_blog }}</td>
                             <td class="text-center" style="width: 10]%;">
-                                <button class="btn btn-danger delete3" data-ikanid="{{ $jenis_ikan->id }}"><i class="fas fa-trash"></i></button>                            
+                                <button class="btn btn-danger delete2" data-kategoriid="{{ $kategori->id }}"><i class="fas fa-trash"></i></button>                            
                             </td>
                         </tr>
                         @endforeach
@@ -86,12 +86,12 @@
             </div>
             
             {{-- Cek ada data atau kosong --}}
-            @if($jenisIkan->isEmpty())
+            @if($kategoriBlog->isEmpty())
                 <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
             @endif 
 
             <!-- Modal Delete -->
-            <div class="modal fade" id="deleteModal3" tabindex="-1" aria-labelledby="deleteModalLabel3" aria-hidden="true">
+            <div class="modal fade" id="deleteModal2" tabindex="-1" aria-labelledby="deleteModalLabel2" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -102,7 +102,7 @@
                             Apakah Anda yakin ingin menghapus transaksi ini?
                         </div>
                         <div class="modal-footer">
-                            <form id="deleteForm3" action="/admin/pengelolaanIkan/hapusIkan/{id}/delete" method="post">
+                            <form id="deleteForm2" action="/admin/blog/hapusKategori/{id}" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -116,20 +116,20 @@
             <!-- Pagination -->
             <nav class="p-3" aria-label="Pagination">
                 <ul class="pagination">
-                    <li class="page-item {{ $jenisIkan->onFirstPage() ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ $jenisIkan->previousPageUrl() ?? '#' }}" tabindex="-1">
+                    <li class="page-item {{ $kategoriBlog->onFirstPage() ? 'disabled' : '' }}">
+                        <a class="page-link" href="{{ $kategoriBlog->previousPageUrl() ?? '#' }}" tabindex="-1">
                             <i class="fa fa-angle-left"></i>
                             <span class="sr-only">Previous</span>
                         </a>
                     </li>
                     <!-- Tampilkan nomor halaman -->
-                    @for ($i = 1; $i <= $jenisIkan->lastPage(); $i++)
-                        <li class="page-item {{ $jenisIkan->currentPage() == $i ? 'active' : '' }}">
-                            <a class="page-link" href="{{ $jenisIkan->url($i) }}">{{ $i }}</a>
+                    @for ($i = 1; $i <= $kategoriBlog->lastPage(); $i++)
+                        <li class="page-item {{ $kategoriBlog->currentPage() == $i ? 'active' : '' }}">
+                            <a class="page-link" href="{{ $kategoriBlog->url($i) }}">{{ $i }}</a>
                         </li>
                     @endfor
-                    <li class="page-item {{ $jenisIkan->hasMorePages() ? '' : 'disabled' }}">
-                        <a class="page-link" href="{{ $jenisIkan->nextPageUrl() ?? '#' }}">
+                    <li class="page-item {{ $kategoriBlog->hasMorePages() ? '' : 'disabled' }}">
+                        <a class="page-link" href="{{ $kategoriBlog->nextPageUrl() ?? '#' }}">
                             <i class="fa fa-angle-right"></i>
                             <span class="sr-only">Next</span>
                         </a>
@@ -179,12 +179,11 @@
                         <input type="text" class="form-control" id="slug" name="slug" required>
                     </div>
                     <div class="form-group">
-                        <label for="kategori" class="col-form-label">Kategori</label>
-                        <select class="form-select" id="kategori" name="kategori" required>
-                            <option value="Pemancingan">Pemancingan</option>
-                            <option value="Tips & Trik">Tips & Trik</option>
-                            <option value="Jenis-Jenis Ikan">Jenis-Jenis Ikan</option>
-                            <option value="Alat Pancing">Alat Pancing</option>
+                        <label for="kategori_blog" class="col-form-label">Kategori</label>
+                        <select class="form-select" id="kategori_blog" name="kategori_blog" required>
+                            @foreach($kategoriOpt->sortBy('kategori_blog') as $kategori)
+                                <option value="{{ $kategori->id }}">{{ $kategori->kategori_blog }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="form-group">
@@ -225,7 +224,7 @@
                     <tr>
                         <td class="text-center">{{ $currentNumber++ }}</td>
                         <td>{{ $blog->judul }}</td>
-                        <td>{{ $blog->kategori }}</td>
+                        <td>{{ $blog->kategoriBlog->kategori_blog }}</td>
                         <td class="text-align-end">
                             <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailModal{{ $blog->id }}"><i class="fas fa-eye"></i></a>
                             <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $blog->id }}"><i class="fas fa-edit"></i></a>
@@ -266,12 +265,11 @@
                                     <input type="text" class="form-control" id="edit_slug" name="slug" value="{{ $blog->slug }}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="edit_kategori" class="col-form-label">Kategori</label>
-                                    <select class="form-select" id="edit_kategori" name="kategori" required>
-                                        <option value="Pemancingan" {{ $blog->kategori === 'Pemancingan' ? 'selected' : '' }}>Pemancingan</option>
-                                        <option value="Tips & Trik" {{ $blog->kategori === 'Tips & Trik' ? 'selected' : '' }}>Tips & Trik</option>
-                                        <option value="Jenis-Jenis Ikan" {{ $blog->kategori === 'Jenis-Jenis Ikan' ? 'selected' : '' }}>Jenis-Jenis Ikan</option>
-                                        <option value="Alat Pancing" {{ $blog->kategori === 'Alat Pancing' ? 'selected' : '' }}>Alat Pancing</option>
+                                    <label for="edit_kategori_blog" class="col-form-label">Kategori</label>
+                                    <select class="form-select" id="edit_kategori_blog" name="kategori_blog" required>
+                                        @foreach($kategoriOpt->sortBy('kategori_blog') as $kategori)
+                                            <option value="{{ $kategori->id }}" @if($kategori->id == $blog->kategori_id) selected @endif>{{ $kategori->kategori_blog }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -309,7 +307,7 @@
                         <div class="container">
                             <div class="row">
                                 <h3>{{ $blog->judul }}</h3>
-                                <a style="color: black"><b>Slug:</b> {{ $blog->slug }}    |<b>   Kategori:</b> {{ $blog->kategori }}</a>
+                                <a style="color: black"><b>Slug:</b> {{ $blog->slug }}    |<b>   Kategori:</b> {{ $blog->kategoriBlog->kategori_blog }}</a>
                                 <img src="{{ asset('images/'.$blog->image) }}" alt="" class="img-fluid p-3">
                                 {!! $blog->body !!}
                             </div>
@@ -387,7 +385,18 @@
             // Mengubah action form berdasarkan ID blog yang dipilih
             $('#deleteForm').attr('action', '/admin/blog/' + blogId);
         });
+
+        // Menangani button delete kategori
+        $(document).on('click', '.delete2', function() {
+            const kategoriid = $(this).data('kategoriid');
+            $('#deleteModal2').modal('show');
+
+            // Make sure the URL is correctly formed with the category ID
+            $('#deleteForm2').attr('action', '/admin/blog/hapusKategori/' + kategoriid); // Use correct URL format
+        });
+
     });
+
 </script>
 
 
