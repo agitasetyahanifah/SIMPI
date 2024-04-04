@@ -27,14 +27,14 @@
         <div class="card mb-0">
           <div class="card-header pb-0">
             <h4 class="font-weight-bolder mb-0">Manajemen Member</h4>
-            {{-- Button Tambah Alat Pancing --}}
-            <form action="/admin/alatPancing" method="post" enctype="multipart/form-data">
+            {{-- Button Tambah Member --}}
+            <form action="/admin/members" method="post">
               @csrf
               <div class="col-12 text-end">
                   <button class="btn btn-outline-primary mb-1" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
               </div>
           </div>
-          {{-- Modal Tambah Alat Pancing --}}
+          {{-- Modal Tambah Member --}}
           <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
