@@ -190,7 +190,7 @@
                                     <div class="modal-body">
                                         <div class="form-group">
                                             <label for="tanggal_ikan_masuk" class="col-form-label">Tanggal Ikan Masuk</label>
-                                            <input type="date" class="form-control" id="tanggal_transaksi" name="tanggal_transaksi" required>
+                                            <input type="date" class="form-control" id="tanggal_ikan_masuk" name="tanggal_ikan_masuk" required>
                                         </div>
                                         <div class="form-group">
                                           <label for="jenis_ikan" class="col-form-label">Jenis Ikan</label>
