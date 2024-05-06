@@ -7,10 +7,10 @@
       </a>
     </div>
     <hr class="horizontal dark mt-0">
-    <div class="collapse navbar-collapse  w-auto" id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link  active" href="#">
+          <a class="nav-link  active" href="{{ route('admin.dashboard.index') }}">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-air-baloon"></i>
             </div>
@@ -20,13 +20,21 @@
         <li class="nav-item">
           <a class="nav-link" href="#">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
+                <i class="ni ni-map-big"></i>
+            </div>
+            <span class="nav-link-text ms-1">Penyewaan Tempat</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ route('admin.keuangan.index') }}">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-money-coins"></i>
             </div>
             <span class="nav-link-text ms-1">Manajemen Keuangan</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link  " href="#">
+          <a class="nav-link  " href="/admin/alatPancing">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-box-2"></i>
             </div>
@@ -34,7 +42,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link  " href="#">
+          <a class="nav-link" href="/admin/penyewaanAlat">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-bullet-list-67"></i>
             </div>
@@ -42,7 +50,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link  " href="#">
+          <a class="nav-link" href="{{ route('admin.pengelolaanIkan.index') }}">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-app"></i>
             </div>
@@ -50,7 +58,7 @@
           </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link  " href="#">
+            <a class="nav-link  " href="admin/members">
               <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-badge"></i>
               </div>
@@ -58,7 +66,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link  " href="#">
+            <a class="nav-link  " href="/admin/blog">
               <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-archive-2"></i>
               </div>

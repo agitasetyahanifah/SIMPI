@@ -60,4 +60,4 @@ Route::resource('/admin/blog', AdminBlogController::class);
 Route::post('/admin/blog/tambahKategori', [AdminBlogController::class, 'storeKategori'])->name('admin.blog.tambah_kategori');
 Route::delete('/admin/blog/hapusKategori/{id}', [AdminBlogController::class, 'deleteKategori'])->name('admin.blog.delete_kategori');
 // Rute Manajemen Member
-Route::resource('admin/members', AdminMemberController::class);
+Route::resource('/admin/members', AdminMemberController::class);
