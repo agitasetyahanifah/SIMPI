@@ -61,3 +61,5 @@ Route::post('/admin/blog/tambahKategori', [AdminBlogController::class, 'storeKat
 Route::delete('/admin/blog/hapusKategori/{id}', [AdminBlogController::class, 'deleteKategori'])->name('admin.blog.delete_kategori');
 // Rute Manajemen Member
 Route::resource('/admin/members', AdminMemberController::class);
+// Rute Booking Tempat Pemancingan
+
