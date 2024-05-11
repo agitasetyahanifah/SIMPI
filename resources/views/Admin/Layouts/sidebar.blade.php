@@ -10,23 +10,23 @@
     <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link  active" href="{{ route('admin.dashboard.index') }}">
-            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+          <a class="nav-link {{ request()->routeIs('admin.dashboard.index') ? 'active' : '' }}" href="{{ route('admin.dashboard.index') }}">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-air-baloon"></i>
             </div>
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">
+          <a class="nav-link {{ request()->is('admin/sewaPemancingan*') ? 'active' : '' }}" href="/admin/sewaPemancingan">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-map-big"></i>
             </div>
-            <span class="nav-link-text ms-1">Penyewaan Pemancingan</span>
+            <span class="nav-link-text ms-1">Sewa Pemancingan</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ route('admin.keuangan.index') }}">
+          <a class="nav-link {{ request()->routeIs('admin.keuangan.index') ? 'active' : '' }}" href="{{ route('admin.keuangan.index') }}">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-money-coins"></i>
             </div>
@@ -34,7 +34,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link  " href="/admin/alatPancing">
+          <a class="nav-link {{ request()->is('admin/alatPancing*') ? 'active' : '' }}" href="/admin/alatPancing">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-box-2"></i>
             </div>
@@ -42,15 +42,15 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/admin/penyewaanAlat">
+          <a class="nav-link {{ request()->is('admin/penyewaanAlat*') ? 'active' : '' }}" href="/admin/penyewaanAlat">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-bullet-list-67"></i>
             </div>
-            <span class="nav-link-text ms-1">Penyewaan Alat Pancing</span>
+            <span class="nav-link-text ms-1">Sewa Alat Pancing</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{{ route('admin.pengelolaanIkan.index') }}">
+          <a class="nav-link {{ request()->routeIs('admin.pengelolaanIkan.index') ? 'active' : '' }}" href="{{ route('admin.pengelolaanIkan.index') }}">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-app"></i>
             </div>
@@ -58,7 +58,7 @@
           </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link  " href="admin/members">
+            <a class="nav-link {{ request()->is('admin/members*') ? 'active' : '' }}" href="admin/members">
               <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-badge"></i>
               </div>
@@ -66,7 +66,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link  " href="/admin/blog">
+            <a class="nav-link {{ request()->is('admin/blog*') ? 'active' : '' }}" href="/admin/blog">
               <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-archive-2"></i>
               </div>

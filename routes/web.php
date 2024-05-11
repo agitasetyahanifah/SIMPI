@@ -1,13 +1,14 @@
 <?php
 
-use App\Http\Controllers\AdminDashboardController;
-use App\Http\Controllers\AdminKeuanganController;
-use App\Http\Controllers\AdminAlatPancingController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminBlogController;
+use App\Http\Controllers\AdminMemberController;
+use App\Http\Controllers\AdminKeuanganController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminAlatPancingController;
 use App\Http\Controllers\AdminPenyewaanAlatController;
 use App\Http\Controllers\AdminPengelolaanIkanController;
-use App\Http\Controllers\AdminMemberController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminSewaPemancinganController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,4 +63,4 @@ Route::delete('/admin/blog/hapusKategori/{id}', [AdminBlogController::class, 'de
 // Rute Manajemen Member
 Route::resource('/admin/members', AdminMemberController::class);
 // Rute Booking Tempat Pemancingan
-
+Route::resource('/admin/sewaPemancingan', AdminSewaPemancinganController::class);
