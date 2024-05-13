@@ -21,7 +21,7 @@ class SewaPemancinganFactory extends Factory
     public function definition(): array
     {
         return [
-            'kode_booking' => $this->faker->unique()->text(10),
+            'kode_booking' => $this->faker->unique()->text(7),
             'user_id' => function () {
                 return \App\Models\Member::factory()->create()->id;
             },

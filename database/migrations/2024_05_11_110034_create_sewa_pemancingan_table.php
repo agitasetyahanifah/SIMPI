@@ -19,7 +19,7 @@ return new class extends Migration
             $table->time('jam_mulai');
             $table->time('jam_selesai');
             $table->integer('jumlah_sewa');
-            $table->decimal('biaya_sewa', 10, 2)->nullable(); // Tambahkan nullable agar bisa diisi setelah data terisi
+            $table->integer('biaya_sewa')->nullable(); // Tambahkan nullable agar bisa diisi setelah data terisi
             $table->timestamps();
             
             $table->foreign('user_id')->references('id')->on('members')->onDelete('cascade');

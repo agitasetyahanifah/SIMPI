@@ -21,15 +21,15 @@
 @endif
 
 <div class="container-fluid py-4">
-    {{-- Update Jumlah Pengunjung --}}
+    {{-- Update Ketersediaan Spot Pemancingan --}}
     <div class="row">
-        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+        <div class="col">
             <div class="card">
                 <div class="card-body p-4 mb-2">
                     <div class="row">
-                        <div class="col-8">
+                        <div class="col">
                             <div class="numbers">
-                                <p class="text-sm mb-0 text-capitalize font-weight-bold mb-1">Pengunjung Pemancingan</p>
+                                <h5 class="font-weight-bolder">Ketersediaan Spot Pemancingan</h5>
                                 <h5 class="font-weight-bolder mb-0">
                                     {{ isset($visitors) ? $visitors->jumlah : 0 }}
                                 </h5>
@@ -38,31 +38,6 @@
                         <div class="col-4 text-end">
                             <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
                                 <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-8 col-sm-6">
-            <div class="card">
-                <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="numbers">
-                                {{-- Update jumlah pengunjung --}}
-                                <form method="post" action="/admin/dashboard/updatePengunjung">
-                                    @csrf
-                                    <div class="input-group p-1 col-8">
-                                        <input name="jumlah" id="jumlah" type="number" class="form-control" placeholder="Update Jumlah Pengunjung Pemancingan">
-                                        <button class="btn btn-outline-primary mb-0" type="submit">Update</button>
-                                    </div>
-                                    @if(isset($visitors) && $visitors->updated_at)
-                                    <div class="p-0">
-                                        <a style="color: grey; font-size: 14px; margin-right: 4px" class="p-1">Tanggal terakhir kali diperbarui: {{ $visitors->updated_at->setTimezone('Asia/Jakarta')->format('d/m/Y H:i:s') }} WIB</a>
-                                    </div>
-                                    @endif
-                                </form>
                             </div>
                         </div>
                     </div>
