@@ -22,49 +22,36 @@
 
 <div class="container-fluid py-4">
     {{-- Update Ketersediaan Spot Pemancingan --}}
-    <div class="row">
+    <div class="row row-cols-md-2">
         <div class="col">
             <div class="card">
-                <div class="card-body p-4 mb-2">
-                    <div class="row">
-                        <div class="col">
-                            <div class="numbers">
-                                <h5 class="font-weight-bolder">Ketersediaan Spot Pemancingan</h5>
-                                <h5 class="font-weight-bolder mb-0">
-                                    {{ isset($visitors) ? $visitors->jumlah : 0 }}
-                                </h5>
+                <div class="row p-3">
+                    <div class="col">
+                        <h5 class="font-weight-bolder">Ketersediaan Spot Pemancingan</h5>
+                        <h5 class="mb-3">{{ $terakhirDiperbaruiKetersediaan }}</h5>
+                        <small class="text-muted">Terakhir diperbarui pada: {{ $waktuTerbaru }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="row p-3">
+                    <div class="col">
+                        <h5 class="font-weight-bolder">Update Jumlah Spot Pemancingan</h5>
+                        <form action="{{ route('admin.dashboard.updateSpotPemancingan') }}" method="post">
+                            @csrf
+                            <div class="input-group">
+                                <input type="number" class="form-control" name="updateSpotPemancingan" placeholder="Update Jumlah Spot Pemancingan" aria-label="UpdateSpotPemancingan" aria-describedby="button-addon2" required>
+                                <button class="btn btn-outline-primary mb-0" type="submit" id="button-addon2">Update</button>
                             </div>
-                        </div>
-                        <div class="col-4 text-end">
-                            <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                                <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
-                            </div>
-                        </div>
+                        </form>
+                        <small class="text-muted">Terakhir diperbarui: {{ $spotPemancingan->updated_at }}</small>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    {{-- Chart Jumlah Pengunjung --}}
-    {{-- <div class="row mt-3">
-        <div class="col-lg-12 mb-lg-0 mb-4">
-            <div class="card">
-                <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="d-flex flex-column h-100">
-                              {{-- Button Tambah Gambar --}}
-                              {{-- <h5 class="font-weight-bolder p-2">Grafik Jumlah Pengunjung Pemancingan</h5>   --}}
-                              {{--  kode chart --}}
-                            {{-- </div>                            
-                        </div>                                                
-                      </div>
-                    </div>                  
-                </div>
-            </div>
-        </div>   
-    </div>     --}} 
     
     {{-- Galeri --}}
     <div class="row mt-3">

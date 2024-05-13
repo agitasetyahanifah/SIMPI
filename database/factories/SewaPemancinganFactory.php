@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\SewaPemancingan;
+use App\Models\Member;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,11 +22,11 @@ class SewaPemancinganFactory extends Factory
     public function definition(): array
     {
         return [
-            'kode_booking' => $this->faker->unique()->text(7),
+            'kode_booking' => $this->faker->unique()->text(5),
             'user_id' => function () {
                 return \App\Models\Member::factory()->create()->id;
             },
-            'tanggal_sewa' => $this->faker->date(),
+            'tanggal_sewa' => $this->faker->dateTimeBetween('2024-01-01', '2024-12-31')->format('Y-m-d'),
             'jam_mulai' => $this->faker->time(),
             'jam_selesai' => $this->faker->time(),
             'jumlah_sewa' => $this->faker->numberBetween(1, 10),

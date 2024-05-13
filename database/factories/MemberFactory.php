@@ -23,8 +23,8 @@ class MemberFactory extends Factory
     public function definition(): array
     {
         return [
-            'nama' => $this->faker->name,
-            'telepon' => $this->faker->phoneNumber,
+            'nama' => $this->faker->name('id_ID'),
+            'telepon' => $this->faker->phoneNumber('id_ID'),
             'email' => $this->faker->unique()->safeEmail,
             'password' => Hash::make('password'), // Ubah 'password' menjadi password yang diinginkan
             'status' => $this->faker->randomElement(['aktif', 'tidak aktif']),

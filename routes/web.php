@@ -28,7 +28,8 @@ Route::get('/', function () {
 // Admin
 // Rute dashboard admin 
 Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard.index');
-Route::post('/admin/dashboard/updatePengunjung', [AdminDashboardController::class, 'updatePengunjung'])->name('admin.dashboard.updatePengunjung');
+Route::post('/admin/dashboard/updateSpotPemancingan', [AdminDashboardController::class, 'updateSpotPemancingan'])->name('admin.dashboard.updateSpotPemancingan');
+Route::get('/admin/dashboard/hitungKetersediaanSpotPancingan', [AdminDashboardController::class, 'hitungKetersediaanSpotPancingan'])->name('admin.dashboard.hitungKetersediaanSpotPancingan');
 Route::post('/admin/dashboard/uploadGambar', [AdminDashboardController::class, 'uploadGambar'])->name('admin.dashboard.uploadGambar');
 Route::delete('/admin/dashboard/{id}', [AdminDashboardController::class, 'hapusGambar'])->name('admin.dashboard.hapusGambar');
 // Rute keuangan admin 
