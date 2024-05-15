@@ -6,7 +6,7 @@ use App\Http\Controllers\AdminMemberController;
 use App\Http\Controllers\AdminKeuanganController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminAlatPancingController;
-use App\Http\Controllers\AdminPenyewaanAlatController;
+use App\Http\Controllers\AdminSewaAlatController;
 use App\Http\Controllers\AdminPengelolaanIkanController;
 use App\Http\Controllers\AdminSewaPemancinganController;
 
@@ -40,8 +40,9 @@ Route::get('/admin/keuangan/edit/{id}', [AdminKeuanganController::class, 'edit']
 Route::put('/admin/keuangan/update/{id}', [AdminKeuanganController::class, 'update'])->name('admin.keuangan.update');
 // Rute alat pancing 
 Route::resource('/admin/alatPancing', AdminAlatPancingController::class);
-// Rute penyewaan alat 
-Route::resource('/admin/penyewaanAlat', AdminPenyewaanAlatController::class);
+// Rute sewa alat 
+Route::resource('/admin/sewaAlat', AdminSewaAlatController::class);
+Route::post('/admin/sewaAlat/konfirmasi-pembayaran/{id}', [AdminSewaAlatController::class, 'konfirmasiPembayaran'])->name('admin.sewaAlat.konfirmasiPembayaran');
 // Rute untuk menampilkan halaman utama pengelolaan ikan
 Route::get('/admin/pengelolaanIkan', [AdminPengelolaanIkanController::class, 'index'])->name('admin.pengelolaanIkan.index');
 // Rute untuk jenis ikan
@@ -65,3 +66,4 @@ Route::delete('/admin/blog/hapusKategori/{id}', [AdminBlogController::class, 'de
 Route::resource('/admin/members', AdminMemberController::class);
 // Rute Booking Tempat Pemancingan
 Route::resource('/admin/sewaPemancingan', AdminSewaPemancinganController::class);
+Route::post('/admin/sewaPemancingan/konfirmasi-pembayaran/{id}', [AdminSewaPemancinganController::class, 'konfirmasiPembayaran'])->name('admin.sewaPemancingan.konfirmasiPembayaran');

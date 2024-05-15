@@ -23,72 +23,12 @@
 <div class="container-fluid py-4">
     <div class="row">
       <div class="col-12">
-        <div class="card mb-0">
+        <div class="card">
           <div class="card-header pb-0">
             <h4 class="font-weight-bolder mb-0">Penyewaan Alat Pancing</h4>
-            {{-- Button Tambah Alat Pancing --}}
-            <form action="/admin/penyewaanAlat" method="POST">
-                @csrf
-              <div class="col-12 text-end">
-                  <button class="btn btn-outline-primary mb-1" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
-              </div>
-            </div>
-          {{-- Modal Tambah Penyewaan Alat Pancing --}}
-          <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Tambah Penyewaan Alat Pancing</h5>
-                        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <form action="/admin/penyewaanAlat" method="POST">
-                        @csrf
-                        <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
-                            <div class="form-group">
-                                <label for="nama_pelanggan" class="col-form-label">Nama Pelanggan</label>
-                                <input type="text" class="form-control" id="nama_pelanggan" name="nama_pelanggan" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="alat_pancing" class="col-form-label">Alat Pancing</label>
-                                <div id="alat_pancing_container">
-                                    <select class="form-select" name="alat_pancing_id[0][id]" required>
-                                        @foreach($alatPancing->sortBy('nama_alat') as $alat)
-                                            @if($alat->status == 'available')
-                                                <option value="{{ $alat->id }}" data-harga="{{ $alat->harga }}">{{ $alat->nama_alat }}</option>
-                                            @endif
-                                        @endforeach
-                                    </select>   
-                                </div>
-                            </div>        
-                            <button type="button" class="btn btn-primary" onclick="tambahKolomAlatPancing()">
-                                <i class="fas fa-plus"></i> Tambah Alat Pancing
-                            </button>                                                        
-                            <div class="form-group">
-                                <label for="tanggal_pinjam" class="col-form-label">Tanggal Pinjam</label>
-                                <input type="date" class="form-control" id="tanggal_pinjam" name="tanggal_pinjam" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="masa_pinjam" class="col-form-label">Masa Pinjam (hari)</label>
-                                <input type="number" class="form-control" id="masa_pinjam" name="masa_pinjam" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="biaya_sewa" class="col-form-label">Biaya Sewa</label>
-                                <input type="number" class="form-control" id="biaya_sewa" name="biaya_sewa" onclick="hitungBiayaSewa()" required readonly>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn bg-gradient-primary">Tambah</button>
-                        </div>
-                    </form>
-                </div>
-              </div>
-          </div>
-          <div class="card-body px-0 pt-0 pb-2">
+          <div class="card-body">
             <div class="table-responsive p-0">
-              <table class="table align-items-center mb-0">
+              <table class="table align-items-center">
                 <thead>
                     <tr>
                         <th>No</th>

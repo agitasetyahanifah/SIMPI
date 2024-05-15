@@ -16,7 +16,7 @@ class SewaPemancingan extends Model
     protected static function booted()
     {
         static::creating(function ($sewaPemancingan) {
-            $sewaPemancingan->kode_booking = 'LNI' . uniqid();
+            $sewaPemancingan->kode_booking = strtoupper('LNI' . uniqid());
         });
     }
 

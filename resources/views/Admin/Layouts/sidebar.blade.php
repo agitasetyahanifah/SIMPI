@@ -42,7 +42,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {{ request()->is('admin/penyewaanAlat*') ? 'active' : '' }}" href="/admin/penyewaanAlat">
+          <a class="nav-link {{ request()->is('admin/sewaAlat*') ? 'active' : '' }}" href="/admin/sewaAlat">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-bullet-list-67"></i>
             </div>

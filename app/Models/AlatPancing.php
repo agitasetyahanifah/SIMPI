@@ -13,8 +13,8 @@ class AlatPancing extends Model
 
     protected $guarded = ['id'];
 
-    public function penyewaanAlat()
+    public function sewaAlat()
     {
-        return $this->belongsToMany(PenyewaanAlat::class)->withTimestamps();
+        return $this->belongsToMany(SewaAlat::class, 'alat_sewa', 'alat_id', 'sewa_id');
     }
 }
