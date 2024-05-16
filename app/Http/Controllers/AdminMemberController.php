@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Member;
 use Illuminate\Http\Request;
 
 class AdminMemberController extends Controller
@@ -11,7 +12,9 @@ class AdminMemberController extends Controller
      */
     public function index()
     {
-        //
+        $members = Member::latest()->paginate(25);
+        $lastItem = $members->lastItem();
+        return view('admin.manajemenmember.index', compact('members','lastItem'));
     }
 
     /**
@@ -27,7 +30,28 @@ class AdminMemberController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validasi input
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'telepon' => 'required|string|max:15', // Adjust max length as needed
+            'email' => 'required|email|max:255|unique:members,email',
+            'password' => 'required|string|min:8',
+            'status' => 'required|string|in:aktif,tidak aktif',
+        ]);
+
+        // Membuat member baru
+        $member = new Member;
+        $member->nama = $request->input('nama');
+        $member->telepon = $request->input('telepon');
+        $member->email = $request->input('email');
+        $member->password = bcrypt($request->input('password'));
+        $member->status = $request->input('status');
+
+        // Menyimpan member baru
+        $member->save();
+
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Data member berhasil ditambahkan');
     }
 
     /**
@@ -49,9 +73,37 @@ class AdminMemberController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        // Validasi input
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'telepon' => 'required|string|max:15',
+            'email' => 'required|email|max:255',
+            'password' => 'nullable|string|min:8',
+            'status' => 'required|string|in:aktif,tidak aktif',
+        ]);
+
+        // Find the member by ID
+        $member = Member::findOrFail($id);
+
+        // Update member data
+        $member->nama = $request->input('nama');
+        $member->telepon = $request->input('telepon');
+        $member->email = $request->input('email');
+
+        // Update password only if provided
+        if ($request->filled('password')) {
+            $member->password = bcrypt($request->input('password'));
+        }
+
+        $member->status = $request->input('status');
+
+        // Save the changes
+        $member->save();
+
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Data member berhasil diperbarui');
     }
 
     /**
@@ -59,6 +111,12 @@ class AdminMemberController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $members = Member::findOrFail($id);
+            
+        // Hapus alat pancing dari database
+        $members->delete();
+            
+        // Redirect kembali ke halaman manajemen member dengan pesan sukses
+        return redirect()->back()->with('success', 'Data member berhasil dihapus.');
     }
 }

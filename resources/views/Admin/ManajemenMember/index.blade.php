@@ -39,40 +39,36 @@
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Tambah Alat Pancing</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Member</h5>
                         <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <form action="/admin/alatPancing" method="POST" enctype="multipart/form-data">
+                    <form action="/admin/members" method="POST">
                         @csrf
                         <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                             <div class="form-group">
-                                <label for="foto" class="col-form-label">Foto</label>
-                                <input type="file" class="form-control" id="foto" name="foto" required accept="image/*">
+                                <label for="nama" class="col-form-label">Nama</label>
+                                <input type="text" class="form-control" id="nama" name="nama" required>
                             </div>
                             <div class="form-group">
-                                <label for="nama_alat" class="col-form-label">Nama Alat</label>
-                                <input type="text" class="form-control" id="nama_alat" name="nama_alat" required>
+                                <label for="telepon" class="col-form-label">Telepon</label>
+                                <input type="text" class="form-control" id="telepon" name="telepon" required oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                             </div>
                             <div class="form-group">
-                                <label for="harga" class="col-form-label">Harga</label>
-                                <input type="number" class="form-control" id="harga" name="harga" required>
+                                <label for="email" class="col-form-label">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
                             </div>
                             <div class="form-group">
-                                <label for="jumlah" class="col-form-label">Jumlah</label>
-                                <input type="number" class="form-control" id="jumlah" name="jumlah" required>
+                                <label for="password" class="col-form-label">Password</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
                             </div>
                             <div class="form-group">
                                 <label for="status" class="col-form-label">Status</label>
                                 <select class="form-select" id="status" name="status" required>
-                                    <option value="available">Available</option>
-                                    <option value="not available">Not Available</option>
+                                    <option value="aktif">Aktif</option>
+                                    <option value="tidak aktif">Tidak Aktif</option>
                                 </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="spesifikasi" class="col-form-label">Spesifikasi</label>
-                                <textarea class="form-control" id="spesifikasi" name="spesifikasi" rows="3"></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -89,43 +85,31 @@
                 <thead>
                   <tr>
                     <th class="text-center">No</th>
-                    <th>Alat Pancing</th>
-                    <th class="text-center">Jumlah</th>
-                    <th class="text-center">Status</th>
-                    <th class="text-center">Aksi</th>
+                    <th>Nama</th>
+                    <th>Telepon</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
                   @php
-                    $currentNumber = $lastItem - $alatPancing->count() + 1;
+                    $currentNumber = $lastItem - $members->count() + 1;
                   @endphp
-                  @if($alatPancing->count() > 0)
-                    @foreach($alatPancing as $key => $alat)
+                  @if($members->count() > 0)
+                    @foreach($members as $key => $member)
                     <tr>
-                      <td>
-                        <p class="text-center">{{ $currentNumber++ }}</p>
-                      </td>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="{{ asset('images/' . $alat->foto) }}" class="avatar avatar-xl me-3" alt="Alat Pancing">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">{{ $alat->nama_alat }}</h6>
-                            <p class="text-xl text-secondary mb-0">{{ number_format($alat->harga, 0, ',', '.') }} /hari</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-sm text-center font-weight-bold mb-0">{{ $alat->jumlah }}</p>
-                      </td>
+                      <td class="text-center">{{ $currentNumber++ }}</td>
+                      <td>{{ $member->nama }}</td>
+                      <td>{{ $member->telepon }}</td>
+                      <td>{{ $member->email }}</td>
                       <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm {{ $alat->status == 'available' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $alat->status }}</span>
+                        <span class="badge badge-sm {{ $member->status == 'aktif' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $member->status }}</span>
                       </td>
                       <td class="align-middle text-center">
-                          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#detailModal{{ $alat->id }}"><i class="fas fa-eye"></i></button>
-                          <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ $alat->id }}"><i class="fas fa-edit"></i></button>
-                          <button class="btn btn-danger delete" data-alatId="{{ $alat->id }}"><i class="fas fa-trash"></i></button>
+                          <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailModal{{ $member->id }}"><i class="fas fa-eye"></i></button>
+                          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $member->id }}"><i class="fas fa-edit"></i></button>
+                          <button class="btn btn-danger delete" data-memberId="{{ $member->id }}"><i class="fas fa-trash"></i></button>
                       </td>
                     </tr>
                     @endforeach
@@ -141,10 +125,10 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Apakah Anda yakin ingin menghapus transaksi ini?
+                            Apakah Anda yakin ingin menghapus data ini?
                         </div>
                         <div class="modal-footer">
-                          <form id="deleteForm" action="/admin/alatPancing/{alatPancing}" method="post">
+                          <form id="deleteForm" action="/admin/members/{id}" method="post">
                             @csrf
                             @method('DELETE')
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -154,81 +138,95 @@
                     </div>
                 </div>
               </div>
-              <!-- Modal Edit Alat Pancing -->
-              @foreach($alatPancing as $alat)
-              <div class="modal fade" id="editModal{{ $alat->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $alat->id }}" aria-hidden="true">
+              <!-- Modal Edit member Pancing -->
+              @foreach($members as $member)
+              <div class="modal fade" id="editModal{{ $member->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $member->id }}" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                       <div class="modal-content">
                           <div class="modal-header">
-                              <h5 class="modal-title" id="editModalLabel{{ $alat->id }}">Edit Alat Pancing</h5>
+                              <h5 class="modal-title" id="editModalLabel{{ $member->id }}">Edit Data Member</h5>
                               <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">×</span>
                               </button>
                           </div>
-                          <form action="/admin/alatPancing/{{ $alat->id }}" method="POST" enctype="multipart/form-data">
+                          <form action="/admin/members/{{ $member->id }}" method="post">
                               @csrf
                               @method('PUT')
-                              <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                              <div class="modal-body">
                                   <div class="form-group">
-                                      <label for="foto{{ $alat->id }}" class="col-form-label">Foto</label>
-                                      <input type="file" class="form-control" id="foto{{ $alat->id }}" name="foto" accept="image/*">
+                                      <label for="nama{{ $member->id }}" class="col-form-label">Nama</label>
+                                      <input type="text" class="form-control" id="nama{{ $member->id }}" name="nama" value="{{ $member->nama }}" required>
                                   </div>
                                   <div class="form-group">
-                                      <label for="nama_alat{{ $alat->id }}" class="col-form-label">Nama Alat</label>
-                                      <input type="text" class="form-control" id="nama_alat{{ $alat->id }}" name="nama_alat" value="{{ $alat->nama_alat }}" required>
+                                    <label for="telepon{{ $member->id }}" class="col-form-label">Telepon</label>
+                                    <input type="text" class="form-control" id="telepon{{ $member->id }}" name="telepon" value="{{ $member->telepon }}" required oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                  </div>                                                               
+                                  <div class="form-group">
+                                      <label for="email{{ $member->id }}" class="col-form-label">Email</label>
+                                      <input type="email" class="form-control" id="email{{ $member->id }}" name="email" value="{{ $member->email }}" required>
                                   </div>
                                   <div class="form-group">
-                                      <label for="harga{{ $alat->id }}" class="col-form-label">Harga</label>
-                                      <input type="number" class="form-control" id="harga{{ $alat->id }}" name="harga" value="{{ $alat->harga }}" required>
+                                    <label for="password{{ $member->id }}" class="col-form-label">Password</label>
+                                    <input type="password" class="form-control" id="password{{ $member->id }}" name="password">
                                   </div>
                                   <div class="form-group">
-                                      <label for="jumlah{{ $alat->id }}" class="col-form-label">Jumlah</label>
-                                      <input type="number" class="form-control" id="jumlah{{ $alat->id }}" name="jumlah" value="{{ $alat->jumlah }}" required>
-                                  </div>
-                                  <div class="form-group">
-                                      <label for="status{{ $alat->id }}" class="col-form-label">Status</label>
-                                      <select class="form-select" id="status{{ $alat->id }}" name="status" required>
-                                          <option value="available" {{ $alat->status == 'available' ? 'selected' : '' }}>Available</option>
-                                          <option value="not available" {{ $alat->status == 'not available' ? 'selected' : '' }}>Not Available</option>
+                                      <label for="status{{ $member->id }}" class="col-form-label">Status</label>
+                                      <select class="form-select" id="status{{ $member->id }}" name="status" required>
+                                          <option value="aktif" {{ $member->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                          <option value="tidak aktif" {{ $member->status == 'tidak aktif' ? 'selected' : '' }}>Tidak Aktif</option>
                                       </select>
-                                  </div>
-                                  <div class="form-group">
-                                      <label for="spesifikasi{{ $alat->id }}" class="col-form-label">Spesifikasi</label>
-                                      <textarea class="form-control" id="spesifikasi{{ $alat->id }}" name="spesifikasi" rows="3">{{ $alat->spesifikasi }}</textarea>
                                   </div>
                               </div>
                               <div class="modal-footer">
                                   <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
-                                  <button type="submit" class="btn bg-gradient-primary">Update</button>
+                                  <button type="submit" class="btn bg-gradient-primary">Simpan</button>
                               </div>
                           </form>
                       </div>
                   </div>
               </div>
               @endforeach
-              <!-- Modal Detail Alat Pancing -->
-              @foreach($alatPancing as $alat)
-              <div class="modal fade" id="detailModal{{ $alat->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $alat->id }}" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+              <!-- Modal Detail member Pancing -->
+              @foreach($members as $member)
+              <div class="modal fade" id="detailModal{{ $member->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $member->id }}" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                       <div class="modal-content">
                           <div class="modal-header">
-                              <h5 class="modal-title" id="detailModalLabel{{ $alat->id }}">Detail Alat Pancing</h5>
+                              <h5 class="modal-title" id="detailModalLabel{{ $member->id }}">Detail Member</h5>
                               <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">×</span>
                               </button>
                           </div>
                           <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                               <div class="row">
-                                  <div class="col-md-6">
-                                      <img src="{{ asset('images/' . $alat->foto) }}" class="img-fluid" alt="Foto Alat Pancing">
-                                  </div>
-                                  <div class="col-md-6">
-                                      <h5>{{ $alat->nama_alat }}</h5>
-                                      <p>Harga: {{ number_format($alat->harga, 0, ',', '.') }} /hari</p>
-                                      <p>Jumlah: {{ $alat->jumlah }}</p>
-                                      <p>Status: <span class="badge {{ $alat->status == 'available' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $alat->status }}</span></p>
-                                      <p>Spesifikasi: </p><p>{!! nl2br(e($alat->spesifikasi)) !!}</p>
-                                  </div>
+                                <div class="col">
+                                    <table class="table">
+                                        <tr>
+                                            <th>Nama</th>
+                                            <td><b>{{ $member->nama }}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Telepon</th>
+                                            <td>{{ $member->telepon }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Email</th>
+                                            <td>{{ $member->email }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Status</th>
+                                            <td>{{ $member->status }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Created At</th>
+                                            <td>{{ $member->created_at }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Updated At</th>
+                                            <td>{{ $member->updated_at }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
                               </div>
                           </div>
                           <div class="modal-footer">
@@ -242,27 +240,27 @@
           </div>
           
           {{-- Cek ada data atau kosong --}}
-          @if($alatPancing->isEmpty())
+          @if($members->isEmpty())
             <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
           @endif
         
           <!-- Pagination -->
           <nav class="p-3" aria-label="Pagination">
             <ul class="pagination">
-                <li class="page-item {{ $alatPancing->onFirstPage() ? 'disabled' : '' }}">
-                    <a class="page-link" href="{{ $alatPancing->previousPageUrl() ?? '#' }}" tabindex="-1">
+                <li class="page-item {{ $members->onFirstPage() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $members->previousPageUrl() ?? '#' }}" tabindex="-1">
                         <i class="fa fa-angle-left"></i>
                         <span class="sr-only">Previous</span>
                     </a>
                 </li>
                 <!-- Tampilkan nomor halaman -->
-                @for ($i = 1; $i <= $alatPancing->lastPage(); $i++)
-                    <li class="page-item {{ $alatPancing->currentPage() == $i ? 'active' : '' }}">
-                        <a class="page-link" href="{{ $alatPancing->url($i) }}">{{ $i }}</a>
+                @for ($i = 1; $i <= $members->lastPage(); $i++)
+                    <li class="page-item {{ $members->currentPage() == $i ? 'active' : '' }}">
+                        <a class="page-link" href="{{ $members->url($i) }}">{{ $i }}</a>
                     </li>
                 @endfor
-                <li class="page-item {{ $alatPancing->hasMorePages() ? '' : 'disabled' }}">
-                    <a class="page-link" href="{{ $alatPancing->nextPageUrl() ?? '#' }}">
+                <li class="page-item {{ $members->hasMorePages() ? '' : 'disabled' }}">
+                    <a class="page-link" href="{{ $members->nextPageUrl() ?? '#' }}">
                         <i class="fa fa-angle-right"></i>
                         <span class="sr-only">Next</span>
                     </a>
@@ -280,11 +278,11 @@
   $(document).ready(function() {
       // Menangani button delete
       $(document).on('click', '.delete', function() {
-          const alatPancing = $(this).data('alatid'); 
+          const members = $(this).data('memberid'); 
           $('#deleteModal').modal('show');
 
           // Mengubah action form berdasarkan ID transaksi yang dipilih
-          $('#deleteForm').attr('action', '/admin/alatPancing/' + alatPancing);
+          $('#deleteForm').attr('action', '/admin/members/' + members);
       });
   });
 </script>

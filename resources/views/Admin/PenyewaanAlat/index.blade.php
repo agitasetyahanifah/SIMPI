@@ -136,7 +136,7 @@
                               </div>
                               <div class="modal-footer">
                                   <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
-                                  <button type="submit" class="btn bg-gradient-primary">Update</button>
+                                  <button type="submit" class="btn bg-gradient-primary">Simpan</button>
                               </div>
                           </form>
                       </div>

@@ -56,9 +56,22 @@ class AdminSewaAlatController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, SewaAlat $sewaAlat)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'edit_tgl_pinjam' => 'required|date',
+            'edit_tgl_kembali' => 'required|date',
+            'edit_alat_pancing' => 'required|array',
+        ]);
+    
+        $sewaAlat = SewaAlat::findOrFail($id);
+        $sewaAlat->tgl_pinjam = $request->input('edit_tgl_pinjam');
+        $sewaAlat->tgl_kembali = $request->input('edit_tgl_kembali');
+        $sewaAlat->save();
+    
+        $sewaAlat->alat()->sync($request->input('edit_alat_pancing'));
+    
+        return redirect()->route('admin.sewaAlat.index')->with('success', 'Data penyewaan berhasil diperbarui.');
     }
 
     /**

@@ -142,6 +142,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- Modal untuk Konfirmasi Pembayaran -->
             <div class="modal fade" id="konfirmasiModal{{ $alat->id }}" tabindex="-1" role="dialog" aria-labelledby="konfirmasiModalLabel{{ $alat->id }}" aria-hidden="true">
                 <div class="modal-dialog" role="document">
@@ -163,6 +164,7 @@
                 </div>
             </div>
             @endforeach
+            
             <!-- Modal Edit Sewa alat -->
             @foreach ($sewaAlat as $alat)
             <div class="modal fade" id="editModal{{ $alat->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $alat->id }}" aria-hidden="true">
@@ -192,10 +194,10 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="edit_alat_pancing">Alat Pancing</label>
-                                    <select class="form-control" id="edit_alat_pancing" name="edit_alat_pancing[]" multiple required>
-                                        @foreach ($alatPancing as $item)
-                                            <option value="{{ $item->id }}" {{ in_array($item->id, $alat->alat->pluck('id')->toArray()) ? 'selected' : '' }}>
-                                                {{ $item->nama_alat }}
+                                    <select id="alat_pancing" name="alat_pancing[]" multiple required>
+                                        @foreach ($alatPancing as $alat)
+                                            <option value="{{ $alat->id }}" {{ in_array($alat->id, $penyewaan->alatPancing()->pluck('id')->toArray()) ? 'selected' : '' }}>
+                                                {{ $alat->nama_alat }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -209,7 +211,8 @@
                     </div>
                 </div>
             </div>
-            @endforeach        
+             @endforeach
+        
             <!-- Modal Delete -->
             <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                 <div class="modal-dialog">

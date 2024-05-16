@@ -18,6 +18,11 @@ class SewaAlat extends Model
         return $this->belongsTo(Member::class, 'user_id');
     }
 
+    public function alatSewa()
+    {
+        return $this->hasMany(AlatSewa::class, 'sewa_id');
+    }
+
     public function alat()
     {
         return $this->belongsToMany(AlatPancing::class, 'alat_sewa', 'sewa_id', 'alat_id');

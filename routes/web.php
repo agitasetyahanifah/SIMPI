@@ -42,6 +42,7 @@ Route::put('/admin/keuangan/update/{id}', [AdminKeuanganController::class, 'upda
 Route::resource('/admin/alatPancing', AdminAlatPancingController::class);
 // Rute sewa alat 
 Route::resource('/admin/sewaAlat', AdminSewaAlatController::class);
+Route::put('/admin/sewaAlat/{id}', [AdminSewaAlatController::class, 'update'])->name('admin.sewaAlat.update');
 Route::post('/admin/sewaAlat/konfirmasi-pembayaran/{id}', [AdminSewaAlatController::class, 'konfirmasiPembayaran'])->name('admin.sewaAlat.konfirmasiPembayaran');
 // Rute untuk menampilkan halaman utama pengelolaan ikan
 Route::get('/admin/pengelolaanIkan', [AdminPengelolaanIkanController::class, 'index'])->name('admin.pengelolaanIkan.index');

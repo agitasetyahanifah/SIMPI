@@ -9,6 +9,14 @@ class Member extends Model
 {
     use HasFactory;
 
+    protected $table = 'members';
+
+    protected $guarded = ['id'];
+
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
     public function sewaAlat()
     {
         return $this->hasMany(SewaAlat::class);

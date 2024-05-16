@@ -58,29 +58,29 @@
           </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ request()->is('admin/members*') ? 'active' : '' }}" href="admin/members">
+            <a class="nav-link {{ request()->is('admin/members*') ? 'active' : '' }}" href="/admin/members">
               <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-badge"></i>
               </div>
               <span class="nav-link-text ms-1">Manajemen Member</span>
             </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {{ request()->is('admin/blog*') ? 'active' : '' }}" href="/admin/blog">
-              <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="ni ni-archive-2"></i>
-              </div>
-              <span class="nav-link-text ms-1">Artikel Pemancingan</span>
-            </a>
-          </li>
-          {{-- <li class="nav-item">
-            <a class="nav-link  " href="#">
-              <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="ni ni-chat-round"></i>
-              </div>
-              <span class="nav-link-text ms-1">Pesan</span>
-            </a>
-          </li> --}}
+        </li>
+        <li class="nav-item">
+           <a class="nav-link {{ request()->is('admin/blog*') ? 'active' : '' }}" href="/admin/blog">
+             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
+               <i class="ni ni-archive-2"></i>
+             </div>
+             <span class="nav-link-text ms-1">Artikel Pemancingan</span>
+           </a>
+         </li>
+        {{-- <li class="nav-item">
+           <a class="nav-link  " href="#">
+             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
+               <i class="ni ni-chat-round"></i>
+             </div>
+             <span class="nav-link-text ms-1">Pesan</span>
+           </a>
+        </li> --}}
         <li class="nav-item mt-3">
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
         </li>
