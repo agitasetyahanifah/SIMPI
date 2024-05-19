@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AlatPancing;
+use App\Models\AlatSewa;
 use App\Models\SewaAlat;
 use App\Models\Member;
 use Illuminate\Http\Request;
@@ -12,13 +13,24 @@ class AdminSewaAlatController extends Controller
     /**
      * Display a listing of the resource.
      */
+    // public function index()
+    // {
+    //     $sewaAlat = SewaAlat::with(['member', 'alatPancing'])->orderBy('tgl_pinjam', 'desc')->paginate(25);
+    //     $lastItem = $sewaAlat->lastItem();
+    //     $member = Member::all();
+    //     $alatPancing = AlatPancing::all();
+    //     $alatSewa = AlatSewa::all();
+    //     return view('admin.sewaalat.index', compact('sewaAlat', 'lastItem', 'member', 'alatPancing', 'alatSewa'));
+    // }
+
     public function index()
     {
-        $sewaAlat = SewaAlat::with(['member', 'alat'])->orderBy('tgl_pinjam', 'desc')->paginate(25);
+        $sewaAlat = SewaAlat::with(['member', 'alatSewa.alatPancing'])->orderBy('tgl_pinjam', 'desc')->paginate(25);
         $lastItem = $sewaAlat->lastItem();
         $member = Member::all();
         $alatPancing = AlatPancing::all();
-        return view('admin.sewaalat.index', compact('sewaAlat', 'lastItem', 'member', 'alatPancing'));
+        $alatSewa = AlatSewa::all();
+        return view('admin.sewaalat.index', compact('sewaAlat', 'lastItem', 'member', 'alatPancing', 'alatSewa'));
     }
 
     /**
@@ -65,12 +77,13 @@ class AdminSewaAlatController extends Controller
         ]);
     
         $sewaAlat = SewaAlat::findOrFail($id);
-        $sewaAlat->tgl_pinjam = $request->input('edit_tgl_pinjam');
-        $sewaAlat->tgl_kembali = $request->input('edit_tgl_kembali');
+        $sewaAlat->tgl_pinjam = $request->edit_tgl_pinjam;
+        $sewaAlat->tgl_kembali = $request->edit_tgl_kembali;
         $sewaAlat->save();
     
-        $sewaAlat->alat()->sync($request->input('edit_alat_pancing'));
-    
+        // Sync alat pancing
+        $sewaAlat->alatPancing()->sync($request->edit_alat_pancing);
+
         return redirect()->route('admin.sewaAlat.index')->with('success', 'Data penyewaan berhasil diperbarui.');
     }
 

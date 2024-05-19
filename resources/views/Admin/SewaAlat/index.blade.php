@@ -101,8 +101,8 @@
                                         <tr>
                                             <th>Alat Pancing yang Dipinjam</th>
                                             <td>
-                                                @if($alat->alat->isNotEmpty())
-                                                    @foreach($alat->alat as $alatPancing)
+                                                @if($alat->alatPancing->isNotEmpty())
+                                                    @foreach($alat->alatPancing as $alatPancing)
                                                         {{ $alatPancing->nama_alat }}@if(!$loop->last), @endif
                                                     @endforeach
                                                 @else
@@ -194,14 +194,50 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="edit_alat_pancing">Alat Pancing</label>
-                                    <select id="alat_pancing" name="alat_pancing[]" multiple required>
-                                        @foreach ($alatPancing as $alat)
-                                            <option value="{{ $alat->id }}" {{ in_array($alat->id, $penyewaan->alatPancing()->pluck('id')->toArray()) ? 'selected' : '' }}>
-                                                {{ $alat->nama_alat }}
-                                            </option>
+                                    <div id="alat-pancing-container">
+                                        @foreach ($sewaAlat as $sewa)
+                                            @foreach ($sewa->alatSewa as $alatSewa)
+                                                <div class="row g-3 align-items-center alat-pancing-item">
+                                                    <div class="col-md-11 col-10 form-group">
+                                                        <select name="edit_alat_pancing[]" class="form-control">
+                                                            @foreach ($alatSewa->alatPancing as $ap)
+                                                                <option value="{{ $ap->id }}" {{ $alatSewa->alat_id == $ap->id ? 'selected' : '' }}>{{ $ap->nama_alat }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-1 col-2 d-flex align-items-end justify-content-end p-3 mt-0">
+                                                        <a onclick="removeAlat(this)"><i class="fas fa-trash" style="color: red"></i></a>
+                                                    </div>
+                                                </div>
+                                            @endforeach
                                         @endforeach
-                                    </select>
+                                    </div>
+                                    <a class="btn btn-primary" onclick="addAlat()"><i class="fas fa-plus"></i> Tambah Alat Pancing</a>
+                                
+                                    <!-- Hidden element to store the alatPancing options -->
+                                    <div id="alatPancingOptions" style="display: none;">
+                                        @foreach ($alatPancing as $ap)
+                                            <option value="{{ $ap->id }}">{{ $ap->nama_alat }}</option>
+                                        @endforeach
+                                    </div>
                                 </div>
+                                {{-- <div class="form-group">
+                                    <label for="edit_alat_pancing">Alat Pancing</label>
+                                    <div id="alat-pancing-container">
+                                        <div class="row g-3 align-items-center alat-pancing-item">
+                                            <div class="col-md-11 col-10 form-group">
+                                                <select name="edit_alat_pancing[]" class="form-control">
+                                                    <option value="">Pancing 1</option>
+                                                    <option value="">Pancing 2</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-1 col-2 d-flex align-items-end justify-content-end p-3 mt-0">
+                                                <a onclick="removeAlat(this)"><i class="fas fa-trash" style="color: red"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <a class="btn btn-primary" onclick="addAlat()"><i class="fas fa-plus"></i> Tambah Alat Pancing</a>
+                                </div> --}}
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -299,6 +335,32 @@
 
     function submitKonfirmasiForm(id) {
         document.getElementById('konfirmasiForm' + id).submit();
+    }
+</script>
+
+<script>
+    function removeAlat(button) {
+        button.closest('.alat-pancing-item').remove();
+    }
+
+    function addAlat() {
+        const container = document.getElementById('alat-pancing-container');
+        const newItem = document.createElement('div');
+        newItem.classList.add('row', 'g-3', 'align-items-center', 'alat-pancing-item');
+        
+        const options = document.getElementById('alatPancingOptions').innerHTML;
+
+        newItem.innerHTML = `
+            <div class="col-md-11 col-10 form-group">
+                <select name="edit_alat_pancing[]" class="form-control">
+                    ${options}
+                </select>
+            </div>
+            <div class="col-md-1 col-2 d-flex align-items-end justify-content-end p-3 mt-0">
+                <a onclick="removeAlat(this)"><i class="fas fa-trash" style="color: red"></i></a>
+            </div>
+        `;
+        container.appendChild(newItem);
     }
 </script>
 

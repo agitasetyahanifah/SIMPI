@@ -15,12 +15,14 @@ class AlatSewa extends Model
     public function sewaAlat()
     {
         return $this->belongsTo(SewaAlat::class, 'sewa_id');
+        // return $this->belongsTo(SewaAlat::class);
     }
 
     // Definisikan relasi dengan model AlatPancing
     public function alatPancing()
     {
         return $this->belongsTo(AlatPancing::class, 'alat_id');
+        // return $this->belongsTo(AlatPancing::class);
     }
 
 }

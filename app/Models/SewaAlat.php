@@ -21,11 +21,13 @@ class SewaAlat extends Model
     public function alatSewa()
     {
         return $this->hasMany(AlatSewa::class, 'sewa_id');
+        // return $this->hasMany(AlatSewa::class);
     }
 
-    public function alat()
+    public function alatPancing()
     {
-        return $this->belongsToMany(AlatPancing::class, 'alat_sewa', 'sewa_id', 'alat_id');
+        // return $this->belongsToMany(AlatPancing::class, 'alat_sewa', 'sewa_id', 'alat_id');
+        return $this->hasManyThrough(AlatPancing::class, AlatSewa::class, 'sewa_id', 'alat_id', 'id', 'id');
     }
 
     protected static function booted()
