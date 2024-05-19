@@ -46,7 +46,12 @@
                                 <button class="btn btn-outline-primary mb-0" type="submit" id="button-addon2">Update</button>
                             </div>
                         </form>
-                        <small class="text-muted">Terakhir diperbarui: {{ $spotPemancingan->updated_at }}</small>
+                        <small class="text-muted">
+                            Terakhir diperbarui: 
+                            @if($spotPemancingan)
+                                {{ $spotPemancingan->updated_at }}
+                            @endif
+                        </small>                        
                     </div>
                 </div>
             </div>

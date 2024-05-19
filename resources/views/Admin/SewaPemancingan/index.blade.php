@@ -26,6 +26,62 @@
         <div class="card">
           <div class="card-header pb-0">
             <h4 class="font-weight-bolder mb-0">Manajemen Penyewaan Spot Pemancingan</h4>
+            {{-- Button Tambah --}}
+            <form action="/admin/sewaPemancingan" method="post">
+                @csrf
+                <div class="col-12 text-end">
+                  <button class="btn btn-outline-primary mb-0" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
+                </div>
+          </div>
+          <!-- Modal Tambah Data Sewa Pemancingan -->
+          <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tambah Data Sewa Spot Pemancingan</h5>
+                <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nama_pelanggan" class="col-form-label">Nama Pelanggan</label>
+                        <select class="form-control" id="nama_pelanggan" name="nama_pelanggan" required>
+                            <option value="">Pilih Nama Pelanggan</option>
+                            @foreach($members as $member)
+                                @if($member->status == 'aktif')
+                                    <option value="{{ $member->id }}">{{ $member->nama }}</option>
+                                @endif
+                            @endforeach
+                        </select>                        
+                    </div>
+                    <div class="form-group">
+                        <label for="tanggal_sewa" class="col-form-label">Tanggal Sewa</label>
+                        <input type="date" class="form-control" id="tanggal_sewa" name="tanggal_sewa" required>
+                    </div>
+                    <div class="row row-cols-2">
+                        <div class="col form-group">
+                            <label for="jam_mulai">Jam Mulai</label>
+                            <input type="time" class="form-control" id="jam_mulai" name="jam_mulai" required>
+                        </div>
+                        <div class="col form-group">
+                            <label for="jam_selesai">Jam Selesai</label>
+                            <input type="time" class="form-control" id="jam_selesai" name="jam_selesai" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="jumlah_sewa">Jumlah Sewa</label>
+                        <input type="number" class="form-control" id="jumlah_sewa" name="jumlah_sewa" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn bg-gradient-primary">Tambah</button>
+                </div>
+            </form>
+            </div>
+            </div>
+          </div>
           <div class="card-body ">
             <div class="table-responsive p-0">
               <table class="table table-hover">
@@ -94,11 +150,11 @@
                                         </tr>
                                         <tr>
                                             <th>Jam Mulai</th>
-                                            <td>{{ $pemancingan->jam_mulai }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($pemancingan->jam_mulai)->format('H:i') }}</td>
                                         </tr>
                                         <tr>
                                             <th>Jam Selesai</th>
-                                            <td>{{ $pemancingan->jam_selesai }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($pemancingan->jam_selesai)->format('H:i') }}</td>
                                         </tr>
                                         <tr>
                                             <th>Jumlah Sewa</th>

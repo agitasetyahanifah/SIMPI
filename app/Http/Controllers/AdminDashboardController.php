@@ -21,12 +21,41 @@ class AdminDashboardController extends Controller
         $waktuTerbaruSewaPemancingan = SewaPemancingan::latest('updated_at')->first();
         $waktuTerbaruSpotPemancingan = SpotPemancingan::latest('updated_at')->first();
 
-        // Buat objek Carbon untuk kedua waktu yang ingin Anda bandingkan
-        $carbonWaktuSewa = Carbon::parse($waktuTerbaruSewaPemancingan->updated_at);
-        $carbonWaktuSpot = Carbon::parse($waktuTerbaruSpotPemancingan->updated_at);
+        // Memeriksa apakah $waktuTerbaruSewaPemancingan tidak null
+        if ($waktuTerbaruSewaPemancingan) {
+            $carbonWaktuSewa = Carbon::parse($waktuTerbaruSewaPemancingan->updated_at);
+        } else {
+            // Tangani kasus jika $waktuTerbaruSewaPemancingan null
+            $carbonWaktuSewa = null;
+        }
 
-        // Gunakan metode max() pada objek Carbon untuk mendapatkan waktu terbaru
-        $waktuTerbaru = $carbonWaktuSewa->max($carbonWaktuSpot);
+        // Memeriksa apakah $waktuTerbaruSpotPemancingan tidak null
+        if ($waktuTerbaruSpotPemancingan) {
+            $carbonWaktuSpot = Carbon::parse($waktuTerbaruSpotPemancingan->updated_at);
+        } else {
+            // Tangani kasus jika $waktuTerbaruSpotPemancingan null
+            $carbonWaktuSpot = null;
+        }
+
+        // Memeriksa apakah $waktuTerbaruSewaPemancingan tidak null
+        $carbonWaktuSewa = $waktuTerbaruSewaPemancingan ? Carbon::parse($waktuTerbaruSewaPemancingan->updated_at) : null;
+
+        // Memeriksa apakah $waktuTerbaruSpotPemancingan tidak null
+        $carbonWaktuSpot = $waktuTerbaruSpotPemancingan ? Carbon::parse($waktuTerbaruSpotPemancingan->updated_at) : null;
+
+        if ($carbonWaktuSewa && $carbonWaktuSpot) {
+            // Jika kedua waktu tidak null, gunakan metode max() untuk mendapatkan waktu terbaru
+            $waktuTerbaru = $carbonWaktuSewa->max($carbonWaktuSpot);
+        } elseif ($carbonWaktuSewa) {
+            // Jika hanya $carbonWaktuSewa yang tidak null
+            $waktuTerbaru = $carbonWaktuSewa;
+        } elseif ($carbonWaktuSpot) {
+            // Jika hanya $carbonWaktuSpot yang tidak null
+            $waktuTerbaru = $carbonWaktuSpot;
+        } else {
+            // Jika kedua waktu null
+            $waktuTerbaru = null;
+        }
 
         return view('admin.dashboard.index', compact(['spotPemancingan', 'images', 'terakhirDiperbaruiKetersediaan', 'waktuTerbaru']));
     }
