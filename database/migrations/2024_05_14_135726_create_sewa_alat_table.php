@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->date('tgl_pinjam');
             $table->date('tgl_kembali');
-            $table->integer('biaya_sewa');
+            $table->integer('biaya_sewa')->nullable();
             $table->enum('status', ['sudah dibayar', 'belum dibayar'])->default('belum dibayar');
             $table->timestamps();
 

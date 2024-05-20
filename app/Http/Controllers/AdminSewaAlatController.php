@@ -6,6 +6,7 @@ use App\Models\AlatPancing;
 use App\Models\AlatSewa;
 use App\Models\SewaAlat;
 use App\Models\Member;
+use App\Models\SewaPemancingan;
 use Illuminate\Http\Request;
 
 class AdminSewaAlatController extends Controller
@@ -13,24 +14,16 @@ class AdminSewaAlatController extends Controller
     /**
      * Display a listing of the resource.
      */
-    // public function index()
-    // {
-    //     $sewaAlat = SewaAlat::with(['member', 'alatPancing'])->orderBy('tgl_pinjam', 'desc')->paginate(25);
-    //     $lastItem = $sewaAlat->lastItem();
-    //     $member = Member::all();
-    //     $alatPancing = AlatPancing::all();
-    //     $alatSewa = AlatSewa::all();
-    //     return view('admin.sewaalat.index', compact('sewaAlat', 'lastItem', 'member', 'alatPancing', 'alatSewa'));
-    // }
-
     public function index()
     {
-        $sewaAlat = SewaAlat::with(['member', 'alatSewa.alatPancing'])->orderBy('tgl_pinjam', 'desc')->paginate(25);
+        $sewaAlat = SewaAlat::with(['member', 'alatPancing'])->orderBy('tgl_pinjam', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
         $lastItem = $sewaAlat->lastItem();
         $member = Member::all();
+        $members = Member::orderBy('nama', 'asc')->get();
         $alatPancing = AlatPancing::all();
+        $alatPancings = AlatPancing::where('status', 'available')->get();
         $alatSewa = AlatSewa::all();
-        return view('admin.sewaalat.index', compact('sewaAlat', 'lastItem', 'member', 'alatPancing', 'alatSewa'));
+        return view('admin.sewaalat.index', compact('sewaAlat', 'lastItem', 'member', 'members', 'alatPancing', 'alatPancings', 'alatSewa'));
     }
 
     /**
@@ -46,8 +39,57 @@ class AdminSewaAlatController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validasi data yang dikirim dari form
+        $request->validate([
+            'nama_pelanggan' => 'required',
+            'nama_alat' => 'required|array',
+            'tgl_pinjam' => 'required|date',
+            'tgl_kembali' => 'required|date|after_or_equal:tgl_pinjam',
+        ]);
+    
+        // Proses penyimpanan data ke dalam database sesuai dengan model masing-masing
+        $sewaAlat = new SewaAlat();
+        $sewaAlat->user_id = $request->nama_pelanggan;
+        $sewaAlat->tgl_pinjam = $request->tgl_pinjam;
+        $sewaAlat->tgl_kembali = $request->tgl_kembali;
+        $sewaAlat->save();
+    
+        // Attach selected fishing equipment to the SewaAlat model
+        // $sewaAlat->alatPancing()->attach($request->nama_alat);
+        foreach ($request->nama_alat as $alatId) {
+            $sewaAlat->alatPancing()->attach($alatId);
+        }
+    
+        // Hitung biaya sewa
+        $biaya_sewa = $this->hitungBiayaSewa($sewaAlat->tgl_pinjam, $sewaAlat->tgl_kembali, $request->nama_alat);
+    
+        // Simpan biaya sewa ke dalam data sewa alat
+        $sewaAlat->biaya_sewa = $biaya_sewa;
+        $sewaAlat->save();
+    
+        // Redirect atau kirim respons sesuai kebutuhan
+        return redirect()->back()->with('success', 'Data sewa alat pancing berhasil ditambahkan.');
     }
+    
+    private function hitungBiayaSewa($tgl_pinjam, $tgl_kembali, $nama_alat)
+    {
+        // Hitung selisih hari antara tanggal kembali dan tanggal pinjam
+        $diff = strtotime($tgl_kembali) - strtotime($tgl_pinjam);
+        $selisih_hari = round($diff / (60 * 60 * 24)); // Konversi detik ke hari
+    
+        // Ambil harga alat pancing berdasarkan nama alat yang dipilih
+        $harga_total = 0;
+        foreach ($nama_alat as $nama) {
+            $harga_alat = AlatPancing::where('nama_alat', $nama)->value('harga');
+            $harga_total += $harga_alat;
+        }
+    
+        // Hitung biaya sewa berdasarkan harga total alat dikali selisih hari
+        $biaya_sewa = $harga_total * $selisih_hari;
+    
+        return $biaya_sewa;
+    }
+    
 
     /**
      * Display the specified resource.

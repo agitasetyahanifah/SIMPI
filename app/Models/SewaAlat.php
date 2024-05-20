@@ -26,8 +26,7 @@ class SewaAlat extends Model
 
     public function alatPancing()
     {
-        // return $this->belongsToMany(AlatPancing::class, 'alat_sewa', 'sewa_id', 'alat_id');
-        return $this->hasManyThrough(AlatPancing::class, AlatSewa::class, 'sewa_id', 'alat_id', 'id', 'id');
+        return $this->belongsToMany(AlatPancing::class, 'alat_sewa', 'sewa_id', 'alat_id');
     }
 
     protected static function booted()

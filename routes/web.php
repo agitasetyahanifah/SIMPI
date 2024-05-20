@@ -4,9 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminBlogController;
 use App\Http\Controllers\AdminMemberController;
 use App\Http\Controllers\AdminKeuanganController;
+use App\Http\Controllers\AdminSewaAlatController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminAlatPancingController;
-use App\Http\Controllers\AdminSewaAlatController;
+use App\Http\Controllers\GuestLandingPageController;
 use App\Http\Controllers\AdminPengelolaanIkanController;
 use App\Http\Controllers\AdminSewaPemancinganController;
 
@@ -68,3 +69,8 @@ Route::resource('/admin/members', AdminMemberController::class);
 // Rute Booking Tempat Pemancingan
 Route::resource('/admin/sewaPemancingan', AdminSewaPemancinganController::class);
 Route::post('/admin/sewaPemancingan/konfirmasi-pembayaran/{id}', [AdminSewaPemancinganController::class, 'konfirmasiPembayaran'])->name('admin.sewaPemancingan.konfirmasiPembayaran');
+
+
+// Guest 
+// Landing Page Guest 
+Route::get('/guest/landingPage', [GuestLandingPageController::class, 'index'])->name('guest.landingpage.index');

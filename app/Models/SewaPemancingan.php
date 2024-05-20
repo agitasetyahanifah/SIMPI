@@ -24,4 +24,11 @@ class SewaPemancingan extends Model
     {
         return $this->belongsTo(Member::class, 'user_id', 'id');
     }
+
+    public function alatPancing()
+    {
+        return $this->belongsToMany(AlatPancing::class, 'alat_sewa', 'sewa_id', 'alat_id')
+            ->withTimestamps();
+    }
+
 }
