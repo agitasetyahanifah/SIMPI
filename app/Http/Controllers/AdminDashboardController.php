@@ -13,7 +13,7 @@ class AdminDashboardController extends Controller
     public function index()
     {
         $spotPemancingan = SpotPemancingan::latest()->first();
-        $images = Galeri::orderBy('created_at', 'desc')->paginate(6);
+        $images = Galeri::orderBy('created_at', 'desc')->paginate(12);
         
         // Panggil metode hitungTerakhirDiperbarui() untuk mendapatkan waktu terakhir diperbarui
         $terakhirDiperbaruiKetersediaan = $this->hitungTerakhirDiperbarui('ketersediaan');

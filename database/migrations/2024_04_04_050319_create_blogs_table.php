@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Definisi foreign key constraint
-            $table->foreign('kategori_id')->references('id')->on('kategori_blog');
+            $table->foreign('kategori_id')->references('id')->on('kategori_blog')->onDelete('cascade');
         });
     }
 

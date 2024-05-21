@@ -5,12 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\SpotPemancingan;
 use App\Models\SewaPemancingan;
+use App\Models\Galeri;
+use App\Models\Blog;
+use App\Models\AlatPancing;
 use Illuminate\Support\Carbon;
 
 class GuestLandingPageController extends Controller
 {
     public function index()
     {
+        $images = Galeri::orderBy('created_at', 'desc')->paginate(6);
+        $blogs = Blog::latest()->paginate(3);
+        $alatPancing = AlatPancing::orderBy('created_at', 'desc')->paginate(6);
         $spotPemancingan = SpotPemancingan::latest()->first();
         
         // Panggil metode hitungTerakhirDiperbarui() untuk mendapatkan waktu terakhir diperbarui
@@ -55,7 +61,7 @@ class GuestLandingPageController extends Controller
             $waktuTerbaru = null;
         }
 
-        return view('guest.landingpage.index', compact(['spotPemancingan', 'terakhirDiperbaruiKetersediaan', 'waktuTerbaru']));
+        return view('guest.landingpage.index', compact(['spotPemancingan', 'terakhirDiperbaruiKetersediaan', 'waktuTerbaru', 'images', 'blogs', 'alatPancing']));
     }
 
     public function hitungTerakhirDiperbarui($jenis)

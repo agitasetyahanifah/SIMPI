@@ -197,7 +197,7 @@
     </div>
 
     {{-- Forum Pemancingan --}}
-    <div class="row mt-3">
+    {{-- <div class="row mt-3">
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-body p-3">
@@ -208,7 +208,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 </div>
 

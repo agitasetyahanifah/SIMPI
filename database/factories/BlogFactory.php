@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use App\Models\KategoriBlog;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Blog>
@@ -18,14 +19,11 @@ class BlogFactory extends Factory
     public function definition(): array
     {
         $judul = $this->faker->sentence;
-        $kategori = 'nama_kategori';
-        $kategori = ['Pemancingan', 'Tips & Trik', 'Jenis-Jenis Ikan', 'Alat Pancing'];
-        $randomKategori = $this->faker->randomElement($kategori);
-
+        
         return [
             'judul' => $judul,
             'slug' => Str::slug($judul),
-            'kategori' => $randomKategori,
+            'kategori_id' => KategoriBlog::factory(), // Menggunakan factory KategoriBlog
             'image' => 'path/to/your/image.jpg',
             'body' => $this->faker->paragraph,
         ];

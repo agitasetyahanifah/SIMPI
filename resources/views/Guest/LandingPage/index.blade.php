@@ -24,6 +24,42 @@
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
   <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- jQuery dan Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+
+  <style>
+    .fixed-image {
+      width: 100%;
+      height: 150px; /* Tinggi tetap */
+      object-fit: cover; /* Agar gambar sesuai dengan ukuran tanpa merusak proporsi */
+      object-position: center; /* Pusatkan gambar */
+    }
+
+    .fixed-image2 {
+      width: 100%;
+      height: 200px; /* Tinggi tetap */
+      object-fit: cover; /* Agar gambar sesuai dengan ukuran tanpa merusak proporsi */
+      object-position: center; /* Pusatkan gambar */
+    }
+
+    .card-body2 {
+      padding-left: 10px;
+      padding-top: 5px;
+    }
+
+    .card-title2 {
+        margin-bottom: 2px; /* Kurangi margin bawah */
+    }
+
+    .card-text2 {
+        margin-bottom: 5px; /* Kurangi margin bawah */
+    }
+  </style>
+    
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -50,25 +86,29 @@
 
     {{-- Content --}}
     <div class="container-fluid py-2">
+
+      {{-- Ketersediaan Spot Pemancingan dan Informasi Cuaca --}}
       <div class="row row-cols-md-2">
-        <div class="col mt-2">
+        {{-- Ketersediaan Spot Pemancingan --}}
+        <div class="col-md-4 mt-2">
           <div class="col-12">
             <div class="card shadow-sm border-0">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-12 col-md-6">
-                            <h5 class="font-weight-bolder">Ketersediaan Spot Pemancingan</h5>
-                            <small class="text-muted">Terakhir diperbarui pada: {{ $waktuTerbaru }}</small>
-                        </div>
-                        <div class="col-12 col-md-6 text-md-end text-center mt-3 mt-md-0">
-                            <a class="btn btn-outline-primary" style="font-size: 25pt">{{ $terakhirDiperbaruiKetersediaan }}</a>
-                        </div>
+                      <div class="col-12 col-md-6 mb-md-0">
+                        <h5 class="font-weight-bolder">Ketersediaan Spot Pemancingan</h5>
+                        <small class="text-muted">Terakhir diperbarui pada: {{ $waktuTerbaru }}</small>
+                      </div>
+                      <div class="col-12 col-md-6 d-flex align-items-center justify-content-center justify-content-md-end mt-3 mt-md-2">
+                        <a class="btn btn-outline-primary" style="font-size: 25pt">{{ $terakhirDiperbaruiKetersediaan }}</a>
+                      </div>
                     </div>
                 </div>
             </div>
+          </div>
         </div>
-        </div>
-        <div class="col mt-2">
+        {{-- Informasi Cuaca --}}
+        <div class="col-md-8 mt-2">
           <div class="col-12">
               <div class="card shadow-sm border-0">
                   <div class="card-body">
@@ -77,16 +117,231 @@
                       </div>
                       <div class="row mt-3">
                           <div class="col">
-                              <div id="weather-info"></div>
+
                           </div>
                       </div>
                   </div>
               </div>
           </div>
+        </div>
       </div>
+
+      {{-- Galeri Pemancingan --}}
+      <div class="col mt-2">
+        <div class="col-12">
+          <div class="card shadow-sm border-0">
+            <div class="card-body">
+              <div class="row">
+                <h4 class="font-weight-bolder mb-2">Galeri Pemancingan</h4>
+                @foreach($images as $image)
+                <div class="col-lg-2 col-md-3 col-sm-4 col-4 g-1 mb-3 text-center">
+                  <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body p-2">
+                      <!-- Tambahkan tombol maximize -->
+                      <div class="position-absolute top-0 end-0 p-2" style="z-index: 999;">
+                        <button class="btn btn-transparent maximize" data-image="{{ asset('images/' . $image->filename) }}">
+                          <i class="fa fa-expand"></i>
+                        </button>
+                      </div>
+                      <div class="d-flex align-items-center justify-content-center h-100">
+                        @if($image->filename)
+                        <img class="img-fluid" src="{{ asset('images/' . $image->filename) }}" alt="{{ asset('images/' . $image->filename) }}" style="max-height: 150px;">
+                        @endif
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                @endforeach
+
+                <!-- Modal Maximize -->
+                <div>
+                  <div class="modal fade" id="maximizeModal" tabindex="-1" aria-labelledby="maximizeModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-fullscreen">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <!-- Tombol close modal -->
+                          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body d-flex align-items-center justify-content-center">
+                          <img id="maximizedImage" src="#" class="img-fluid" alt="Gambar Diperbesar"
+                            style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {{-- Cek ada data atau kosong --}}
+              @if($images->isEmpty())
+                <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+              @endif
+
+              {{-- Button Lainnya --}}
+              <div class="row mt-3">
+                <div class="text-center">
+                  <a href="#" class="btn btn-primary btn-sm rounded-pill">Lainnya <i class="fas fa-chevron-right" style="font-size: 10pt"></i></a>
+                </div>
+              </div>              
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{-- Konten Blog --}}
+      @php
+        use Illuminate\Support\Str;
+      @endphp
+      <div class="col mt-2">
+        <div class="col-12">
+          <div class="card shadow-sm border-0">
+            <div class="card-body">
+              <div class="row">
+                <h4 class="font-weight-bolder mb-3">Blog/Artikel Pemancingan</h4>
+                <div class="col-12 d-flex flex-wrap mb-2">
+                  <div class="row g-2">
+                    @foreach($blogs as $blog)
+                      <div class="col-lg-4 col-md-6 col-sm-12 mb-1">
+                        <div class="card h-100">
+                          @if($blog->image && file_exists(public_path('images/'.$blog->image)))
+                            <img src="{{ asset('images/'.$blog->image) }}" class="card-img-top fixed-image" alt="{{ $blog->judul }}">
+                          @else
+                            <img src="https://source.unsplash.com/random/450x150?fishing" class="card-img-top fixed-image" alt="Fishing Image">
+                          @endif
+                          <div class="card-body">
+                            <h5 class="card-title">{{ $blog->judul }}</h5>
+                            <p class="card-text">{{ Str::words(strip_tags($blog->body), 12, '...') }} <a href="#" style="color: aqua;">Selengkapnya</a></p>
+                            <small class="text-muted mt-2">Last updated {{ $blog->updated_at->diffForHumans() }}</small>
+                          </div>
+                        </div>
+                      </div>
+                    @endforeach
+                  </div>
+                </div>
+              </div>                          
+
+              {{-- Cek ada data atau kosong --}}
+              @if($blogs->isEmpty())
+                <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+              @endif
+
+              {{-- Button Lainnya --}}
+              <div class="row mt-3">
+                <div class="text-center">
+                  <a href="#" class="btn btn-primary btn-sm rounded-pill">Lainnya <i class="fas fa-chevron-right" style="font-size: 10pt"></i></a>
+                </div>
+              </div>              
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{-- Daftar Alat Pancing --}}
+      <div class="col mt-2">
+        <div class="col-12">
+          <div class="card shadow-sm border-0">
+            <div class="card-body">
+              <div class="row">
+                <h4 class="font-weight-bolder mb-2">Daftar Alat Pancing yang Disewakan</h4>
+                @foreach($alatPancing as $alat)
+                <div class="col-lg-2 col-md-3 col-sm-4 col-6 g-1 mb-1">
+                  <div class="card h-100">
+                    <div class="card">
+                      @if($alat->foto && file_exists(public_path('images/'.$alat->foto)))
+                        <img src="{{ asset('images/'.$alat->foto) }}" class="card-img-top fixed-image" alt="{{ $alat->nama_alat }}">
+                      @else
+                         <img src="https://source.unsplash.com/random/450x450?fishing" class="card-img-top fixed-image" alt="Fishing Image">
+                      @endif
+                      <div class="card-body2">
+                          <h5 class="card-title2">{{ $alat->nama_alat }}</h5>
+                          <p class="card-text2" style="color: orangered;">Rp {{ number_format($alat->harga, 0, ',', '.') }}/hari</p>
+                          <div class="text-center">
+                            <a href="#" class="btn btn-primary mt-2">Detail</a>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                @endforeach
+              </div>            
+
+              {{-- Cek ada data atau kosong --}}
+              @if($alatPancing->isEmpty())
+                <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+              @endif
+
+              {{-- Button Lainnya --}}
+              <div class="row mt-3">
+                <div class="text-center">
+                  <a href="#" class="btn btn-primary btn-sm rounded-pill">Lainnya <i class="fas fa-chevron-right" style="font-size: 10pt"></i></a>
+                </div>
+              </div>              
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{-- Lokasi Pemancingan --}}
+      <div class="col mt-2">
+        <div class="col-12">
+          <div class="card shadow-sm border-0">
+            <div class="card-body">
+              <div class="row">
+                <!-- Kolom kiri untuk sosial media -->
+                <div class="col-md-6">
+                  <h5 class="card-title mb-3"><b>Sosial Media</b></h5>
+                  <ul class="list-unstyled d-flex flex-wrap">
+                    <li class="me-2 mb-2">
+                      <a href="#" class="btn btn-outline-primary btn-sm d-flex align-items-center">
+                        <i class="fa fa-facebook me-2" style="font-size: 15px"></i> Facebook
+                      </a>
+                    </li>
+                    <li class="me-2 mb-2">
+                      <a href="#" class="btn btn-outline-info btn-sm d-flex align-items-center">
+                        <i class="fa fa-twitter me-2" style="font-size: 15px"></i> Twitter
+                      </a>
+                    </li>
+                    <li class="me-2 mb-2">
+                      <a href="#" class="btn btn-outline-danger btn-sm d-flex align-items-center">
+                        <i class="fa fa-instagram me-2" style="font-size: 15px"></i> Instagram
+                      </a>
+                    </li>
+                    <li class="me-2 mb-2">
+                      <a href="#" class="btn btn-outline-warning btn-sm d-flex align-items-center">
+                        <i class="fa fa-linkedin me-2" style="font-size: 15px"></i> LinkedIn
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+      
+                <!-- Kolom kanan untuk peta -->
+                <div class="col-md-6">
+                  <h5 class="card-title mb-3"><b>Lokasi Kami</b></h5>
+                  <div class="card">
+                    <div id="map-container" style="height: 300px;">
+                      <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.3856887394672!2d110.74229609999999!3d-7.532844599999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a149ddf20b1c5%3A0xb967e9b36ae5bd62!2sPT.%20LegendNET%20Indonesia!5e0!3m2!1sid!2sid!4v1716319883143!5m2!1sid!2sid" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                      </iframe>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
 
     {{-- Footer --}}
     <footer class="footer pl-0 pb-3">
@@ -290,37 +545,21 @@
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
   </script>
+  <script>
+    $(document).ready(function() {
+        // Menangani klik tombol maximize
+        $('.maximize').on('click', function() {
+            const imageUrl = $(this).data('image');
+            $('#maximizedImage').attr('src', imageUrl);
+            $('#maximizeModal').modal('show');
+        });
+    });
+  </script>
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="../assets/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
 
-  <script>
-    const API_KEY = 'YOUR_WEATHERCOM_API_KEY';
-    const LOCATION_ID = 'YOUR_LOCATION_ID';
-
-    const API_URL = `https://api.weather.com/data/2.5/weather?id=${LOCATION_ID}&appid=${API_KEY}&units=metric`;
-
-    const getWeatherInfo = () => {
-        fetch(API_URL)
-            .then(response => response.json())
-            .then(data => {
-                const weatherInfo = document.getElementById('weather-info');
-                weatherInfo.innerHTML = `
-                    <p>Kota: ${data.name}</p>
-                    <p>Suhu: ${data.main.temp}°C</p>
-                    <p>Kondisi Cuaca: ${data.weather[0].description}</p>
-                    <p>Kelembaban: ${data.main.humidity}%</p>
-                    <p>Kecepatan Angin: ${data.wind.speed} km/h</p>
-                `;
-            })
-            .catch(error => console.log('Error:', error));
-    };
-
-    window.onload = () => {
-        getWeatherInfo();
-    };
-  </script>
 </body>
 
 </html>

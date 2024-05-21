@@ -169,7 +169,7 @@
                     <span aria-hidden="true">×</span>
                 </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                     <div class="form-group">
                         <label for="judul" class="col-form-label">Judul</label>
                         <input type="text" class="form-control" id="judul" name="judul" required>
@@ -252,7 +252,7 @@
                                 <span aria-hidden="true">×</span>
                             </button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                             <form action="/admin/blog/{{ $blog->id }}" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
@@ -296,14 +296,14 @@
             @foreach ($blogs as $blog)
               <div class="modal fade" id="detailModal{{ $blog->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $blog->id }}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-xl">
-                  <div class="modal-content">
+                    <div class="modal-content">
                     <div class="modal-header">
                       <h5 class="modal-title" id="exampleModalLabel">Detail Blog/Artikel Pemancingan</h5>
                       <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                       </button>                    
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                         <div class="container">
                             <div class="row">
                                 <h3>{{ $blog->judul }}</h3>

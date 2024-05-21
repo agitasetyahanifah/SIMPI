@@ -41,7 +41,7 @@ class AdminAlatPancingController extends Controller
         ]);
 
         // Menyimpan foto ke dalam direktori public/images
-        $fotoFileName = $request->file('foto')->getClientOriginalName(); // Mendapatkan nama file
+        $fotoFileName = time() . '_' . $request->file('foto')->getClientOriginalName();
         $request->file('foto')->move(public_path('images'), $fotoFileName);
 
         // Membuat entri baru dalam tabel alat_pancing

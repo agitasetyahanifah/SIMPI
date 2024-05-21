@@ -137,13 +137,16 @@ class AdminBlogController extends Controller
     public function deleteKategori(String $id)
     {
         $kategoriBlog = KategoriBlog::findOrFail($id);
-
-        // Hapus blog dari database
+    
+        // Hapus semua blog yang terkait dengan kategori ini
+        Blog::where('kategori_id', $kategoriBlog->id)->delete();
+    
+        // Hapus kategori dari database
         $kategoriBlog->delete();
-
-        // Redirect kembali ke halaman ddaftar blog dengan pesan sukses
-        return redirect()->back()->with('success', 'Kategori blog berhasil dihapus.');
-    }
+    
+        // Redirect kembali ke halaman daftar kategori blog dengan pesan sukses
+        return redirect()->back()->with('success', 'Kategori blog dan blog terkait berhasil dihapus.');
+    }    
 
     public function checkSlug(Request $request)
     {
