@@ -14,7 +14,7 @@ class GuestLandingPageController extends Controller
 {
     public function index()
     {
-        $images = Galeri::orderBy('created_at', 'desc')->paginate(6);
+        $images = Galeri::orderBy('created_at', 'desc')->paginate(3);
         $blogs = Blog::latest()->paginate(3);
         $alatPancing = AlatPancing::orderBy('created_at', 'desc')->paginate(6);
         $spotPemancingan = SpotPemancingan::latest()->first();
