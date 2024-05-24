@@ -87,8 +87,8 @@
   --bs-border-radius-2xl: 1.5rem;
   --bs-border-radius-pill: 50rem;
   --bs-link-color: #FF9940;
-  --bs-link-hover-color: #830866;
-  --bs-code-color: #d63384;
+  --bs-link-hover-color: #FFD042;
+  --bs-code-color: #FFC412;
   --bs-highlight-bg: #fcf8e3;
 }
 
@@ -124,6 +124,15 @@ hr {
   border-top: 1px solid;
   opacity: 0.25;
 }
+
+/* hr {
+  margin: 1rem 0;
+  color: grey;
+  border: 0;
+  border-top: 1px solid grey;
+  opacity: 0.75;
+} */
+
 
 h1,
 .h1,
@@ -4016,9 +4025,9 @@ fieldset:disabled .btn {
   --bs-btn-color: #FF9940;
   --bs-btn-bg: transparent;
   --bs-btn-border-color: transparent;
-  --bs-btn-hover-color: #830866;
+  --bs-btn-hover-color: #FFD042;
   --bs-btn-hover-border-color: transparent;
-  --bs-btn-active-color: #830866;
+  --bs-btn-active-color: #FFD042;
   --bs-btn-active-border-color: transparent;
   --bs-btn-disabled-color: #6c757d;
   --bs-btn-disabled-border-color: transparent;
@@ -4711,7 +4720,7 @@ fieldset:disabled .btn {
   --bs-navbar-color: #344767;
   --bs-navbar-hover-color: rgba(52, 71, 103, 0.7);
   --bs-navbar-disabled-color: rgba(52, 71, 103, 0.3);
-  --bs-navbar-active-color: rgba(52, 71, 103, 0.9);
+  --bs-navbar-active-color: rgba(255, 153, 64, 0.9);
   --bs-navbar-brand-padding-y: 0.59375rem;
   --bs-navbar-brand-margin-end: 1rem;
   --bs-navbar-brand-font-size: 0.875rem;
@@ -5593,10 +5602,10 @@ fieldset:disabled .btn {
   --bs-pagination-border-width: 1px;
   --bs-pagination-border-color: #dee2e6;
   --bs-pagination-border-radius: 0.5rem;
-  --bs-pagination-hover-color: #830866;
+  --bs-pagination-hover-color: #FFD042;
   --bs-pagination-hover-bg: #e9ecef;
   --bs-pagination-hover-border-color: #dee2e6;
-  --bs-pagination-focus-color: #830866;
+  --bs-pagination-focus-color: #FFD042;
   --bs-pagination-focus-bg: #e9ecef;
   --bs-pagination-focus-box-shadow: 0 0 0 0.2rem rgba(255, 153, 64, 0.25);
   --bs-pagination-active-color: #fff;

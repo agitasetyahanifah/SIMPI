@@ -2,11 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminBlogController;
+use App\Http\Controllers\GuestBlogController;
 use App\Http\Controllers\AdminMemberController;
 use App\Http\Controllers\GuestGaleriController;
 use App\Http\Controllers\AdminKeuanganController;
 use App\Http\Controllers\AdminSewaAlatController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\GuestDaftarAlatController;
 use App\Http\Controllers\AdminAlatPancingController;
 use App\Http\Controllers\GuestLandingPageController;
 use App\Http\Controllers\AdminPengelolaanIkanController;
@@ -77,3 +79,8 @@ Route::post('/admin/sewaPemancingan/konfirmasi-pembayaran/{id}', [AdminSewaPeman
 Route::get('/guest/landingPage', [GuestLandingPageController::class, 'index'])->name('guest.landingpage.index');
 // Galeri Guest 
 Route::get('/guest/galeriPemancingan', [GuestGaleriController::class, 'index'])->name('guest.galeri.index');
+// Blog Guest 
+Route::get('/guest/blogPemancingan', [GuestBlogController::class, 'index'])->name('guest.blog.index');
+Route::get('/guest/detailBlogPemancingan/{id}', [GuestBlogController::class, 'show'])->name('blog.detail-blog');
+// Daftar Alat yang Disewakan Guest 
+Route::get('/guest/daftarAlat', [GuestDaftarAlatController::class, 'index'])->name('guest.daftar-alat.index');

@@ -71,11 +71,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="spesifikasi" class="col-form-label">Spesifikasi</label>
-                                <textarea class="form-control" id="spesifikasi" name="spesifikasi" rows="3"></textarea>
+                                <textarea class="form-control" id="spesifikasi" name="spesifikasi" rows="5"></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
                             <button type="submit" class="btn btn-primary">Tambah</button>
                         </div>
                     </form>
@@ -193,11 +193,11 @@
                                   </div>
                                   <div class="form-group">
                                       <label for="spesifikasi{{ $alat->id }}" class="col-form-label">Spesifikasi</label>
-                                      <textarea class="form-control" id="spesifikasi{{ $alat->id }}" name="spesifikasi" rows="3">{{ $alat->spesifikasi }}</textarea>
+                                      <textarea class="form-control" id="spesifikasi{{ $alat->id }}" name="spesifikasi" rows="5">{{ $alat->spesifikasi }}</textarea>
                                   </div>
                               </div>
                               <div class="modal-footer">
-                                  <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                                  <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
                                   <button type="submit" class="btn btn-primary">Simpan</button>
                               </div>
                           </form>
@@ -231,7 +231,7 @@
                               </div>
                           </div>
                           <div class="modal-footer">
-                              <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                              <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
                           </div>
                       </div>
                   </div>

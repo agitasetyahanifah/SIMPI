@@ -150,7 +150,7 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header pb-0">
-            <h4 class="font-weight-bolder mb-0">Blog/Artikel Pemancingan</h4>
+            <h4 class="font-weight-bolder mb-0">Blog Pemancingan</h4>
             {{-- Button Tambah --}}
             <form action="/admin/blog" method="post" enctype="multipart/form-data">
                 @csrf
@@ -164,7 +164,7 @@
             <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Tambah Blog/Artikel Pemancingan</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Tambah Blog Pemancingan</h5>
                 <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -197,7 +197,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
                     <button type="submit" class="btn btn-primary">Tambah</button>
                 </div>
             </form>
@@ -247,7 +247,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="editModalTitle">Edit Blog/Artikel Pemancingan</h5>
+                            <h5 class="modal-title" id="editModalTitle">Edit Blog Pemancingan</h5>
                             <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
@@ -283,7 +283,7 @@
                                 </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
                         </form>
@@ -296,9 +296,9 @@
             @foreach ($blogs as $blog)
               <div class="modal fade" id="detailModal{{ $blog->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $blog->id }}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-xl">
-                    <div class="modal-content">
+                  <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel">Detail Blog/Artikel Pemancingan</h5>
+                      <h5 class="modal-title" id="exampleModalLabel">Detail Blog Pemancingan</h5>
                       <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                       </button>                    
@@ -308,13 +308,16 @@
                             <div class="row">
                                 <h3>{{ $blog->judul }}</h3>
                                 <a style="color: black"><b>Slug:</b> {{ $blog->slug }}    |<b>   Kategori:</b> {{ $blog->kategoriBlog->kategori_blog }}</a>
-                                <img src="{{ asset('images/'.$blog->image) }}" alt="" class="img-fluid p-3">
-                                {!! $blog->body !!}
+                                <img src="{{ asset('images/'.$blog->image) }}" class="img-fluid mt-2" alt="{{ $blog->judul }}" style="max-height: 450px">
+                                {{-- <img src="{{ asset('images/'.$blog->image) }}" alt="" class="img-fluid p-3"> --}}
+                                <div class="mt-4" style="text-align: justify;">
+                                    {!! $blog->body !!}
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                     </div>
                   </div>
                 </div>

@@ -25,7 +25,7 @@ class BlogFactory extends Factory
             'slug' => Str::slug($judul),
             'kategori_id' => KategoriBlog::factory(), // Menggunakan factory KategoriBlog
             'image' => 'path/to/your/image.jpg',
-            'body' => $this->faker->paragraph,
+            'body' => implode("\n\n", $this->faker->paragraphs(5)),
         ];
     }
 }

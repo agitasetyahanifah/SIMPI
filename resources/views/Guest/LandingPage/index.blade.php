@@ -157,7 +157,7 @@
         {{-- Button Lainnya --}}
         <div class="row mt-3">
           <div class="text-center">
-            <a href="#" class="btn btn-primary btn-sm rounded-pill">Lainnya <i class="ms-2 fas fa-chevron-right" style="font-size: 10pt"></i></a>
+            <a href="{{ route('guest.galeri.index') }}" class="btn btn-primary btn-sm rounded-pill">Lainnya <i class="ms-2 fas fa-chevron-right" style="font-size: 10pt"></i></a>
           </div>
         </div>
         {{-- End Galeri Pemancingan --}}
@@ -168,7 +168,7 @@
         @endphp
         {{-- Konten Blog --}}
         <div class="row">
-          <h3 class="text-center mt-4 mb-4">Blog/Artikel Pemancingan</h3>
+          <h3 class="text-center mt-4 mb-4">Blog Pemancingan</h3>
           <div class="col-12 d-flex flex-wrap mb-2">
             <div class="row g-2">
               @foreach($blogs as $blog)
@@ -197,7 +197,7 @@
         {{-- Button Lainnya --}}
         <div class="row mt-3">
           <div class="text-center">
-            <a href="#" class="btn btn-primary btn-sm rounded-pill">Lainnya <i class="ms-2 fas fa-chevron-right" style="font-size: 10pt"></i></a>
+            <a href="{{ route('guest.blog.index') }}" class="btn btn-primary btn-sm rounded-pill">Lainnya <i class="ms-2 fas fa-chevron-right" style="font-size: 10pt"></i></a>
           </div>
         </div> 
         {{-- End Blog Pemancingan --}}
@@ -234,7 +234,7 @@
         {{-- Button Lainnya --}}
         <div class="row mt-3">
           <div class="text-center">
-            <a href="#" class="btn btn-primary btn-sm rounded-pill">Lainnya <i class="ms-2 fas fa-chevron-right" style="font-size: 10pt"></i></a>
+            <a href="{{ route('guest.daftar-alat.index') }}" class="btn btn-primary btn-sm rounded-pill">Lainnya <i class="ms-2 fas fa-chevron-right" style="font-size: 10pt"></i></a>
           </div>
         </div>   
         {{-- End Daftar Alat Pancing --}}

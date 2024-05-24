@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" type="image/png" sizes="16x16" href="../images/logo.png">
   <title>
-    SIMPI | Galeri Pemancingan
+    SIMPI | Alat Pancing
   </title>
   <!-- Fonts and icons -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -74,66 +74,52 @@
         <a href="{{ route('guest.landingpage.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Kembali</a>
       </div>
       <div class="mt-3 mb-4">
-        <h2 class="font-weight-bolder mt-4 mb-3 text-center"><b>Galeri Pemancingan</b></h2>
+        <h2 class="font-weight-bolder mt-4 mb-3 text-center"><b>Daftar Alat Pancing yang Disewakan</b></h2>
       </div>
-      <div class="row mb-4 gx-2">
-        @foreach($images as $image)
-        <div class="col-lg-2 col-md-4 col-md-12 col-4 g-1">
-          @if($image->filename)
-          <div class="card text-bg-light">
-            <!-- Tambahkan tombol maximize -->
-            <div class="position-absolute top-0 end-0 p-1" style="z-index: 999;">
-              <button class="btn btn-transparent maximize" data-image="{{ asset('images/' . $image->filename) }}">
-                <i class="fa fa-expand" style="color: black"></i>
-              </button>
+      <div class="row gx-2">
+        @foreach($alatPancing as $alat)
+        <div class="col-lg-2 col-md-3 col-sm-4 col-4 g-1 mb-1">
+          <div class="card h-100">
+            <div class="card">
+              @if($alat->foto && file_exists(public_path('images/'.$alat->foto)))
+                <img src="{{ asset('images/'.$alat->foto) }}" class="card-img-top fixed-image" alt="{{ $alat->nama_alat }}">
+              @else
+                 <img src="https://source.unsplash.com/random/450x450?fishing" class="card-img-top fixed-image" alt="Fishing Image">
+              @endif
+              <div class="card-body2">
+                  <h5 class="card-title2">{{ $alat->nama_alat }}</h5>
+                  <p class="card-text2" style="color: orangered;">Rp {{ number_format($alat->harga, 0, ',', '.') }}/hari</p>
+                  <div class="text-center">
+                    <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#detailModal{{ $alat->id }}">Detail</button>
+                  </div>
+              </div>
             </div>
-            <img class="card-img" src="{{ asset('images/' . $image->filename) }}" alt="{{ asset('images/' . $image->filename) }}" style="max-height: 150px;">
           </div>
-          @endif
         </div>
         @endforeach
       </div>
-      <!-- Modal Maximize -->
-      <div>
-        <div class="modal fade" id="maximizeModal" tabindex="-1" aria-labelledby="maximizeModalLabel"
-          aria-hidden="true">
-          <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content">
-              <div class="modal-header">
-                <!-- Tombol close modal -->
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                  aria-label="Close"></button>
-              </div>
-              <div class="modal-body d-flex align-items-center justify-content-center">
-                <img id="maximizedImage" src="#" class="img-fluid" alt="Gambar Diperbesar"
-                  style="max-width: 100%; max-height: 100%; object-fit: contain;">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       {{-- Cek ada data atau kosong --}}
-      @if($images->isEmpty())
+      @if($alatPancing->isEmpty())
         <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
       @endif
     </div>
     <!-- Pagination -->
     <nav class="p-3" aria-label="Pagination">
       <ul class="pagination justify-content-center">
-        <li class="page-item {{ $images->onFirstPage() ? 'disabled' : '' }}">
-              <a class="page-link" href="{{ $images->previousPageUrl() ?? '#' }}" tabindex="-1">
+        <li class="page-item {{ $alatPancing->onFirstPage() ? 'disabled' : '' }}">
+              <a class="page-link" href="{{ $alatPancing->previousPageUrl() ?? '#' }}" tabindex="-1">
                   <i class="fa fa-angle-left"></i>
                   <span class="sr-only">Previous</span>
               </a>
           </li>
           <!-- Tampilkan nomor halaman -->
-          @for ($i = 1; $i <= $images->lastPage(); $i++)
-              <li class="page-item {{ $images->currentPage() == $i ? 'active' : '' }}">
-                  <a class="page-link" href="{{ $images->url($i) }}">{{ $i }}</a>
+          @for ($i = 1; $i <= $alatPancing->lastPage(); $i++)
+              <li class="page-item {{ $alatPancing->currentPage() == $i ? 'active' : '' }}">
+                  <a class="page-link" href="{{ $alatPancing->url($i) }}">{{ $i }}</a>
               </li>
           @endfor
-          <li class="page-item {{ $images->hasMorePages() ? '' : 'disabled' }}">
-              <a class="page-link" href="{{ $images->nextPageUrl() ?? '#' }}">
+          <li class="page-item {{ $alatPancing->hasMorePages() ? '' : 'disabled' }}">
+              <a class="page-link" href="{{ $alatPancing->nextPageUrl() ?? '#' }}">
                   <i class="fa fa-angle-right"></i>
                   <span class="sr-only">Next</span>
               </a>
@@ -141,6 +127,41 @@
       </ul>
     </nav>
     <!-- End Pagination -->
+    <!-- Modal Detail Alat Pancing -->
+    @foreach($alatPancing as $alat)
+    <div class="modal fade" id="detailModal{{ $alat->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $alat->id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detailModalLabel{{ $alat->id }}">Detail Alat Pancing</h5>
+                    <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                    <div class="row">
+                        <div class="col-md-6">
+                          @if($alat->foto && file_exists(public_path('images/'.$alat->foto)))
+                            <img src="{{ asset('images/'.$alat->foto) }}" class="img-fluid" alt="{{ $alat->nama_alat }}">
+                          @else
+                            <img src="https://source.unsplash.com/random/450x450?fishing" class="img-fluid" alt="Fishing Image">
+                          @endif                        </div>
+                        <div class="col-md-6">
+                            <h5>{{ $alat->nama_alat }}</h5>
+                            <p>Harga: {{ number_format($alat->harga, 0, ',', '.') }} /hari</p>
+                            <p>Jumlah: {{ $alat->jumlah }}</p>
+                            <p>Status: <span class="badge {{ $alat->status == 'available' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $alat->status }}</span></p>
+                            <p>Spesifikasi: </p><p style="text-align: justify;">{!! nl2br(e($alat->spesifikasi)) !!}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
 
     <footer class="footer pl-0 pb-3">
       <div class="container-fluid">

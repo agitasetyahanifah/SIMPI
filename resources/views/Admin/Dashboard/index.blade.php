@@ -91,7 +91,7 @@
                                         </form>
                                       </div>
                                       <div class="modal-footer">
-                                        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
                                         <button type="submit" class="btn btn-primary">Upload</button>
                                       </div>
                                     </div>
