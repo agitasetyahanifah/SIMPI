@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminBlogController;
 use App\Http\Controllers\AdminMemberController;
+use App\Http\Controllers\GuestGaleriController;
 use App\Http\Controllers\AdminKeuanganController;
 use App\Http\Controllers\AdminSewaAlatController;
 use App\Http\Controllers\AdminDashboardController;
@@ -74,3 +75,5 @@ Route::post('/admin/sewaPemancingan/konfirmasi-pembayaran/{id}', [AdminSewaPeman
 // Guest 
 // Landing Page Guest 
 Route::get('/guest/landingPage', [GuestLandingPageController::class, 'index'])->name('guest.landingpage.index');
+// Galeri Guest 
+Route::get('/guest/galeriPemancingan', [GuestGaleriController::class, 'index'])->name('guest.galeri.index');
