@@ -13,11 +13,11 @@
           <a class="nav-link  {{ request()->routeIs('member.blog.index') ? 'active' : '' }}" aria-current="page" href="{{ route('member.blog.index') }}">Blog</a>
           <a class="nav-link  {{ request()->routeIs('member.daftar-alat.index') ? 'active' : '' }}" aria-current="page" href="{{ route('member.daftar-alat.index') }}">Daftar Alat Pancing</a>
         </div>
-        {{-- <ul class="navbar-nav ms-lg-auto">
+        <ul class="navbar-nav ms-lg-auto">
            <li class="nav-item" style="padding: 0px 4px;">
                <a class="nav-link" href="#">Agita Setya Hanifah <i class="fa fa-circle-user"></i></a>
            </li>
-        </ul> --}}
+        </ul>
         </div>
        </div>
     </div>
