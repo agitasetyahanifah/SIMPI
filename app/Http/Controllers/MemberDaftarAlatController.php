@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\AlatPancing;
 
-class GuestDaftarAlatController extends Controller
+class MemberDaftarAlatController extends Controller
 {
     /**
      * Display a listing of the resource.

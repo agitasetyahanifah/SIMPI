@@ -3,18 +3,18 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\AlatPancing;
+use App\Models\Galeri;
 
-class GuestDaftarAlatController extends Controller
+class MemberGaleriController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $alatPancing = AlatPancing::orderBy('created_at', 'desc')->paginate(18);
-        $lastItem = $alatPancing->lastItem();
-        return view('guest.daftaralat.daftar-alat', compact('alatPancing','lastItem'));    
+        $images = Galeri::orderBy('created_at', 'desc')->paginate(24);
+        $lastItem = $images->lastItem();
+        return view('guest.galeri.galeri', compact('images', 'lastItem'));
     }
 
     /**

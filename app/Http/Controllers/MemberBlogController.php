@@ -3,18 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\AlatPancing;
+use App\Models\Blog;
+use App\Models\KategoriBlog;
 
-class GuestDaftarAlatController extends Controller
+class MemberBlogController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $alatPancing = AlatPancing::orderBy('created_at', 'desc')->paginate(18);
-        $lastItem = $alatPancing->lastItem();
-        return view('guest.daftaralat.daftar-alat', compact('alatPancing','lastItem'));    
+        $blogs = Blog::latest()->paginate(12);
+        $lastItem = $blogs->lastItem();
+        return view('guest.blog.blog', compact('blogs','lastItem'));
     }
 
     /**
@@ -36,10 +37,19 @@ class GuestDaftarAlatController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
-    }
+        // Mengambil data blog berdasarkan ID
+        $blog = Blog::findOrFail($id);
+    
+        // Mengambil 6 blog terbaru, selain blog yang sedang ditampilkan
+        $latestBlogs = Blog::where('id', '!=', $id)->latest()->take(3)->get();
+
+        $kategoriBlog = KategoriBlog::orderByDesc('created_at')->paginate(5);
+    
+        // Mengembalikan view dengan data blog dan latestBlogs
+        return view('guest.blog.detail-blog', compact('blog', 'latestBlogs', 'kategoriBlog'));
+    } 
 
     /**
      * Show the form for editing the specified resource.
