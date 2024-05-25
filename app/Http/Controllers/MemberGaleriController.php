@@ -14,7 +14,7 @@ class MemberGaleriController extends Controller
     {
         $images = Galeri::orderBy('created_at', 'desc')->paginate(24);
         $lastItem = $images->lastItem();
-        return view('guest.galeri.galeri', compact('images', 'lastItem'));
+        return view('member.galeri.galeri', compact('images', 'lastItem'));
     }
 
     /**

@@ -71,7 +71,7 @@
 
     <div class="container-fluid py-2">
       <div class="mt-3 mb-2">
-        <a href="{{ route('guest.landingpage.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Kembali</a>
+        <a href="{{ route('member.landingpage.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Kembali</a>
       </div>
       <div class="mt-3 mb-4">
         <h2 class="font-weight-bolder mt-4 mb-3 text-center"><b>Daftar Alat Pancing yang Disewakan</b></h2>

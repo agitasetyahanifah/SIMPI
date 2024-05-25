@@ -51,7 +51,7 @@
 
     <div class="container-fluid py-2">
       <div class="mt-3 mb-2">
-        <a href="{{ route('guest.blog.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Kembali</a>
+        <a href="{{ route('member.blog.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Kembali</a>
       </div>
       <div class="row">
         <div class="col-lg-8 col-md-6 col-sm-12 mb-4">
@@ -86,7 +86,7 @@
                 <div class="col-md-8">
                   <div class="card-body">
                     <h5 class="card-title">{{ $latestBlog->judul }}</h5>
-                    <p class="card-text">{{ Str::words(strip_tags($latestBlog->body), 12, '...') }} <a href="{{ route('blog.detail-blog', $latestBlog->id) }}" style="color: aqua;">Selengkapnya</a></p>
+                    <p class="card-text">{{ Str::words(strip_tags($latestBlog->body), 12, '...') }} <a href="{{ route('member.blog.detail-blog', $latestBlog->id) }}" style="color: aqua;">Selengkapnya</a></p>
                     <p class="card-text"><small class="text-body-secondary">Last updated {{ $latestBlog->updated_at->diffForHumans() }}</small></p>
                   </div>
                 </div>

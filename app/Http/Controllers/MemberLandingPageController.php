@@ -64,7 +64,7 @@ class MemberLandingPageController extends Controller
             $waktuTerbaru = null;
         }
 
-        return view('guest.landingpage.index', compact(['spotPemancingan', 'terakhirDiperbaruiKetersediaan', 'waktuTerbaru', 'images', 'blogs', 'alatPancing']));
+        return view('member.landingpage.index', compact(['spotPemancingan', 'terakhirDiperbaruiKetersediaan', 'waktuTerbaru', 'images', 'blogs', 'alatPancing']));
     }
 
     public function hitungTerakhirDiperbarui($jenis)

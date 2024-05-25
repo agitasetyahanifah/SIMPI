@@ -181,7 +181,7 @@
                     @endif
                     <div class="card-body">
                       <h5 class="card-title">{{ $blog->judul }}</h5>
-                      <p class="card-text">{{ Str::words(strip_tags($blog->body), 12, '...') }} <a href="#" style="color: aqua;">Selengkapnya</a></p>
+                      <p class="card-text">{{ Str::words(strip_tags($blog->body), 12, '...') }} <a href="{{ route('guest.blog.detail-blog', $blog->id) }}" style="color: aqua;">Selengkapnya</a></p>
                       <small class="text-muted mt-2">Last updated {{ $blog->updated_at->diffForHumans() }}</small>
                     </div>
                   </div>
@@ -219,7 +219,7 @@
                     <h5 class="card-title2">{{ $alat->nama_alat }}</h5>
                     <p class="card-text2" style="color: orangered;">Rp {{ number_format($alat->harga, 0, ',', '.') }}/hari</p>
                     <div class="text-center">
-                      <a href="#" class="btn btn-primary mt-2">Detail</a>
+                      <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#detailModal{{ $alat->id }}">Detail</button>
                     </div>
                 </div>
               </div>
@@ -237,6 +237,41 @@
             <a href="{{ route('guest.daftar-alat.index') }}" class="btn btn-primary btn-sm rounded-pill">Lainnya <i class="ms-2 fas fa-chevron-right" style="font-size: 10pt"></i></a>
           </div>
         </div>   
+        <!-- Modal Detail Alat Pancing -->
+        @foreach($alatPancing as $alat)
+        <div class="modal fade" id="detailModal{{ $alat->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $alat->id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detailModalLabel{{ $alat->id }}">Detail Alat Pancing</h5>
+                        <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                        <div class="row">
+                            <div class="col-md-6">
+                              @if($alat->foto && file_exists(public_path('images/'.$alat->foto)))
+                                <img src="{{ asset('images/'.$alat->foto) }}" class="img-fluid" alt="{{ $alat->nama_alat }}">
+                              @else
+                                <img src="https://source.unsplash.com/random/450x450?fishing" class="img-fluid" alt="Fishing Image">
+                              @endif                        </div>
+                            <div class="col-md-6">
+                                <h5>{{ $alat->nama_alat }}</h5>
+                                <p>Harga: {{ number_format($alat->harga, 0, ',', '.') }} /hari</p>
+                                <p>Jumlah: {{ $alat->jumlah }}</p>
+                                <p>Status: <span class="badge {{ $alat->status == 'available' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $alat->status }}</span></p>
+                                <p>Spesifikasi: </p><p style="text-align: justify;">{!! nl2br(e($alat->spesifikasi)) !!}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
         {{-- End Daftar Alat Pancing --}}
       </div> {{-- End Card Body --}}
 

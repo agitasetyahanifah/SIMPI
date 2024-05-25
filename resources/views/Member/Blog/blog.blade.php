@@ -71,7 +71,7 @@
 
     <div class="container-fluid py-2">
       <div class="mt-3 mb-2">
-        <a href="{{ route('guest.landingpage.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Kembali</a>
+        <a href="{{ route('member.landingpage.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Kembali</a>
       </div>
       <div class="mt-3 mb-4">
         <h2 class="font-weight-bolder mt-4 mb-3 text-center"><b>Blog Pemancingan</b></h2>
@@ -87,8 +87,7 @@
             @endif
             <div class="card-body">
               <h5 class="card-title">{{ $blog->judul }}</h5>
-              <p class="card-text">{{ Str::words(strip_tags($blog->body), 12, '...') }} <a href="{{ route('member.blog.detail-blog', $blog->id) }}" style="color: aqua;">Selengkapnya</a>
-              </p>
+              <p class="card-text">{{ Str::words(strip_tags($blog->body), 12, '...') }} <a href="{{ route('member.blog.detail-blog', $blog->id) }}" style="color: aqua;">Selengkapnya</a></p>
               <small class="text-muted mt-2">Last updated {{ $blog->updated_at->diffForHumans() }}</small>
             </div>
           </div>

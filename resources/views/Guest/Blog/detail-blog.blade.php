@@ -86,7 +86,7 @@
                 <div class="col-md-8">
                   <div class="card-body">
                     <h5 class="card-title">{{ $latestBlog->judul }}</h5>
-                    <p class="card-text">{{ Str::words(strip_tags($latestBlog->body), 12, '...') }} <a href="{{ route('blog.detail-blog', $latestBlog->id) }}" style="color: aqua;">Selengkapnya</a></p>
+                    <p class="card-text">{{ Str::words(strip_tags($latestBlog->body), 12, '...') }} <a href="{{ route('guest.blog.detail-blog', $latestBlog->id) }}" style="color: aqua;">Selengkapnya</a></p>
                     <p class="card-text"><small class="text-body-secondary">Last updated {{ $latestBlog->updated_at->diffForHumans() }}</small></p>
                   </div>
                 </div>
