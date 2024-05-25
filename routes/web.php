@@ -17,6 +17,7 @@ use App\Http\Controllers\MemberDaftarAlatController;
 use App\Http\Controllers\MemberLandingPageController;
 use App\Http\Controllers\AdminPengelolaanIkanController;
 use App\Http\Controllers\AdminSewaPemancinganController;
+use App\Http\Controllers\MemberSewaPemancinganController;
 
 /*
 |--------------------------------------------------------------------------
@@ -98,5 +99,7 @@ Route::get('/member/galeriPemancingan', [MemberGaleriController::class, 'index']
 // Blog Member
 Route::get('/member/blogPemancingan', [MemberBlogController::class, 'index'])->name('member.blog.index');
 Route::get('/member/detailBlogPemancingan/{id}', [MemberBlogController::class, 'show'])->name('member.blog.detail-blog');
+// Sewa Spot Pemancingan
+Route::get('/member/sewaPemancingan', [MemberSewaPemancinganController::class, 'index'])->name('member.sewa-pemancingan.index');
 // Daftar Alat yang Disewakan Member
 Route::get('/member/daftarAlat', [MemberDaftarAlatController::class, 'index'])->name('member.daftar-alat.index');
