@@ -47,7 +47,7 @@
 
 <body class="g-sidenav-show bg-gray-100">
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-    @include('Guest.Layouts.navbar')
+    @include('Member.Layouts.navbar')
 
     <div class="container-fluid py-2">
       <div class="mt-3 mb-2">
