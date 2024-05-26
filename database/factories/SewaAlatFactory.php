@@ -16,8 +16,8 @@ class SewaAlatFactory extends Factory
 
     public function definition()
     {
-        $startDate = $this->faker->dateTimeBetween('2024-01-01', '2024-12-31');
-        $endDate = $this->faker->dateTimeBetween($startDate, '2024-12-31');
+        $startDate = $this->faker->dateTimeBetween('2024-01-01', '2024-06-31');
+        $endDate = $this->faker->dateTimeBetween($startDate, '2024-06-31');
 
         return [
             'user_id' => Member::factory(),

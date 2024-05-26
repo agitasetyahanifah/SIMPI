@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use App\Models\Blog;
 use App\Models\KategoriBlog;
 
 /**
@@ -16,6 +17,9 @@ class BlogFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
+    protected $model = Blog::class;
+
     public function definition(): array
     {
         $judul = $this->faker->sentence;
@@ -23,7 +27,7 @@ class BlogFactory extends Factory
         return [
             'judul' => $judul,
             'slug' => Str::slug($judul),
-            'kategori_id' => KategoriBlog::factory(), // Menggunakan factory KategoriBlog
+            'kategori_id' => KategoriBlog::inRandomOrder()->first()->id,
             'image' => 'path/to/your/image.jpg',
             'body' => implode("\n\n", $this->faker->paragraphs(5)),
         ];
