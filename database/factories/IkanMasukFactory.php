@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\IkanMasuk;
+use App\Models\JenisIkan;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\IkanMasuk>
@@ -14,14 +16,15 @@ class IkanMasukFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
+    protected $model = IkanMasuk::class;
+
     public function definition(): array
     {
-        $jenisIkan = ['Ikan Lele', 'Ikan Mas', 'Ikan Nila', 'Ikan Gurame', 'Ikan Patin', 'Ikan Gabus', 'Ikan Bawal', 'Ikan Kakap', 'Ikan Bandeng', 'Ikan Kerapu'];
-        $randomJenisIkan = $this->faker->randomElement($jenisIkan);
-
         return [
-            'tanggal' => $this->faker->date(),
-            'jenis_ikan' => $randomJenisIkan,
+            'tanggal' => $this->faker->dateTimeBetween('2024-01-01', '2024-05-31')->format('Y-m-d'),
+            // 'tanggal' => $this->faker->date(),
+            'jenis_ikan_id' => JenisIkan::inRandomOrder()->first()->id,
             'jumlah' => $this->faker->numberBetween(1, 100),
             'catatan' => $this->faker->sentence,
         ];

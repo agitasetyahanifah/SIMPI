@@ -26,7 +26,7 @@ class SewaPemancinganFactory extends Factory
             'user_id' => function () {
                 return \App\Models\Member::factory()->create()->id;
             },
-            'tanggal_sewa' => $this->faker->dateTimeBetween('2024-01-01', '2024-12-31')->format('Y-m-d'),
+            'tanggal_sewa' => $this->faker->dateTimeBetween('2024-01-01', '2024-05-31')->format('Y-m-d'),
             'jam_mulai' => $this->faker->time(),
             'jam_selesai' => $this->faker->time(),
             'jumlah_sewa' => $this->faker->numberBetween(1, 10),

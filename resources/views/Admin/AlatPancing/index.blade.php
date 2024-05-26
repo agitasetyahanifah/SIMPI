@@ -107,7 +107,11 @@
                       <td>
                         <div class="d-flex px-2 py-1">
                           <div>
-                            <img src="{{ asset('images/' . $alat->foto) }}" class="avatar avatar-xl me-3" alt="Alat Pancing">
+                            @if($alat->foto && file_exists(public_path('images/'.$alat->foto)))
+                                <img src="{{ asset('images/'.$alat->foto) }}" class="cavatar avatar-xl me-3" alt="{{ $alat->nama_alat }}">
+                            @else
+                                <img src="https://source.unsplash.com/random/150x150?fishing" class="avatar avatar-xl me-3" alt="Fishing Image">
+                            @endif
                           </div>
                           <div class="d-flex flex-column justify-content-center">
                             <h6 class="mb-0 text-sm">{{ $alat->nama_alat }}</h6>
@@ -219,7 +223,11 @@
                           <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                               <div class="row">
                                   <div class="col-md-6">
-                                      <img src="{{ asset('images/' . $alat->foto) }}" class="img-fluid" alt="Foto Alat Pancing">
+                                    @if($alat->foto && file_exists(public_path('images/'.$alat->foto)))
+                                        <img src="{{ asset('images/'.$alat->foto) }}" class="img-fluid" alt="{{ $alat->nama_alat }}">
+                                    @else
+                                        <img src="https://source.unsplash.com/random/?fishing" class="img-fluid" alt="Fishing Image">
+                                    @endif
                                   </div>
                                   <div class="col-md-6">
                                       <h5>{{ $alat->nama_alat }}</h5>

@@ -308,8 +308,11 @@
                             <div class="row">
                                 <h3>{{ $blog->judul }}</h3>
                                 <a style="color: black"><b>Slug:</b> {{ $blog->slug }}    |<b>   Kategori:</b> {{ $blog->kategoriBlog->kategori_blog }}</a>
-                                <img src="{{ asset('images/'.$blog->image) }}" class="img-fluid mt-2" alt="{{ $blog->judul }}" style="max-height: 450px">
-                                {{-- <img src="{{ asset('images/'.$blog->image) }}" alt="" class="img-fluid p-3"> --}}
+                                @if($blog->image && file_exists(public_path('images/'.$blog->image)))
+                                    <img src="{{ asset('images/'.$blog->image) }}" class="img-fluid mt-2" alt="{{ $blog->judul }}" style="max-height: 450px">
+                                @else
+                                    <img src="https://source.unsplash.com/random/450x300?fishing" class="img-fluid mt-2" alt="Fishing Image" style="max-height: 450px">
+                                @endif
                                 <div class="mt-4" style="text-align: justify;">
                                     {!! $blog->body !!}
                                 </div>
