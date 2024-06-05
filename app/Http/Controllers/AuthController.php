@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use App\Models\UserMember;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -26,40 +26,6 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
-    // public function login(Request $request)
-    // {
-    //     $credentials = $request->validate([
-    //         'email' => 'required|email',
-    //         'password' => 'required',
-    //     ], [
-    //         'email.required' => 'Email is required',
-    //         'email.email' => 'Please enter a valid email address',
-    //         'password.required' => 'Password is required',
-    //     ]);
-    
-    //     // Periksa apakah pengguna ada di database
-    //     $user = UserMember::where('email', $credentials['email'])->first();
-    //     if (!$user) {
-    //         return back()->withErrors(['email' => 'Invalid credentials. Please check your email and password.']);
-    //     }
-    
-    //     // Periksa apakah password cocok
-    //     if (!Hash::check($credentials['password'], $user->password)) {
-    //         return back()->withErrors(['email' => 'Invalid credentials. Please check your email and password.']);
-    //     }
-    
-    //     // Lakukan login
-    //     Auth::login($user);
-    
-    //     if ($user->role === 'admin') {
-    //         return redirect()->route('admin.dashboard.index');
-    //     } elseif ($user->role === 'member') {
-    //         return redirect()->route('member.landingpage.index');
-    //     }
-    
-    //     return back()->withErrors(['email' => 'Invalid credentials. Please check your email and password.']);
-    // }  
-    
     public function login(Request $request)
     {
         // Validasi input
@@ -85,6 +51,7 @@ class AuthController extends Controller
     
         // Jika login gagal, kembalikan dengan pesan kesalahan
         return back()->withErrors(['email' => 'Invalid credentials. Please check your email and password.']);
+
     }    
 
     /**
@@ -112,7 +79,7 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $user = UserMember::create([
+        $user = User::create([
             'nama' => $validatedData['nama'],
             'telepon' => $validatedData['telepon'],
             'email' => $validatedData['email'],
@@ -121,6 +88,44 @@ class AuthController extends Controller
 
         return redirect()->route('login')->with('success', 'Registration successful! Please login to continue.');
     }
+
+    /**
+     * Show the change password form.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showChangePasswordForm()
+    {
+        return view('auth.change-password');
+    }
+
+    /**
+     * Handle a change password request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
+     */
+    public function changePassword(Request $request)
+    {
+        $request->validate([
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        $role = $user->role;
+
+        if ($role === 'admin') {
+            return redirect()->route('admin.dashboard.index')->with('success', 'Password changed successfully!');
+        } elseif ($role === 'member') {
+            return redirect()->route('member.landingpage.index')->with('success', 'Password changed successfully!');
+        } else {
+            // Default fallback, jika role tidak dikenali
+            return redirect()->route('password.change')->with('success', 'Password changed successfully!');
+        }    }
 
     /**
      * Log the user out of the application.
@@ -135,7 +140,7 @@ class AuthController extends Controller
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
-
-        return redirect('/');
+ 
+        return redirect('/login');
     }
 }

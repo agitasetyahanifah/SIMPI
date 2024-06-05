@@ -35,7 +35,9 @@ use App\Http\Controllers\MemberSewaPemancinganController;
 
 // Route::get('/', function () {
 //     return view('welcome');
-// });
+// })
+
+Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
 
 // Routes Login
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -48,8 +50,14 @@ Route::post('/register', [AuthController::class, 'register']);
 // Route Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Route Ubah Password 
+Route::middleware('auth')->group(function () {
+    Route::get('/change-password', [AuthController::class, 'showChangePasswordForm'])->name('password.change');
+    Route::post('/change-password', [AuthController::class, 'changePassword'])->name('password.update');
+});
+
 // Admin Routes
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     // Rute dashboard admin 
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard.index');
     Route::post('/admin/dashboard/updateSpotPemancingan', [AdminDashboardController::class, 'updateSpotPemancingan'])->name('admin.dashboard.updateSpotPemancingan');
@@ -95,22 +103,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 });
 
 
-// Guest Routes
-Route::prefix('guest')->name('guest.')->group(function () {
-    // Landing Page Guest 
-    Route::get('/guest/landingPage', [GuestLandingPageController::class, 'index'])->name('guest.landingpage.index');
-    // Galeri Guest 
-    Route::get('/guest/galeriPemancingan', [GuestGaleriController::class, 'index'])->name('guest.galeri.index');
-    // Blog Guest 
-    Route::get('/guest/blogPemancingan', [GuestBlogController::class, 'index'])->name('guest.blog.index');
-    Route::get('/guest/detailBlogPemancingan/{id}', [GuestBlogController::class, 'show'])->name('guest.blog.detail-blog');
-    // Daftar Alat yang Disewakan Guest 
-    Route::get('/guest/daftarAlat', [GuestDaftarAlatController::class, 'index'])->name('guest.daftar-alat.index');
-});
-
-
 // Member Routes
-// Route::middleware(['auth', 'member'])->prefix('member')->name('member.')->group(function () {
 Route::middleware(['auth', 'member'])->group(function () {
     // Landing Page Member
     Route::get('/member/landingPage', [MemberLandingPageController::class, 'index'])->name('member.landingpage.index');
@@ -127,4 +120,23 @@ Route::middleware(['auth', 'member'])->group(function () {
     // Daftar Alat yang Disewakan Member
     Route::get('/member/daftarAlat', [MemberDaftarAlatController::class, 'index'])->name('member.daftar-alat.index');
 });
+
+
+// Guest Routes
+Route::prefix('guest')->name('guest.')->group(function () {
+    // Landing Page Guest 
+    Route::get('/landingPage', [GuestLandingPageController::class, 'index'])->name('landingpage.index');
+
+    // Galeri Guest 
+    Route::get('/galeriPemancingan', [GuestGaleriController::class, 'index'])->name('galeri.index');
+
+    // Blog Guest 
+    Route::get('/blogPemancingan', [GuestBlogController::class, 'index'])->name('blog.index');
+    Route::get('/detailBlogPemancingan/{id}', [GuestBlogController::class, 'show'])->name('blog.detail-blog');
+
+    // Daftar Alat yang Disewakan Guest 
+    Route::get('/daftarAlat', [GuestDaftarAlatController::class, 'index'])->name('daftar-alat.index');
+});
+
+
 

@@ -14,13 +14,15 @@
           <a class="nav-link  {{ request()->routeIs('guest.daftar-alat.index') ? 'active' : '' }}" aria-current="page" href="{{ route('guest.daftar-alat.index') }}">Daftar Alat Pancing</a>
         </div>
         <ul class="navbar-nav ms-lg-auto">
-           <li class="nav-item" style="padding: 0px 4px;">
-               <a class="nav-link" href="#"><i class="fa fa-user"></i> Login</a>
-           </li>
-           <li class="nav-item" style="padding: 0px 4px;">
-               <a class="nav-link" href="#"><i class="fa fa-user"></i> Register</a>
-           </li>
-        </ul>
+          @guest
+              <li class="nav-item" style="padding: 0px 4px;">
+                  <a class="nav-link" href="{{ route('login') }}"><i class="fa fa-user"></i> Login</a>
+              </li>
+              <li class="nav-item" style="padding: 0px 4px;">
+                  <a class="nav-link" href="{{ route('register') }}"><i class="fa fa-user"></i> Register</a>
+              </li>
+          @endguest
+        </ul>      
         </div>
        </div>
     </div>

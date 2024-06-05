@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SewaPemancingan;
-use App\Models\UserMember;
+use App\Models\User;
 
 class AdminSewaPemancinganController extends Controller
 {
@@ -16,8 +16,8 @@ class AdminSewaPemancinganController extends Controller
     {
         $sewaPemancingan = SewaPemancingan::orderBy('tanggal_sewa', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
         $lastItem = $sewaPemancingan->lastItem();
-        $member = UserMember::where('role', 'member')->get();
-        $members = UserMember::where('role', 'member')->orderBy('nama', 'asc')->get();        
+        $member = User::where('role', 'member')->get();
+        $members = User::where('role', 'member')->orderBy('nama', 'asc')->get();        
         return view('admin.sewapemancingan.index', compact('sewaPemancingan', 'lastItem', 'member', 'members'));
     }
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserMember;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AdminMemberController extends Controller
@@ -12,7 +12,7 @@ class AdminMemberController extends Controller
      */
     public function index()
     {
-        $members = UserMember::where('role', 'member')->latest()->paginate(25);
+        $members = User::where('role', 'member')->latest()->paginate(25);
         $lastItem = $members->lastItem();
         return view('admin.manajemenmember.index', compact('members','lastItem'));
     }
@@ -40,7 +40,7 @@ class AdminMemberController extends Controller
         ]);
 
         // Membuat member baru
-        $member = new UserMember;
+        $member = new User;
         $member->nama = $request->input('nama');
         $member->telepon = $request->input('telepon');
         $member->email = $request->input('email');
@@ -85,7 +85,7 @@ class AdminMemberController extends Controller
         ]);
 
         // Find the member by ID
-        $member = UserMember::findOrFail($id);
+        $member = User::findOrFail($id);
 
         // Update member data
         $member->nama = $request->input('nama');
@@ -111,7 +111,7 @@ class AdminMemberController extends Controller
      */
     public function destroy(string $id)
     {
-        $members = UserMember::findOrFail($id);
+        $members = User::findOrFail($id);
             
         // Hapus alat pancing dari database
         $members->delete();

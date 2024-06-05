@@ -86,13 +86,24 @@
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">
-            <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
-                <i class="ni ni-circle-08"></i>
-            </div>
-            <span class="nav-link-text ms-1">Sign Out</span>
+          <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+              <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
+                  <i class="ni ni-circle-08"></i>
+              </div>
+              <span class="nav-link-text ms-1">Logout</span>
           </a>
-        </li>
+          <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+              @csrf
+          </form>
+        </li>      
+        <li class="nav-item">
+          <a class="nav-link" href="{{ route('password.change') }}">
+              <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
+                  <i class="ni ni-key-25"></i>
+              </div>
+              <span class="nav-link-text ms-1">Change Password</span>
+          </a>
+        </li>      
       </ul>
     </div>
 </aside>

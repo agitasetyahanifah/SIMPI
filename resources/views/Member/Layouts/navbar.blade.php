@@ -16,21 +16,20 @@
         </div>
         <ul class="navbar-nav ms-lg-auto">
           <li class="nav-item dropdown" style="padding: 0px 4px;">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Agita Setya Hanifah <i class="fa fa-user ms-2"></i>
-              </a>
+              @if(Auth::check())
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      {{ Auth::user()->nama }} <i class="fa fa-user ms-2"></i>
+                  </a>
+              @endif
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                  {{-- <li><a class="dropdown-item" href="#">Profile</a></li>
-                  <li><a class="dropdown-item" href="#">Settings</a></li> --}}
-                  {{-- <li><hr class="dropdown-divider"></li> --}}
-                  {{-- <li>
+                  <li><a class="dropdown-item" href="{{ route('password.change') }}">Ubah Password</a></li>
+                  {{-- <li><a class="dropdown-item" href="#">Settings</a></li> --}}
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
                       <form method="POST" action="{{ route('logout') }}">
                           @csrf
                           <button type="submit" class="dropdown-item">Logout</button>
                       </form>
-                  </li> --}}
-                  <li>
-                    <button type="submit" class="dropdown-item">Logout</button>
                   </li>
               </ul>
           </li>

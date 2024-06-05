@@ -172,10 +172,6 @@
                         <input type="time" class="form-control" id="jam_selesai" name="jam_selesai" required>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="jumlah_sewa">Jumlah Sewa</label>
-                    <input type="number" class="form-control" id="jumlah_sewa" name="jumlah_sewa" required>
-                </div>
             </form>
         </div>
         <div class="modal-footer">
