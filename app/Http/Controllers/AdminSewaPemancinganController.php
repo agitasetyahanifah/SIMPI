@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SewaPemancingan;
+use App\Models\UserMember;
 
 class AdminSewaPemancinganController extends Controller
 {
@@ -16,8 +16,8 @@ class AdminSewaPemancinganController extends Controller
     {
         $sewaPemancingan = SewaPemancingan::orderBy('tanggal_sewa', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
         $lastItem = $sewaPemancingan->lastItem();
-        $member = Member::all();
-        $members = Member::orderBy('nama', 'asc')->get();
+        $member = UserMember::where('role', 'member')->get();
+        $members = UserMember::where('role', 'member')->orderBy('nama', 'asc')->get();        
         return view('admin.sewapemancingan.index', compact('sewaPemancingan', 'lastItem', 'member', 'members'));
     }
 
@@ -36,7 +36,7 @@ class AdminSewaPemancinganController extends Controller
     {
         // Validasi data yang diterima dari form
         $validatedData = $request->validate([
-            'nama_pelanggan' => 'required|exists:members,id',
+            'nama_pelanggan' => 'required|exists:user,id',
             'tanggal_sewa' => 'required|date',
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',

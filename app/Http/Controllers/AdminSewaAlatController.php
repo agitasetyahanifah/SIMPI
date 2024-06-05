@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AlatPancing;
 use App\Models\AlatSewa;
 use App\Models\SewaAlat;
-use App\Models\Member;
+use App\Models\UserMember;
 use App\Models\SewaPemancingan;
 use Illuminate\Http\Request;
 
@@ -18,8 +18,8 @@ class AdminSewaAlatController extends Controller
     {
         $sewaAlat = SewaAlat::with(['member', 'alatPancing'])->orderBy('tgl_pinjam', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
         $lastItem = $sewaAlat->lastItem();
-        $member = Member::all();
-        $members = Member::orderBy('nama', 'asc')->get();
+        $member = UserMember::where('role', 'member')->get();
+        $members = UserMember::where('role', 'member')->orderBy('nama', 'asc')->get();        
         $alatPancing = AlatPancing::all();
         $alatPancings = AlatPancing::where('status', 'available')->get();
         $alatSewa = AlatSewa::all();

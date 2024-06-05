@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Member;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -18,7 +18,7 @@ class MemberFactory extends Factory
      * @return array<string, mixed>
      */
 
-    protected $model = Member::class;
+    protected $model = User::class;
 
     public function definition(): array
     {
@@ -26,10 +26,11 @@ class MemberFactory extends Factory
             'nama' => $this->faker->name('id_ID'),
             'telepon' => $this->faker->phoneNumber('id_ID'),
             'email' => $this->faker->unique()->safeEmail,
-            'password' => Hash::make('password'), // Ubah 'password' menjadi password yang diinginkan
+            'password' => Hash::make('@Member2024'),
             'status' => $this->faker->randomElement(['aktif', 'tidak aktif']),
-            'created_at' => $this->faker->dateTime(),
-            'updated_at' => $this->faker->dateTime(),
+            'role' => 'member',
+            // 'created_at' => $this->faker->dateTime(),
+            // 'updated_at' => $this->faker->dateTime(),
         ];
     }
 }

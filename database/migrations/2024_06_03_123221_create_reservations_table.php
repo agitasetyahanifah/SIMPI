@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('members', function (Blueprint $table) {
+        Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->string('nama');
-            $table->string('telepon')->nullable();
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->enum('status', ['aktif', 'tidak aktif'])->default('aktif');
-            $table->string('role')->default('member');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('spot_id');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('members')->onDelete('cascade');
+            $table->foreign('spot_id')->references('id')->on('spots')->onDelete('cascade');
         });
     }
 
@@ -28,7 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('members');
+        Schema::dropIfExists('reservations');
     }
 };
-

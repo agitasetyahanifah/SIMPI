@@ -3,6 +3,8 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 return new class extends Migration
 {
@@ -11,16 +13,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('members', function (Blueprint $table) {
+        Schema::create('user', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
             $table->string('telepon')->nullable();
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('status', ['aktif', 'tidak aktif'])->default('aktif');
-            $table->string('role')->default('member');
+            $table->enum('role', ['admin', 'member'])->default('member');
             $table->timestamps();
         });
+
+        // Insert default admin
+        DB::table('user')->insert([
+            'nama' => 'Admin2024',
+            'telepon' => '02717851580',
+            'email' => 'admin@gmail.com',
+            'password' => Hash::make('@Admin2024'),
+            'status' => 'aktif',
+            'role' => 'admin',
+        ]);
     }
 
     /**
@@ -28,7 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('members');
+        Schema::dropIfExists('user');
     }
 };
-

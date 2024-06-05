@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Member;
+use App\Models\UserMember;
 use Illuminate\Http\Request;
 
 class AdminMemberController extends Controller
@@ -12,7 +12,7 @@ class AdminMemberController extends Controller
      */
     public function index()
     {
-        $members = Member::latest()->paginate(25);
+        $members = UserMember::where('role', 'member')->latest()->paginate(25);
         $lastItem = $members->lastItem();
         return view('admin.manajemenmember.index', compact('members','lastItem'));
     }
@@ -34,13 +34,13 @@ class AdminMemberController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'telepon' => 'required|string|max:15', // Adjust max length as needed
-            'email' => 'required|email|max:255|unique:members,email',
+            'email' => 'required|email|max:255|unique:user,email',
             'password' => 'required|string|min:8',
             'status' => 'required|string|in:aktif,tidak aktif',
         ]);
 
         // Membuat member baru
-        $member = new Member;
+        $member = new UserMember;
         $member->nama = $request->input('nama');
         $member->telepon = $request->input('telepon');
         $member->email = $request->input('email');
@@ -85,7 +85,7 @@ class AdminMemberController extends Controller
         ]);
 
         // Find the member by ID
-        $member = Member::findOrFail($id);
+        $member = UserMember::findOrFail($id);
 
         // Update member data
         $member->nama = $request->input('nama');
@@ -111,7 +111,7 @@ class AdminMemberController extends Controller
      */
     public function destroy(string $id)
     {
-        $members = Member::findOrFail($id);
+        $members = UserMember::findOrFail($id);
             
         // Hapus alat pancing dari database
         $members->delete();
