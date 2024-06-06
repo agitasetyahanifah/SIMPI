@@ -23,7 +23,7 @@ return new class extends Migration
             $table->enum('status', ['belum dibayar', 'sudah dibayar'])->default('belum dibayar');
             $table->timestamps();
             
-            $table->foreign('user_id')->references('id')->on('members')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

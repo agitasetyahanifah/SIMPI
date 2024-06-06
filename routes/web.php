@@ -5,7 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminBlogController;
 use App\Http\Controllers\GuestBlogController;
 use App\Http\Controllers\MemberBlogController;
-use App\Http\Controllers\MemberSpotController;
+use App\Http\Controllers\MemberSewaSpotController;
 use App\Http\Controllers\AdminMemberController;
 use App\Http\Controllers\GuestGaleriController;
 use App\Http\Controllers\MemberGaleriController;
@@ -115,8 +115,8 @@ Route::middleware(['auth', 'member'])->group(function () {
     Route::get('/member/detailBlogPemancingan/{id}', [MemberBlogController::class, 'show'])->name('member.blog.detail-blog');
     // Sewa Spot Pemancingan
     // Route::get('/member/sewaPemancingan', [MemberSewaPemancinganController::class, 'index'])->name('member.sewa-pemancingan.index');
-    Route::get('/member/sewaPemancingan/spots', [MemberSpotController::class, 'index'])->name('member.spots.index');
-    Route::post('member/sewaPemancingan/spots/reserve', [MemberSpotController::class, 'reserve'])->name('member.spots.reserve');
+    Route::get('/member/sewaPemancingan/spots', [MemberSewaSpotController::class, 'index'])->name('member.spots.index');
+    Route::post('member/sewaPemancingan/spots/reserve', [MemberSewaSpotController::class, 'reserve'])->name('member.spots.reserve');
     // Daftar Alat yang Disewakan Member
     Route::get('/member/daftarAlat', [MemberDaftarAlatController::class, 'index'])->name('member.daftar-alat.index');
 });

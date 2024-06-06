@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -13,10 +14,18 @@ return new class extends Migration
     {
         Schema::create('spots', function (Blueprint $table) {
             $table->id();
-            $table->string('nomor');
-            $table->boolean('is_reserved')->default(false);
+            $table->string('nomor_spot');
             $table->timestamps();
         });
+
+        // Menambahkan data nomor spot dari 1 hingga 40
+        for ($i = 1; $i <= 40; $i++) {
+            DB::table('spots')->insert([
+                'nomor_spot' => sprintf('%02d', $i), // Format nomor menjadi dua digit
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 
     /**

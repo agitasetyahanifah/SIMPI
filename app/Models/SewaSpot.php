@@ -5,18 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SewaPemancingan extends Model
+class SewaSpot extends Model
 {
     use HasFactory;
 
-    protected $table = 'sewa_pemancingan';
+    protected $table = 'sewa_spots';
 
     protected $guarded = ['id'];
 
     protected static function booted()
     {
-        static::creating(function ($sewaPemancingan) {
-            $sewaPemancingan->kode_booking = strtoupper('LNI' . uniqid());
+        static::creating(function ($sewaSpot) {
+            $sewaSpot->kode_booking = strtoupper('LNI' . uniqid());
         });
     }
 
