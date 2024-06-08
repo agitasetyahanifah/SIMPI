@@ -15,7 +15,8 @@ class MemberSewaSpotController extends Controller
     public function index()
     {
         $spots = Spot::all();
-        $sewaSpots = SewaSpot::all()->groupBy('spot_id');
+        // $sewaSpots = SewaSpot::all()->groupBy('spot_id');
+        $sewaSpots = SewaSpot::where('tanggal_sewa', '>=', Carbon::today())->get()->groupBy('spot_id');
         return view('member.sewaspotpemancingan.sewa-spot', compact('spots', 'sewaSpots'));
     }
 
@@ -35,7 +36,7 @@ class MemberSewaSpotController extends Controller
 
         // Jika spot sudah dipesan, kembalikan dengan pesan error
         if ($spotBooked) {
-            return redirect()->back()->with('error', 'Spot pada sesi dan tanggal tersebut sudah dipesan.');
+            return back()->withErrors(['sesi' => 'Sesi ini sudah tidak tersedia. Silakan pilih sesi lain.']);
         }
 
         $biaya_sewa = 10000;
@@ -55,19 +56,22 @@ class MemberSewaSpotController extends Controller
             $sewaSpot->update(['timeout' => $timeout]);
         });
 
-        return redirect()->route('member.spots.index')->with('success', 'Spot berhasil disewa!');
+        return redirect()->route('member.spots.index')->with('success', 'Spot berhasil dibooking!');
     }
 
     public function cancelOrder(SewaSpot $sewaSpot)
     {
         // Pastikan pesanan belum dibayar dan belum melewati timeout
         if ($sewaSpot->status === 'menunggu pembayaran' && Carbon::now()->lt($sewaSpot->timeout)) {
-            $sewaSpot->delete(); // Batalkan pesanan
+            // Ubah status pesanan menjadi "dibatalkan"
+            $sewaSpot->status = 'dibatalkan';
+            $sewaSpot->save();
+    
             return redirect()->back()->with('success', 'Pesanan berhasil dibatalkan.');
         }
-
+    
         return redirect()->back()->with('error', 'Gagal membatalkan pesanan.');
-    }
+    }    
 
     public function resetSpot()
     {
@@ -90,4 +94,48 @@ class MemberSewaSpotController extends Controller
 
         return redirect()->route('member.spots.index');
     }
+
+    public function cekKetersediaan(Request $request)
+    {
+        $tanggalSewa = $request->query('tanggal_sewa');
+        $spotId = $request->query('spot_id');
+
+        // Logika untuk mendapatkan sesi yang sudah dipesan
+        $bookedSessions = SewaSpot::where('tanggal_sewa', $tanggalSewa)
+                                ->where('spot_id', $spotId)
+                                ->pluck('sesi');
+
+        return response()->json(['sesi_terpesan' => $bookedSessions]);
+    }
+
+    public function riwayatSewa()
+    {
+        // Ambil riwayat sewa terbaru berdasarkan user yang sedang login
+        $user = Auth::user();
+        $riwayatSewa = SewaSpot::where('user_id', $user->id)
+                                ->orderBy('created_at', 'desc') // Mengurutkan berdasarkan tanggal sewa descending
+                                ->get();
+    
+        // Kembalikan ke view dengan data riwayat sewa
+        return view('member.sewaspotpemancingan.riwayat-sewa', compact('riwayatSewa'));
+    }    
+
+    public function autoCancel($id)
+    {
+        $sewa = SewaSpot::find($id);
+
+        if ($sewa && $sewa->status === 'menunggu pembayaran') {
+            $createdTime = $sewa->created_at;
+            $currentTime = now();
+            $hoursDifference = $createdTime->diffInHours($currentTime);
+
+            if ($hoursDifference >= 24) {
+                $sewa->status = 'dibatalkan';
+                $sewa->save();
+            }
+        }
+
+        return response()->json(['success' => true]);
+    }
+
 }

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/logo.png') }}">
+  <title>
+    SIMPI | Riwayat Sewa Spot Pemancingan
+  </title>
+  <!-- Fonts and icons -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
+  <!-- Nucleo Icons -->
+  <link href="{{ asset('assets/css/nucleo-icons.css') }}" rel="stylesheet" />
+  <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- CSS Files -->
+  <link id="pagestyle" href="{{ asset('assets/css/soft-ui-dashboard.css?v=1.0.7') }}" rel="stylesheet" />
+  <!-- Nepcha Analytics (nepcha.com) -->
+  <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- jQuery dan Bootstrap JS -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<body class="g-sidenav-show bg-gray-100">
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    @include('Member.Layouts.navbar')
+
+    <div class="container-fluid py-2">
+      <div class="mt-3 mb-2">
+        <a href="{{ route('member.spots.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Kembali</a>
+      </div>
+      <div class="mt-3 mb-4 d-flex justify-content-between align-items-center flex-wrap">
+        <h2 class="font-weight-bolder mt-4 mb-3 text-center flex-grow-1">Riwayat Sewa Spot Pemancingan</h2>
+      </div>   
+      @if(session('success'))
+          <div class="alert alert-success">
+              {{ session('success') }}
+          </div>
+      @endif
+
+      @if ($errors->any())
+          <div class="alert alert-danger">
+              <ul>
+                  @foreach ($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                  @endforeach
+              </ul>
+          </div>
+      @endif
+
+      <div class="card-body">
+        @if($riwayatSewa->isEmpty())
+            <h6 class="text-muted text-center">Belum ada data riwayat sewa spot pemancingan</h6>
+        @else
+            @foreach($riwayatSewa as $index => $sewa)
+                <div class="card card-frame mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5 class="card-title"><strong>Kode Booking:</strong> {{ $sewa->kode_booking }}</h5>
+                                <div class="row mb-2">
+                                    <div class="col-md-2"><strong>Tanggal Sewa</strong></div>
+                                    <div class="col-md-10">{{ $sewa->tanggal_sewa }}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-2"><strong>Nomor Spot</strong></div>
+                                    <div class="col-md-10">{{ $sewa->spot ? $sewa->spot->nomor_spot : 'N/A' }}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-2"><strong>Sesi</strong></div>
+                                    <div class="col-md-10">{{ $sewa->sesi }}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-2"><strong>Status</strong></div>
+                                    <div class="col-md-10">
+                                        @if($sewa->status === 'dibatalkan')
+                                            <span class="text-danger">Dibatalkan</span>
+                                        @elseif($sewa->status === 'sudah dibayar')
+                                            <span class="text-success">Sudah Dibayar</span>
+                                        @elseif($sewa->status === 'menunggu pembayaran')
+                                            <span class="text-warning">Menunggu Pembayaran</span>
+                                        @else
+                                            {{ $sewa->status }}
+                                        @endif
+                                    </div>
+                                </div>
+                                @if($sewa->status === 'menunggu pembayaran')
+                                <div class="row mb-2">
+                                    <div class="col-md-2"><strong>Waktu Tersisa</strong></div>
+                                    <div class="col-md-10 text-danger" id="countdown-{{ $sewa->id }}"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 text-end">
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal{{ $sewa->id }}">Batalkan Sewa</button>
+                                        <a class="btn btn-primary mx-2" data-bs-toggle="modal" data-bs-target="#detailModal{{ $sewa->id }}">Detail</a>
+                                    </div>
+                                </div>
+                                @else
+                                <div class="row">
+                                    <div class="col-md-12 text-end">
+                                        <a class="btn btn-primary mx-2" data-bs-toggle="modal" data-bs-target="#detailModal{{ $sewa->id }}">Detail</a>
+                                    </div>
+                                </div>
+                                @endif
+
+                                <!-- Modal Konfirmasi Batal Sewa-->
+                                <div class="modal fade" id="confirmModal{{ $sewa->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Konfirmasi Pembatalan Sewa</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Apakah Anda yakin ingin membatalkan sewa ini?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form id="cancelForm{{ $sewa->id }}" action="{{ route('member.spots.cancel', $sewa->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger">Ya, Batalkan Sewa</button>
+                                                </form>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal Detail Sewa -->
+                                <div class="modal fade" id="detailModal{{ $sewa->id }}" tabindex="-1" aria-labelledby="detailModalLabel{{ $sewa->id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="detailModalLabel{{ $sewa->id }}">Detail Penyewaan Pemancingan</h5>
+                                                <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <p class="me-3" style="font-size: 18pt"><b>Kode Booking: {{ $sewa->kode_booking }}</b></p>
+                                                        <table class="table">
+                                                            <tr>
+                                                                <th style="width: 35%">Nama Pelanggan</th>
+                                                                <td>{{ $sewa->member->nama }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Tanggal Sewa</th>
+                                                                <td>{{ $sewa->tanggal_sewa }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Nomor Spot</th>
+                                                                <td>{{ $sewa->spot ? $sewa->spot->nomor_spot : 'N/A' }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Sesi</th>
+                                                                <td>{{ $sewa->sesi }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Biaya Sewa</th>
+                                                                <td>Rp {{ number_format($sewa->biaya_sewa, 0, ',', '.') }}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Status Pembayaran</th>
+                                                                <td>
+                                                                    @if($sewa->status === 'dibatalkan')
+                                                                        <span class="text-danger">Dibatalkan</span>
+                                                                    @elseif($sewa->status === 'sudah dibayar')
+                                                                        <span class="text-success">Sudah Dibayar</span>
+                                                                    @elseif($sewa->status === 'menunggu pembayaran')
+                                                                        <span class="text-warning">Menunggu Pembayaran</span>
+                                                                    @else
+                                                                        {{ $sewa->status }}
+                                                                    @endif
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                        <div class="mt-3">
+                                                            <p><strong>Note: </strong>Silahkan melakukan pembayaran secara langsung kepada admin di lokasi pemancingan.</p>
+                                                            <p>Untuk informasi lebih lanjut atau pertanyaan, bisa menghubungi admin melalui kontak berikut:</p>
+                                                            <table class="table table-borderless">
+                                                                <tr>
+                                                                    <th style="width: 15%">WhatsApp</th>
+                                                                    <td>0895-2295-6203</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th>Email</th>
+                                                                    <td>adminlni@gmail.com</td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        @endif
+      </div>
+    
+    </div>
+
+    </div>
+
+    <footer class="footer pl-0 pb-3">
+      <div class="container-fluid">
+        <div class="row align-items-center justify-content-lg-between">
+          <div class="col-lg-6 mb-lg-0 mb-4">
+            <div class="copyright text-center text-sm text-muted text-lg-start">
+              © <script>
+                document.write(new Date().getFullYear())
+              </script>,
+              SIMPI | Sistem Manajemen Pemancingan Ikan
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script src="{{ asset('assets/js/core/popper.min.js') }}"></script>
+  <script src="{{ asset('assets/js/core/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
+  <script src="{{ asset('assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
+  <script src="{{ asset('assets/js/plugins/chartjs.min.js') }}"></script>
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <script src="{{ asset('assets/js/soft-ui-dashboard.min.js?v=1.0.7') }}"></script>
+
+    <script>
+        function submitForm(sewaId) {
+            document.getElementById('cancelForm' + sewaId).submit();
+        }
+    </script>
+    
+    <!-- JavaScript Hitung Mundur -->
+    <script>  
+        document.addEventListener('DOMContentLoaded', function() {
+            @foreach($riwayatSewa as $sewa)
+                var createdAt{{ $sewa->id }} = new Date("{{ $sewa->created_at }}").getTime();
+                var expireAt{{ $sewa->id }} = createdAt{{ $sewa->id }} + (24 * 60 * 60 * 1000);
+                var countdownElement{{ $sewa->id }} = document.getElementById("countdown-{{ $sewa->id }}");
+        
+                var countdownInterval{{ $sewa->id }} = setInterval(function() {
+                    var now = new Date().getTime();
+                    var distance = expireAt{{ $sewa->id }} - now;
+        
+                    if (distance < 0) {
+                        clearInterval(countdownInterval{{ $sewa->id }});
+                        countdownElement{{ $sewa->id }}.innerHTML = "Waktu Pembayaran Telah Habis";
+                        cancelOrderAutomatically({{ $sewa->id }});
+                    } else {
+                        var hours = Math.floor((distance % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+                        var minutes = Math.floor((distance % (60 * 60 * 1000)) / (60 * 1000));
+                        var seconds = Math.floor((distance % (60 * 1000)) / 1000);
+        
+                        countdownElement{{ $sewa->id }}.innerHTML = hours + " jam " + minutes + " menit " + seconds + " detik ";
+                    }
+                }, 1000);
+        
+                function cancelOrderAutomatically(sewaId) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "{{ route('member.spots.autoCancel', '') }}/" + sewaId, true);
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                    xhr.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}");
+        
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                            location.reload();
+                        }
+                    };
+        
+                    xhr.send();
+                }
+            @endforeach
+        });
+      </script>
+
+</body>
+</html>

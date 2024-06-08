@@ -31,4 +31,9 @@ class SewaSpot extends Model
             ->withTimestamps();
     }
 
+    public function spot()
+    {
+        return $this->belongsTo(Spot::class);
+    }
+
 }

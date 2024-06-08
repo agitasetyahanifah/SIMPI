@@ -21,6 +21,35 @@ class AdminSewaPemancinganController extends Controller
         return view('admin.sewapemancingan.index', compact('sewaPemancingan', 'lastItem', 'member', 'members'));
     }
 
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+        $sewaPemancingan = SewaSpot::where(function ($query) use ($search) {
+            $query->where('kode_booking', 'like', '%' . $search . '%')
+                  ->orWhereHas('member', function($subquery) use ($search) {
+                      $subquery->where('nama', 'like', '%' . $search . '%');
+                  });
+        })->orderBy('tanggal_sewa', 'desc')->paginate(25);
+        
+        return response()->json($sewaPemancingan);
+    
+    }      
+
+    // public function search(Request $request)
+    // {
+    //     $search = $request->input('search');
+    //     $sewaPemancingan = SewaSpot::whereHas('member', function($query) use ($search) {
+    //         $query->where('nama', 'like', '%' . $search . '%');
+    //     })
+    //     ->orWhere('kode_booking', 'like', '%' . $search . '%')
+    //     ->with('member')
+    //     ->get();
+
+    //     return response()->json([
+    //         'data' => $sewaPemancingan,
+    //     ]);
+    // }
+
     /**
      * Show the form for creating a new resource.
      */

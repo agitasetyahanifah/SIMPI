@@ -99,6 +99,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('/admin/members', AdminMemberController::class);
     // Rute Booking Tempat Pemancingan
     Route::resource('/admin/sewaPemancingan', AdminSewaPemancinganController::class);
+    Route::get('/admin/sewaPemancingan/search', [AdminSewaPemancinganController::class, 'search'])->name('admin.sewaPemancingan.search');
     Route::post('/admin/sewaPemancingan/konfirmasi-pembayaran/{id}', [AdminSewaPemancinganController::class, 'konfirmasiPembayaran'])->name('admin.sewaPemancingan.konfirmasiPembayaran');
 });
 
@@ -116,7 +117,11 @@ Route::middleware(['auth', 'member'])->group(function () {
     // Sewa Spot Pemancingan
     // Route::get('/member/sewaPemancingan', [MemberSewaPemancinganController::class, 'index'])->name('member.sewa-pemancingan.index');
     Route::get('/member/sewaPemancingan/spots', [MemberSewaSpotController::class, 'index'])->name('member.spots.index');
-    Route::post('member/sewaPemancingan/spots/sewaSpot', [MemberSewaSpotController::class, 'store'])->name('member.spots.pesan-spot');
+    Route::post('/member/sewaPemancingan/spots/sewaSpot', [MemberSewaSpotController::class, 'store'])->name('member.spots.pesan-spot');
+    Route::get('/member/sewaPemancingan/spots/riwayatSewa', [MemberSewaSpotController::class, 'riwayatSewa'])->name('member.spots.riwayat-sewa');
+    Route::delete('/member/sewaPemancingan/spots/cancel/{sewaSpot}', [MemberSewaSpotController::class, 'cancelOrder'])->name('member.spots.cancel');
+    Route::post('/member/sewaPemancingan/spos/auto-cancel/{id}', [MemberSewaSpotController::class, 'autoCancel'])->name('member.spots.autoCancel');
+    Route::get('/cek-ketersediaan', [MemberSewaSpotController::class, 'cekKetersediaan']);
     // Daftar Alat yang Disewakan Member
     Route::get('/member/daftarAlat', [MemberDaftarAlatController::class, 'index'])->name('member.daftar-alat.index');
 });

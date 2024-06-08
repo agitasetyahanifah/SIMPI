@@ -14,12 +14,14 @@ class Spot extends Model
     protected $guarded = ['id'];
 
     // Definisikan relasi dengan SewaSpot
+    // public function sewaSpots()
+    // {
+    //     return $this->hasMany(SewaSpot::class, 'spot_id', 'id');
+    // }
+
     public function sewaSpots()
     {
-        return $this->hasMany(SewaSpot::class, 'spot_id', 'id');
+        return $this->hasMany(SewaSpot::class);
     }
-    
-    // Metode untuk memeriksa apakah spot sudah dipesan pada sesi tersebut
-
  
 }

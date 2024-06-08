@@ -124,9 +124,10 @@
       <div class="mt-3 mb-2">
         <a href="{{ route('member.landingpage.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Kembali</a>
       </div>
-      <div class="mt-3 mb-4">
-        <h2 class="font-weight-bolder mt-4 mb-3 text-center"><b>Sewa Spot Pemancingan</b></h2>
-      </div>
+      <div class="mt-3 mb-4 d-flex justify-content-between align-items-center flex-wrap">
+        <h2 class="font-weight-bolder mt-4 mb-3 text-center flex-grow-1">Sewa Spot Pemancingan</h2>
+        <a href="{{ route('member.spots.riwayat-sewa') }}" class="btn btn-primary mb-3 mb-sm-0">Riwayat Sewa</a>
+      </div>      
       @if(session('success'))
           <div class="alert alert-success">
               {{ session('success') }}
@@ -142,7 +143,7 @@
               </ul>
           </div>
       @endif
-      <div class="card-body p-7">
+      <div class="card-body p-6 mb-4">
           <div class="kolam">
             <h1 style="color: white;">Kolam</h1>
             <div class="spot-container">
@@ -217,59 +218,47 @@
       </div>
     </div>
 
-    <!-- Tambahkan modal untuk pemesanan -->
-    <div class="modal fade" id="spotModal" tabindex="-1" role="dialog" aria-labelledby="spotModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="spotModalLabel">Sewa Spot Pemancingan</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Modal Sewa Spot Pemancingan -->
+    <div class="modal fade" id="spotModal" tabindex="-1" aria-labelledby="spotModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="spotModalLabel">Sewa Spot Pemancingan</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <form id="sewaSpotForm" action="{{ route('member.spots.pesan-spot') }}" method="POST">
+                      @csrf
+                      <input type="hidden" name="spot_id" id="selectedSpotId" value="">
+
+                      <div class="form-group">
+                        <label for="nama_pelanggan" class="col-form-label">Nama Pelanggan</label>
+                        <input type="text" class="form-control" id="nama_pelanggan" name="nama_pelanggan" value="{{ auth()->user()->nama }}" disabled>
+                      </div>                
+                      <div class="form-group">
+                        <label for="tanggal_sewa" class="col-form-label">Tanggal Sewa</label>
+                        <input type="date" class="form-control" id="tanggal_sewa" name="tanggal_sewa" value="{{ date('Y-m-d') }}" min="{{ date('Y-m-d') }}" required>
+                      </div>
+                      <div class="mb-3">
+                          <label for="sesi" class="form-label">Pilih Sesi:</label>
+                          <div id="sesiButtons">
+                              <button type="button" class="btn btn-outline-primary sesi-button"
+                                  data-sesi="08.00-12.00">08.00-12.00</button>
+                              <button type="button" class="btn btn-outline-primary sesi-button"
+                                  data-sesi="13.00-17.00">13.00-17.00</button>
+                          </div>
+
+                          <input type="hidden" id="sesi" name="sesi" required>
+
+                      </div>
+
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                          <button type="submit" class="btn btn-primary">Sewa</button>
+                      </div>
+                  </form>
+              </div>
           </div>
-          <div class="modal-body">
-              <form id="pesanForm" action="{{ route('member.spots.pesan-spot') }}" method="POST">
-                  @csrf
-                  <input type="hidden" id="spot_id" name="spot_id">
-                  <div class="form-group">
-                      <label for="nama_pelanggan" class="col-form-label">Nama Pelanggan</label>
-                      <input type="text" class="form-control" id="nama_pelanggan" name="nama_pelanggan" value="{{ auth()->user()->nama }}" disabled>
-                  </div>                
-                  <div class="form-group">
-                      <label for="tanggal_sewa" class="col-form-label">Tanggal Sewa</label>
-                      <input type="date" class="form-control" id="tanggal_sewa" name="tanggal_sewa" value="{{ date('Y-m-d') }}" required>
-                    </div>
-                  <div class="form-group">
-                    @php
-                        use App\Models\SewaSpot;
-                    
-                        $spot_id = request('spot_id');
-                        $tanggal_sewa = request('tanggal_sewa');
-                    
-                        $spotBookedMorning = SewaSpot::where('spot_id', $spot_id)
-                            ->where('tanggal_sewa', $tanggal_sewa)
-                            ->where('sesi', '08.00-12.00')
-                            ->exists();
-                    
-                        $spotBookedAfternoon = SewaSpot::where('spot_id', $spot_id)
-                            ->where('tanggal_sewa', $tanggal_sewa)
-                            ->where('sesi', '13.00-17.00')
-                            ->exists();
-                    @endphp                           
-                    <label for="pilih_sesi" class="col-form-label">Pilih Sesi</label>
-                    <div class="col form-group d-flex ms-2 justify-content-start">
-                      <button type="button" class="btn btn-outline-primary sesi-button me-2 {{ $spotBookedMorning ? 'disabled' : '' }}" data-sesi="08.00-12.00">08:00 - 12:00</button>
-                      <button type="button" class="btn btn-outline-primary sesi-button {{ $spotBookedAfternoon ? 'disabled' : '' }}" data-sesi="13.00-17.00">13:00 - 17:00</button>
-                    </div>
-                  </div>
-                
-                  <input type="hidden" id="sesi" name="sesi" required>                
-                
-              </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            <button type="submit" class="btn btn-primary" form="pesanForm">Sewa</button>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -297,109 +286,86 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <script src="{{ asset('assets/js/soft-ui-dashboard.min.js?v=1.0.7') }}"></script>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    $(document).ready(function() {
-      // Data pemesanan dari server
-      const sewaSpots = @json($sewaSpots);
-
-      // Variabel untuk menyimpan sesi yang dipilih
-      let selectedSesi = '';
-
-      // Fungsi untuk mengecek ketersediaan spot setelah perubahan tanggal atau sesi
-      function checkSpotAvailability() {
-        var selectedDate = $('#tanggal_sewa').val();
-
-        // Cek ketersediaan spot pada tanggal dan sesi yang dipilih
-        if (selectedDate && selectedSesi) {
-          $('.spot').each(function() {
-            var spotId = $(this).attr('id').split('-')[1];
-            if (checkAvailability(selectedDate, selectedSesi, spotId)) {
-              $(this).addClass('btn-secondary disabled').removeClass('btn-primary').prop('disabled', true).css('cursor', 'not-allowed');
-            } else {
-              $(this).removeClass('btn-secondary disabled selected').addClass('btn-primary').prop('disabled', false).css('cursor', 'pointer');
+    document.addEventListener('DOMContentLoaded', function() {
+        var selectedSpotId;
+    
+        function updateSesiButtons(spotId, tanggalSewa) {
+            var sesiButtons = document.querySelectorAll('.sesi-button');
+    
+            // Reset tombol sesi
+            sesiButtons.forEach(function(button) {
+                button.classList.remove('disabled');
+                button.disabled = false;
+                button.classList.remove('btn-primary');
+                button.classList.add('btn-outline-primary');
+            });
+    
+            // AJAX request untuk mengecek ketersediaan sesi
+            $.ajax({
+                url: '/cek-ketersediaan',
+                type: 'GET',
+                data: {
+                    tanggal_sewa: tanggalSewa,
+                    spot_id: spotId
+                },
+                success: function(data) {
+                    var bookedSesi = data.sesi_terpesan;
+                    sesiButtons.forEach(function(button) {
+                        var sesi = button.getAttribute('data-sesi');
+                        if (bookedSesi.includes(sesi)) {
+                            button.classList.add('disabled');
+                            button.disabled = true;
+                            button.classList.remove('btn-outline-primary');
+                            button.classList.add('btn-primary');
+                        } else {
+                            button.classList.remove('disabled');
+                            button.disabled = false;
+                        }
+                    });
+                }
+            });
+        }
+    
+        document.querySelectorAll('.spot').forEach(function(spot) {
+            spot.addEventListener('click', function() {
+                if (spot.classList.contains('disabled')) {
+                    return;
+                }
+                selectedSpotId = spot.getAttribute('id').split('-')[1];
+                document.getElementById('selectedSpotId').value = selectedSpotId;
+                var selectedDate = document.getElementById('tanggal_sewa').value;
+                updateSesiButtons(selectedSpotId, selectedDate);
+            });
+        });
+    
+        document.querySelectorAll('.sesi-button').forEach(function(button) {
+            button.addEventListener('click', function() {
+                if (button.classList.contains('disabled')) {
+                    return;
+                }
+                var sesi = button.getAttribute('data-sesi');
+                document.querySelector('input[name="sesi"]').value = sesi;
+                button.classList.remove('btn-outline-primary');
+                button.classList.add('btn-primary');
+            });
+        });
+    
+        document.getElementById('tanggal_sewa').addEventListener('change', function() {
+            var selectedDate = this.value;
+            if (selectedSpotId) {
+                updateSesiButtons(selectedSpotId, selectedDate);
             }
-          });
-          $('.sesi-button').each(function() {
-          var sesi = $(this).data('sesi');
-          var spotBooked = checkAvailability(selectedDate, sesi);
-          if (spotBooked) {
-            $(this).addClass('disabled').prop('disabled', true);
-          } else {
-            $(this).removeClass('disabled').prop('disabled', false);
-          }
         });
-        }
-      }
-
-      // Mengatur event handler untuk button sesi
-      $('.sesi-button').on('click', function() {
-        selectedSesi = $(this).data('sesi');
-        $('#sesi').val(selectedSesi);
-
-        // Mengubah warna tombol yang dipilih
-        $('.sesi-button').removeClass('btn-primary').addClass('btn-outline-primary');
-        $(this).removeClass('btn-outline-primary').addClass('btn-primary');
-
-        // Periksa ketersediaan spot setelah perubahan sesi
-        checkSpotAvailability();
-      });
-
-      // Mengatur event handler untuk spot
-      $('.spot').on('click', function() {
-        var spotId = $(this).attr('id').split('-')[1];
-        $('#spot_id').val(spotId);
-
-        var selectedDate = $('#tanggal_sewa').val();
-
-        // Cek ketersediaan spot pada tanggal dan sesi yang dipilih
-        if (selectedDate && selectedSesi) {
-          if (checkAvailability(selectedDate, selectedSesi, spotId)) {
-            // Jika spot sudah dipesan, tampilkan pesan dan kembalikan
-            alert('Spot pada tanggal dan sesi tersebut sudah dipesan.');
-            return;
-          }
-
-          // Jika spot belum dipesan, atur tampilan spot yang bisa dipesan
-          $(this).addClass('selected');
-          $(this).removeClass('btn-primary').addClass('btn-secondary').prop('disabled', true).css('cursor', 'not-allowed');
-        }
-      });
-
-      // Setelah halaman dimuat, cek ketersediaan spot yang sudah dipesan dan nonaktifkan mereka
-      checkSpotAvailability();
-
-      // Event handler untuk perubahan tanggal sewa atau sesi yang dipilih
-      $('#tanggal_sewa, #sesi').on('change', function() {
-        // Reset pilihan spot
-        $('.spot').removeClass('btn-secondary disabled selected').addClass('btn-primary').prop('disabled', false).css('cursor', 'pointer');
-
-        // Periksa ketersediaan spot setelah perubahan tanggal atau sesi
-        checkSpotAvailability();
-      });
-
-      // Mengatur ketersediaan button sesi berdasarkan spot yang tersedia
-      function updateSesiButtonsAvailability(spotId) {
-        $('.sesi-button').each(function() {
-          var sesi = $(this).data('sesi');
-          var spotBooked = checkAvailability(selectedDate, sesi, spotId);
-          if (spotBooked) {
-            $(this).addClass('disabled').prop('disabled', true);
-          } else {
-            $(this).removeClass('disabled').prop('disabled', false);
-          }
+    
+        document.getElementById('spotModal').addEventListener('hidden.bs.modal', function() {
+            document.getElementById('sewaSpotForm').reset();
+            selectedSpotId = null;
+            document.getElementById('selectedSpotId').value = '';
         });
-      }
-
-      // Event handler untuk perubahan spot pada modal
-      $('#spot_id').on('input', function() {
-        var spotId = $(this).val();
-        updateSesiButtonsAvailability(spotId);
-      });
-
-
     });
   </script>
-
-
+  
 </body>
 </html>
