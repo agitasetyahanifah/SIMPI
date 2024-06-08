@@ -3,121 +3,91 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
 use App\Models\SewaSpot;
-use Carbon\Carbon; // Gunakan Carbon untuk manipulasi waktu
+use App\Models\Spot;
 
 class MemberSewaSpotController extends Controller
 {
     public function index()
     {
-        $spots = [
-            ['id' => 1, 'nomor_spot' => '01'],
-            ['id' => 2, 'nomor_spot' => '02'],
-            ['id' => 3, 'nomor_spot' => '03'],
-            ['id' => 4, 'nomor_spot' => '04'],
-            ['id' => 5, 'nomor_spot' => '05'],
-            ['id' => 6, 'nomor_spot' => '06'],
-            ['id' => 7, 'nomor_spot' => '07'],
-            ['id' => 8, 'nomor_spot' => '08'],
-            ['id' => 9, 'nomor_spot' => '09'],
-            ['id' => 10, 'nomor_spot' => '10'],
-            ['id' => 11, 'nomor_spot' => '11'],
-            ['id' => 12, 'nomor_spot' => '12'],
-            ['id' => 13, 'nomor_spot' => '13'],
-            ['id' => 14, 'nomor_spot' => '14'],
-            ['id' => 15, 'nomor_spot' => '15'],
-            ['id' => 16, 'nomor_spot' => '16'],
-            ['id' => 17, 'nomor_spot' => '17'],
-            ['id' => 18, 'nomor_spot' => '18'],
-            ['id' => 19, 'nomor_spot' => '19'],
-            ['id' => 20, 'nomor_spot' => '20'],
-            ['id' => 21, 'nomor_spot' => '21'],
-            ['id' => 22, 'nomor_spot' => '22'],
-            ['id' => 23, 'nomor_spot' => '23'],
-            ['id' => 24, 'nomor_spot' => '24'],
-            ['id' => 25, 'nomor_spot' => '25'],
-            ['id' => 26, 'nomor_spot' => '26'],
-            ['id' => 27, 'nomor_spot' => '27'],
-            ['id' => 28, 'nomor_spot' => '28'],
-            ['id' => 29, 'nomor_spot' => '29'],
-            ['id' => 30, 'nomor_spot' => '30'],
-            ['id' => 31, 'nomor_spot' => '31'],
-            ['id' => 32, 'nomor_spot' => '32'],
-            ['id' => 33, 'nomor_spot' => '33'],
-            ['id' => 34, 'nomor_spot' => '34'],
-            ['id' => 35, 'nomor_spot' => '35'],
-            ['id' => 36, 'nomor_spot' => '36'],
-            ['id' => 37, 'nomor_spot' => '37'],
-            ['id' => 38, 'nomor_spot' => '38'],
-            ['id' => 39, 'nomor_spot' => '39'],
-            ['id' => 40, 'nomor_spot' => '40'],
-        ];
-        
-
-        return view('member.sewaspotpemancingan.sewa-pemancingan', compact('spots'));
+        $spots = Spot::all();
+        $sewaSpots = SewaSpot::all()->groupBy('spot_id');
+        return view('member.sewaspotpemancingan.sewa-spot', compact('spots', 'sewaSpots'));
     }
 
-    public function pesanSpot(Request $request)
+    public function store(Request $request)
     {
-        // Validasi input
         $request->validate([
-            'nama_pelanggan' => 'required|string|max:255',
+            'spot_id' => 'required|exists:spots,id',
             'tanggal_sewa' => 'required|date',
-            'jam_mulai' => 'required|date_format:H:i',
-            'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
-            'spot_id' => 'required|integer',
+            'sesi' => 'required|in:08.00-12.00,13.00-17.00',
         ]);
 
-        // Cek apakah spot sudah dipesan sebelumnya
-        $sewaSpotLain = SewaSpot::where('spot_id', $request->input('spot_id'))
-            ->where('tanggal_sewa', $request->input('tanggal_sewa'))
-            ->where(function ($query) use ($request) {
-                $query->where(function ($q) use ($request) {
-                    $q->where('jam_mulai', '<=', $request->input('jam_mulai'))
-                        ->where('jam_selesai', '>=', $request->input('jam_mulai'));
-                })->orWhere(function ($q) use ($request) {
-                    $q->where('jam_mulai', '<=', $request->input('jam_selesai'))
-                        ->where('jam_selesai', '>=', $request->input('jam_selesai'));
-                });
-            })->first();
+        // Periksa apakah spot pada sesi dan tanggal tersebut sudah dipesan
+        $spotBooked = SewaSpot::where('spot_id', $request->spot_id)
+            ->where('tanggal_sewa', $request->tanggal_sewa)
+            ->where('sesi', $request->sesi)
+            ->exists();
 
-        if ($sewaSpotLain) {
-            return response()->json(['message' => 'Spot sudah dipesan pada waktu tersebut'], 400);
+        // Jika spot sudah dipesan, kembalikan dengan pesan error
+        if ($spotBooked) {
+            return redirect()->back()->with('error', 'Spot pada sesi dan tanggal tersebut sudah dipesan.');
         }
 
-        // Simpan SewaSpot ke database
-        $sewaSpot = new SewaSpot();
-        $sewaSpot->nama_pelanggan = $request->input('nama_pelanggan');
-        $sewaSpot->tanggal_sewa = $request->input('tanggal_sewa');
-        $sewaSpot->jam_mulai = $request->input('jam_mulai');
-        $sewaSpot->jam_selesai = $request->input('jam_selesai');
-        $sewaSpot->spot_id = $request->input('spot_id');
-        $sewaSpot->status = 'menunggu_pembayaran'; // Status awal SewaSpot
-        $sewaSpot->save();
+        $biaya_sewa = 10000;
 
-        // Tambahkan logika lain seperti pengaturan status SewaSpot otomatis setelah 24 jam
-        $this->aturStatusSewaSpot($sewaSpot);
+        DB::transaction(function () use ($request, $biaya_sewa) {
+            $sewaSpot = SewaSpot::create([
+                'user_id' => Auth::id(),
+                'tanggal_sewa' => $request->tanggal_sewa,
+                'sesi' => $request->sesi,
+                'spot_id' => $request->spot_id,
+                'biaya_sewa' => $biaya_sewa,
+                'status' => 'menunggu pembayaran',
+            ]);
 
-        return response()->json(['message' => 'Sewa Spot Pemancingan berhasil disimpan'], 201);
+            // Tambahkan kode untuk mengatur pembatalan otomatis pesanan
+            $timeout = Carbon::now()->addHours(24); // Waktu timeout 24 jam dari sekarang
+            $sewaSpot->update(['timeout' => $timeout]);
+        });
+
+        return redirect()->route('member.spots.index')->with('success', 'Spot berhasil disewa!');
     }
 
-    // Method untuk mengatur status SewaSpot berdasarkan aturan yang disebutkan
-    private function aturStatusSewaSpot($sewaSpot)
+    public function cancelOrder(SewaSpot $sewaSpot)
     {
-        $waktuSewa = Carbon::parse($sewaSpot->tanggal_sewa . ' ' . $sewaSpot->jam_mulai);
-        $waktuSekarang = Carbon::now();
-
-        // Apabila waktu sekarang melewati 24 jam dari waktu sewa dan SewaSpot belum dibayar
-        if ($waktuSekarang->diffInHours($waktuSewa) >= 24 && $sewaSpot->status === 'menunggu_pembayaran') {
-            $sewaSpot->status = 'dibatalkan';
-            $sewaSpot->save();
+        // Pastikan pesanan belum dibayar dan belum melewati timeout
+        if ($sewaSpot->status === 'menunggu pembayaran' && Carbon::now()->lt($sewaSpot->timeout)) {
+            $sewaSpot->delete(); // Batalkan pesanan
+            return redirect()->back()->with('success', 'Pesanan berhasil dibatalkan.');
         }
 
-        // Atur kembali spot menjadi tersedia jika waktu selesai sewa sudah lewat
-        $waktuSelesai = Carbon::parse($sewaSpot->tanggal_sewa . ' ' . $sewaSpot->jam_selesai);
-        if ($waktuSekarang->greaterThanOrEqualTo($waktuSelesai)) {
-            $sewaSpot->status = 'tersedia';
-            $sewaSpot->save();
+        return redirect()->back()->with('error', 'Gagal membatalkan pesanan.');
+    }
+
+    public function resetSpot()
+    {
+        $currentHour = Carbon::now()->format('H:i');
+        $spots = Spot::all();
+
+        // Reset spot untuk sesi 08.00-12.00 pada pukul 12.00
+        if ($currentHour === '12:00') {
+            foreach ($spots as $spot) {
+                $spot->sewaSpots()->where('sesi', '08.00-12.00')->delete();
+            }
         }
+
+        // Reset spot untuk sesi 13.00-17.00 pada pukul 17.00
+        if ($currentHour === '17:00') {
+            foreach ($spots as $spot) {
+                $spot->sewaSpots()->where('sesi', '13.00-17.00')->delete();
+            }
+        }
+
+        return redirect()->route('member.spots.index');
     }
 }

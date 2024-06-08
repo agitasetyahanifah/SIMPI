@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\SewaPemancingan;
+use App\Models\SewaSpot;
 use App\Models\User;
 
 class AdminSewaPemancinganController extends Controller
@@ -14,7 +14,7 @@ class AdminSewaPemancinganController extends Controller
      */
     public function index()
     {
-        $sewaPemancingan = SewaPemancingan::orderBy('tanggal_sewa', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
+        $sewaPemancingan = SewaSpot::orderBy('tanggal_sewa', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
         $lastItem = $sewaPemancingan->lastItem();
         $member = User::where('role', 'member')->get();
         $members = User::where('role', 'member')->orderBy('nama', 'asc')->get();        
@@ -40,7 +40,6 @@ class AdminSewaPemancinganController extends Controller
             'tanggal_sewa' => 'required|date',
             'jam_mulai' => 'required|date_format:H:i',
             'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
-            'jumlah_sewa' => 'required|integer|min:1',
         ]);
 
         // Get the authenticated user's ID
@@ -49,7 +48,7 @@ class AdminSewaPemancinganController extends Controller
         // Contoh untuk mengecek apakah jam yang dipilih sudah dipesan atau tidak
         $jamMulai = \Carbon\Carbon::parse($validatedData['jam_mulai']);
         $jamSelesai = \Carbon\Carbon::parse($validatedData['jam_selesai']);
-        $isTimeAvailable = !SewaPemancingan::where('tanggal_sewa', $validatedData['tanggal_sewa'])
+        $isTimeAvailable = !SewaSpot::where('tanggal_sewa', $validatedData['tanggal_sewa'])
                          ->where(function ($query) use ($jamMulai, $jamSelesai) {
                              $query->where(function ($q) use ($jamMulai, $jamSelesai) {
                                  $q->where('jam_mulai', '>=', $jamMulai)
@@ -75,17 +74,16 @@ class AdminSewaPemancinganController extends Controller
         $hargaSewaPerJam = 10000; // Ganti dengan harga sewa yang sesuai
     
         // Hitung biaya sewa berdasarkan rumus
-        $biayaSewa = $hargaSewaPerJam * $selisihJam * $validatedData['jumlah_sewa'];
+        $biayaSewa = $hargaSewaPerJam * $selisihJam;
     
         // Simpan data sewa pemancingan
-        $sewaPemancingan = new SewaPemancingan();
+        $sewaPemancingan = new SewaSpot();
         $sewaPemancingan->kode_booking = uniqid('BK');
         // $sewaPemancingan->user_id = $userId;
         $sewaPemancingan->user_id = $validatedData['nama_pelanggan'];
         $sewaPemancingan->tanggal_sewa = $validatedData['tanggal_sewa'];
         $sewaPemancingan->jam_mulai = $validatedData['jam_mulai'];
         $sewaPemancingan->jam_selesai = $validatedData['jam_selesai'];
-        $sewaPemancingan->jumlah_sewa = $validatedData['jumlah_sewa'];
         $sewaPemancingan->biaya_sewa = $biayaSewa;
         $sewaPemancingan->save();
     
@@ -119,17 +117,15 @@ class AdminSewaPemancinganController extends Controller
             'edit_tanggal_sewa' => 'required|date',
             'edit_jam_mulai' => 'required|date_format:H:i',
             'edit_jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
-            'edit_jumlah_sewa' => 'required|integer|min:1',
         ]);
         
         // Cari data sewa pemancingan berdasarkan ID
-        $sewaPemancingan = SewaPemancingan::findOrFail($id);
+        $sewaPemancingan = SewaSpot::findOrFail($id);
     
         // Update data sewa pemancingan
         $sewaPemancingan->tanggal_sewa = $validatedData['edit_tanggal_sewa'];
         $sewaPemancingan->jam_mulai = $validatedData['edit_jam_mulai'];
         $sewaPemancingan->jam_selesai = $validatedData['edit_jam_selesai'];
-        $sewaPemancingan->jumlah_sewa = $validatedData['edit_jumlah_sewa'];
 
          // Hitung selisih waktu dalam jam
         $jamMulai = \Carbon\Carbon::parse($validatedData['edit_jam_mulai']);
@@ -145,14 +141,14 @@ class AdminSewaPemancinganController extends Controller
         $hargaSewaPerJam = 10000; // Ganti dengan harga sewa yang sesuai
 
         // Hitung biaya sewa berdasarkan rumus
-        $biayaSewa = $hargaSewaPerJam * $selisihJam * $validatedData['edit_jumlah_sewa'];
+        $biayaSewa = $hargaSewaPerJam * $selisihJam;
 
         // Update biaya sewa dalam database
         $sewaPemancingan->biaya_sewa = $biayaSewa;
         
         // Update biaya sewa dan status dalam database
         $sewaPemancingan->biaya_sewa = $biayaSewa;
-        $sewaPemancingan->status = 'belum dibayar';
+        $sewaPemancingan->status = 'menunggu pembayaran';
         $sewaPemancingan->save();
 
         // Redirect atau berikan respons sesuai kebutuhan Anda
@@ -164,7 +160,7 @@ class AdminSewaPemancinganController extends Controller
      */
     public function destroy(string $id)
     {
-        $sewaPemancingan = SewaPemancingan::findOrFail($id);
+        $sewaPemancingan = SewaSpot::findOrFail($id);
             
         // Hapus alat pancing dari database
         $sewaPemancingan->delete();
@@ -175,7 +171,7 @@ class AdminSewaPemancinganController extends Controller
 
     public function konfirmasiPembayaran($id, Request $request)
     {
-        $pemancingan = SewaPemancingan::findOrFail($id);
+        $pemancingan = SewaSpot::findOrFail($id);
 
         // Periksa apakah status sudah 'sudah dibayar'
         if ($pemancingan->status === 'sudah dibayar') {

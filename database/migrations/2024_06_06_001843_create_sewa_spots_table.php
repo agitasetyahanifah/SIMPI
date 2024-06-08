@@ -16,16 +16,14 @@ return new class extends Migration
             $table->string('kode_booking')->unique();
             $table->unsignedBigInteger('user_id');
             $table->date('tanggal_sewa');
-            $table->time('jam_mulai');
-            $table->time('jam_selesai');
+            $table->enum('sesi', ['08.00-12.00', '13.00-17.00']);
             $table->unsignedBigInteger('spot_id');
             $table->integer('biaya_sewa')->nullable();
-            $table->enum('status', ['tersedia', 'menunggu_pembayaran', 'dibatalkan'])->default('tersedia');
+            $table->enum('status', ['sudah dibayar', 'menunggu pembayaran', 'dibatalkan'])->default('menunggu pembayaran');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('spot_id')->references('id')->on('spots')->onDelete('cascade');
-        
         });
     }
 

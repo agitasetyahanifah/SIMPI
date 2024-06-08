@@ -16,7 +16,6 @@
   <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
   <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-  <link href="{{ asset('assets/css/nucleo-svg.css') }}" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="{{ asset('assets/css/soft-ui-dashboard.css?v=1.0.7') }}" rel="stylesheet" />
   <!-- Nepcha Analytics (nepcha.com) -->
@@ -101,6 +100,18 @@
       right: -60px;
     }
 
+    .spot.disabled {
+      background-color: lightgray !important;
+      border-color: lightgray !important;
+      cursor: not-allowed;
+    }
+
+    .sesi-button.disabled {
+      background-color: lightgray !important;
+      border-color: lightgray !important;
+      color: gray !important;
+    }
+
   </style>
 
 </head>
@@ -116,71 +127,151 @@
       <div class="mt-3 mb-4">
         <h2 class="font-weight-bolder mt-4 mb-3 text-center"><b>Sewa Spot Pemancingan</b></h2>
       </div>
+      @if(session('success'))
+          <div class="alert alert-success">
+              {{ session('success') }}
+          </div>
+      @endif
+
+      @if ($errors->any())
+          <div class="alert alert-danger">
+              <ul>
+                  @foreach ($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                  @endforeach
+              </ul>
+          </div>
+      @endif
       <div class="card-body p-7">
           <div class="kolam">
             <h1 style="color: white;">Kolam</h1>
             <div class="spot-container">
-              <!-- Bagian atas (1-15) dari kiri ke kanan -->
-              @for ($i = 1; $i <= 15; $i++)
-              <div class="spot top" data-id="{{ $i }}" data-bs-toggle="modal" data-bs-target="#spotModal" style="left: calc(({{ $i }} - 1) * 80px);">{{ $i }}</div>
-              @endfor
 
-              <!-- Bagian kanan (16-20) dari atas ke bawah -->
-              @for ($i = 16; $i <= 20; $i++)
-              <div class="spot right" data-id="{{ $i }}" data-bs-toggle="modal" data-bs-target="#spotModal" style="top: calc(({{ $i }} - 16) * 80px);">{{ $i }}</div>
-              @endfor
+            <!-- Bagian atas (1-15) dari kiri ke kanan -->
+            @foreach ($spots->whereBetween('nomor_spot', ['01', '15']) as $spot)
+                @php
+                    $selectedDate = date('Y-m-d');
+                    $availableSesi = ['08.00-12.00', '13.00-17.00'];
+                    $spotBooked = $sewaSpots->has($spot->id) && $sewaSpots[$spot->id]->contains('tanggal_sewa', $selectedDate);
+                    $spotBookedSesi = $spotBooked ? $sewaSpots[$spot->id]->where('tanggal_sewa', $selectedDate)->pluck('sesi')->toArray() : [];
+                    $availableSesiCount = count(array_diff($availableSesi, $spotBookedSesi));
+                    $isSpotAvailable = $availableSesiCount > 0;
+                @endphp
+                <div id="spot-{{ $spot->id }}" class="spot top{{ !$isSpotAvailable ? ' disabled' : '' }}" 
+                    data-bs-toggle="modal" data-bs-target="{{ !$isSpotAvailable ? '' : '#spotModal' }}" 
+                    style="left: calc(({{ ltrim($spot->nomor_spot, '0') }} - 1) * 80px);">
+                    {{ $spot->nomor_spot }}
+                </div>
+            @endforeach
 
-              <!-- Bagian bawah (21-35) dari kanan ke kiri -->
-              @for ($i = 35; $i >= 21; $i--)
-              <div class="spot bottom" data-id="{{ $i }}" data-bs-toggle="modal" data-bs-target="#spotModal" style="left: calc((35 - {{ $i }}) * 80px);">{{ $i }}</div>
-              @endfor
+            <!-- Bagian kanan (16-20) dari atas ke bawah -->
+            @foreach ($spots->whereBetween('nomor_spot', ['16', '20']) as $spot)
+                @php
+                    $availableSesi = ['08.00-12.00', '13.00-17.00'];
+                    $spotBooked = $sewaSpots->has($spot->id) && $sewaSpots[$spot->id]->contains('tanggal_sewa', $selectedDate);
+                    $spotBookedSesi = $spotBooked ? $sewaSpots[$spot->id]->where('tanggal_sewa', $selectedDate)->pluck('sesi')->toArray() : [];
+                    $availableSesiCount = count(array_diff($availableSesi, $spotBookedSesi));
+                    $isSpotAvailable = $availableSesiCount > 0;
+                @endphp
+                <div id="spot-{{ $spot->id }}" class="spot right{{ !$isSpotAvailable ? ' disabled' : '' }}" 
+                    data-bs-toggle="modal" data-bs-target="{{ !$isSpotAvailable ? '' : '#spotModal' }}" 
+                    style="top: calc(({{ ltrim($spot->nomor_spot, '0') }} - 16) * 80px);">
+                    {{ $spot->nomor_spot }}
+                </div>
+            @endforeach
 
-              <!-- Bagian kiri (36-40) dari bawah ke atas -->
-              @for ($i = 40; $i >= 36; $i--)
-              <div class="spot left" data-id="{{ $i }}" data-bs-toggle="modal" data-bs-target="#spotModal" style="top: calc((40 - {{ $i }}) * 80px);">{{ $i }}</div>
-              @endfor
-            </div>
+            <!-- Bagian bawah (21-35) dari kanan ke kiri -->
+            @foreach ($spots->whereBetween('nomor_spot', ['21', '35']) as $spot)
+                @php
+                    $availableSesi = ['08.00-12.00', '13.00-17.00'];
+                    $spotBooked = $sewaSpots->has($spot->id) && $sewaSpots[$spot->id]->contains('tanggal_sewa', $selectedDate);
+                    $spotBookedSesi = $spotBooked ? $sewaSpots[$spot->id]->where('tanggal_sewa', $selectedDate)->pluck('sesi')->toArray() : [];
+                    $availableSesiCount = count(array_diff($availableSesi, $spotBookedSesi));
+                    $isSpotAvailable = $availableSesiCount > 0;
+                @endphp
+                <div id="spot-{{ $spot->id }}" class="spot bottom{{ !$isSpotAvailable ? ' disabled' : '' }}" 
+                    data-bs-toggle="modal" data-bs-target="{{ !$isSpotAvailable ? '' : '#spotModal' }}" 
+                    style="left: calc((35 - {{ ltrim($spot->nomor_spot, '0') }}) * 80px);">
+                    {{ $spot->nomor_spot }}
+                </div>
+            @endforeach
+
+            <!-- Bagian kiri (36-40) dari bawah ke atas -->
+            @foreach ($spots->whereBetween('nomor_spot', ['36', '40']) as $spot)
+                @php
+                    $availableSesi = ['08.00-12.00', '13.00-17.00'];
+                    $spotBooked = $sewaSpots->has($spot->id) && $sewaSpots[$spot->id]->contains('tanggal_sewa', $selectedDate);
+                    $spotBookedSesi = $spotBooked ? $sewaSpots[$spot->id]->where('tanggal_sewa', $selectedDate)->pluck('sesi')->toArray() : [];
+                    $availableSesiCount = count(array_diff($availableSesi, $spotBookedSesi));
+                    $isSpotAvailable = $availableSesiCount > 0;
+                @endphp
+                <div id="spot-{{ $spot->id }}" class="spot left{{ !$isSpotAvailable ? ' disabled' : '' }}"
+                    data-bs-toggle="modal" data-bs-target="{{ !$isSpotAvailable ? '' : '#spotModal' }}" 
+                    style="top: calc((40 - {{ ltrim($spot->nomor_spot, '0') }}) * 80px);">
+                    {{ $spot->nomor_spot }}
+                </div>
+            @endforeach
+
+            </div>          
+          </div>        
+      </div>
+    </div>
+
+    <!-- Tambahkan modal untuk pemesanan -->
+    <div class="modal fade" id="spotModal" tabindex="-1" role="dialog" aria-labelledby="spotModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="spotModalLabel">Sewa Spot Pemancingan</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          <div class="modal-body">
+              <form id="pesanForm" action="{{ route('member.spots.pesan-spot') }}" method="POST">
+                  @csrf
+                  <input type="hidden" id="spot_id" name="spot_id">
+                  <div class="form-group">
+                      <label for="nama_pelanggan" class="col-form-label">Nama Pelanggan</label>
+                      <input type="text" class="form-control" id="nama_pelanggan" name="nama_pelanggan" value="{{ auth()->user()->nama }}" disabled>
+                  </div>                
+                  <div class="form-group">
+                      <label for="tanggal_sewa" class="col-form-label">Tanggal Sewa</label>
+                      <input type="date" class="form-control" id="tanggal_sewa" name="tanggal_sewa" value="{{ date('Y-m-d') }}" required>
+                    </div>
+                  <div class="form-group">
+                    @php
+                        use App\Models\SewaSpot;
+                    
+                        $spot_id = request('spot_id');
+                        $tanggal_sewa = request('tanggal_sewa');
+                    
+                        $spotBookedMorning = SewaSpot::where('spot_id', $spot_id)
+                            ->where('tanggal_sewa', $tanggal_sewa)
+                            ->where('sesi', '08.00-12.00')
+                            ->exists();
+                    
+                        $spotBookedAfternoon = SewaSpot::where('spot_id', $spot_id)
+                            ->where('tanggal_sewa', $tanggal_sewa)
+                            ->where('sesi', '13.00-17.00')
+                            ->exists();
+                    @endphp                           
+                    <label for="pilih_sesi" class="col-form-label">Pilih Sesi</label>
+                    <div class="col form-group d-flex ms-2 justify-content-start">
+                      <button type="button" class="btn btn-outline-primary sesi-button me-2 {{ $spotBookedMorning ? 'disabled' : '' }}" data-sesi="08.00-12.00">08:00 - 12:00</button>
+                      <button type="button" class="btn btn-outline-primary sesi-button {{ $spotBookedAfternoon ? 'disabled' : '' }}" data-sesi="13.00-17.00">13:00 - 17:00</button>
+                    </div>
+                  </div>
+                
+                  <input type="hidden" id="sesi" name="sesi" required>                
+                
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            <button type="submit" class="btn btn-primary" form="pesanForm">Sewa</button>
+          </div>
+        </div>
       </div>
     </div>
-
-<!-- Tambahkan modal untuk pemesanan -->
-<div class="modal fade" id="spotModal" tabindex="-1" role="dialog" aria-labelledby="spotModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="spotModalLabel">Sewa Spot Pemancingan</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form id="pesanForm">
-                <div class="form-group">
-                    <label for="nama_pelanggan" class="col-form-label">Nama Pelanggan</label>
-                    <input type="text" class="form-control" id="nama_pelanggan" name="nama_pelanggan" value="{{ auth()->user()->nama }}" disabled>
-                </div>                
-                <div class="form-group">
-                    <label for="tanggal_sewa" class="col-form-label">Tanggal Sewa</label>
-                    <input type="date" class="form-control" id="tanggal_sewa" name="tanggal_sewa" required>
-                </div>
-                <div class="row row-cols-2">
-                    <div class="col form-group">
-                        <label for="jam_mulai">Jam Mulai</label>
-                        <input type="time" class="form-control" id="jam_mulai" name="jam_mulai" required>
-                    </div>
-                    <div class="col form-group">
-                        <label for="jam_selesai">Jam Selesai</label>
-                        <input type="time" class="form-control" id="jam_selesai" name="jam_selesai" required>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-          <button type="button" class="btn btn-primary" id="pesanButton">Sewa</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
     <footer class="footer pl-0 pb-3">
       <div class="container-fluid">
@@ -206,71 +297,109 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <script src="{{ asset('assets/js/soft-ui-dashboard.min.js?v=1.0.7') }}"></script>
 
-  <!-- Tambahkan script untuk mengatur perilaku spot -->
   <script>
-      $(document).ready(function() {
-        // Fungsi untuk mengubah warna spot yang sudah dipesan menjadi abu
-        function updateSpotColor() {
-          $(".spot").each(function() {
-            if ($(this).hasClass("submitted")) {
-              $(this).css("background-color", "gray");
-              $(this).css("border-color", "gray");
-              $(this).removeAttr("data-bs-toggle data-bs-target");
+    $(document).ready(function() {
+      // Data pemesanan dari server
+      const sewaSpots = @json($sewaSpots);
+
+      // Variabel untuk menyimpan sesi yang dipilih
+      let selectedSesi = '';
+
+      // Fungsi untuk mengecek ketersediaan spot setelah perubahan tanggal atau sesi
+      function checkSpotAvailability() {
+        var selectedDate = $('#tanggal_sewa').val();
+
+        // Cek ketersediaan spot pada tanggal dan sesi yang dipilih
+        if (selectedDate && selectedSesi) {
+          $('.spot').each(function() {
+            var spotId = $(this).attr('id').split('-')[1];
+            if (checkAvailability(selectedDate, selectedSesi, spotId)) {
+              $(this).addClass('btn-secondary disabled').removeClass('btn-primary').prop('disabled', true).css('cursor', 'not-allowed');
             } else {
-              $(this).css("background-color", "green"); // Warna hijau untuk spot yang belum dipilih
-              $(this).css("border-color", "green");
+              $(this).removeClass('btn-secondary disabled selected').addClass('btn-primary').prop('disabled', false).css('cursor', 'pointer');
             }
           });
-        }
-    
-        // Panggil fungsi saat halaman dimuat
-        updateSpotColor();
-    
-        $(".spot").click(function() {
-          // Jika spot belum dipilih dan belum dipesan
-          if (!$(this).hasClass("selected") && !$(this).hasClass("submitted")) {
-            $(this).addClass("selected"); // Tambahkan kelas selected
-            $(this).css("background-color", "lightgray"); // Ubah warna background menjadi abu
-            $(this).css("border-color", "lightgray"); // Ubah warna border menjadi abu
-            $(this).removeAttr("data-bs-toggle data-bs-target"); // Hapus atribut data-bs-toggle dan data-bs-target
-          }
-        });
-    
-        // Fungsi untuk mengirim pesanan
-        $("#pesanButton").click(function() {
-          // Validasi form sebelum mengirim pesanan
-          if ($("#pesanForm")[0].checkValidity()) {
-            // Kirim data pesanan ke backend (simulasi)
-            $.ajax({
-              url: 'url_backend_anda', // Ganti dengan URL endpoint backend Anda
-              type: 'POST',
-              data: $("#pesanForm").serialize(), // Menggunakan data form yang di-serialize
-              success: function(response) {
-                // Spot yang dipilih berubah warna menjadi abu gelap
-                $(".spot.selected").addClass("submitted");
-                $(".spot.submitted").css("background-color", "gray");
-                $(".spot.submitted").css("border-color", "gray");
-                $(".spot.submitted").removeClass("selected");
-    
-                // Panggil fungsi untuk mengupdate warna spot setelah mengirim pesanan
-                updateSpotColor();
-    
-                alert("Pesanan berhasil dikirim!");
-                $("#spotModal").modal("hide"); // Sembunyikan modal setelah pesanan berhasil dikirim
-              },
-              error: function(xhr, status, error) {
-                console.error(error); // Log error jika terjadi kesalahan saat mengirim data
-                alert("Terjadi kesalahan saat mengirim pesanan.");
-              }
-            });
+          $('.sesi-button').each(function() {
+          var sesi = $(this).data('sesi');
+          var spotBooked = checkAvailability(selectedDate, sesi);
+          if (spotBooked) {
+            $(this).addClass('disabled').prop('disabled', true);
           } else {
-            // Tampilkan pesan error jika form tidak valid
-            alert("Mohon lengkapi semua kolom form.");
+            $(this).removeClass('disabled').prop('disabled', false);
           }
         });
+        }
+      }
+
+      // Mengatur event handler untuk button sesi
+      $('.sesi-button').on('click', function() {
+        selectedSesi = $(this).data('sesi');
+        $('#sesi').val(selectedSesi);
+
+        // Mengubah warna tombol yang dipilih
+        $('.sesi-button').removeClass('btn-primary').addClass('btn-outline-primary');
+        $(this).removeClass('btn-outline-primary').addClass('btn-primary');
+
+        // Periksa ketersediaan spot setelah perubahan sesi
+        checkSpotAvailability();
       });
+
+      // Mengatur event handler untuk spot
+      $('.spot').on('click', function() {
+        var spotId = $(this).attr('id').split('-')[1];
+        $('#spot_id').val(spotId);
+
+        var selectedDate = $('#tanggal_sewa').val();
+
+        // Cek ketersediaan spot pada tanggal dan sesi yang dipilih
+        if (selectedDate && selectedSesi) {
+          if (checkAvailability(selectedDate, selectedSesi, spotId)) {
+            // Jika spot sudah dipesan, tampilkan pesan dan kembalikan
+            alert('Spot pada tanggal dan sesi tersebut sudah dipesan.');
+            return;
+          }
+
+          // Jika spot belum dipesan, atur tampilan spot yang bisa dipesan
+          $(this).addClass('selected');
+          $(this).removeClass('btn-primary').addClass('btn-secondary').prop('disabled', true).css('cursor', 'not-allowed');
+        }
+      });
+
+      // Setelah halaman dimuat, cek ketersediaan spot yang sudah dipesan dan nonaktifkan mereka
+      checkSpotAvailability();
+
+      // Event handler untuk perubahan tanggal sewa atau sesi yang dipilih
+      $('#tanggal_sewa, #sesi').on('change', function() {
+        // Reset pilihan spot
+        $('.spot').removeClass('btn-secondary disabled selected').addClass('btn-primary').prop('disabled', false).css('cursor', 'pointer');
+
+        // Periksa ketersediaan spot setelah perubahan tanggal atau sesi
+        checkSpotAvailability();
+      });
+
+      // Mengatur ketersediaan button sesi berdasarkan spot yang tersedia
+      function updateSesiButtonsAvailability(spotId) {
+        $('.sesi-button').each(function() {
+          var sesi = $(this).data('sesi');
+          var spotBooked = checkAvailability(selectedDate, sesi, spotId);
+          if (spotBooked) {
+            $(this).addClass('disabled').prop('disabled', true);
+          } else {
+            $(this).removeClass('disabled').prop('disabled', false);
+          }
+        });
+      }
+
+      // Event handler untuk perubahan spot pada modal
+      $('#spot_id').on('input', function() {
+        var spotId = $(this).val();
+        updateSesiButtonsAvailability(spotId);
+      });
+
+
+    });
   </script>
-  
+
 
 </body>
 </html>

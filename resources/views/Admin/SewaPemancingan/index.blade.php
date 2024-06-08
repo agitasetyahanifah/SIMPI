@@ -106,7 +106,15 @@
                         <td>{{ $pemancingan->member->nama }}</td>
                         <td>{{ $pemancingan->tanggal_sewa }}</td>
                         <td class="align-middle text-center text-sm">
-                            <span class="badge badge-sm {{ $pemancingan->status == 'sudah dibayar' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $pemancingan->status }}</span>
+                            <span class="badge badge-sm
+                            @if($pemancingan->status == 'sudah dibayar')
+                                bg-gradient-success
+                            @elseif($pemancingan->status == 'menunggu pembayaran')
+                                bg-gradient-secondary
+                            @elseif($pemancingan->status == 'dibatalkan')
+                                bg-gradient-danger
+                            @endif
+                        ">{{ $pemancingan->status }}</span>
                         </td>
                         <td class="text-align-end">
                             <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailModal{{ $pemancingan->id }}"><i class="fas fa-eye"></i></a>
@@ -157,10 +165,6 @@
                                             <td>{{ \Carbon\Carbon::parse($pemancingan->jam_selesai)->format('H:i') }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Jumlah Sewa</th>
-                                            <td>{{ $pemancingan->jumlah_sewa }}</td>
-                                        </tr>
-                                        <tr>
                                             <th>Biaya Sewa</th>
                                             <td>{{ $pemancingan->biaya_sewa }}</td>
                                         </tr>
@@ -169,7 +173,7 @@
                                             <td>{{ $pemancingan->status }}</td>
                                         </tr>
                                     </table>
-                                    @if($pemancingan->status === 'belum dibayar')
+                                    @if($pemancingan->status === 'menunggu pembayaran')
                                         <form id="konfirmasiForm{{ $pemancingan->id }}" action="{{ route('admin.sewaPemancingan.konfirmasiPembayaran', $pemancingan->id) }}" method="POST">
                                             @csrf
                                             <div class="form-check">
@@ -243,10 +247,6 @@
                                         <label for="edit_jam_selesai">Jam Selesai</label>
                                         <input type="time" class="form-control" id="edit_jam_selesai" name="edit_jam_selesai" value="{{ date('H:i', strtotime($pemancingan->jam_selesai)) }}" required>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="edit_jumlah_sewa">Jumlah Sewa</label>
-                                    <input type="number" class="form-control" id="edit_jumlah_sewa" name="edit_jumlah_sewa" value="{{ $pemancingan->jumlah_sewa }}" required>
                                 </div>
                             </div>
                             <div class="modal-footer">

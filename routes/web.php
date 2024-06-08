@@ -116,7 +116,7 @@ Route::middleware(['auth', 'member'])->group(function () {
     // Sewa Spot Pemancingan
     // Route::get('/member/sewaPemancingan', [MemberSewaPemancinganController::class, 'index'])->name('member.sewa-pemancingan.index');
     Route::get('/member/sewaPemancingan/spots', [MemberSewaSpotController::class, 'index'])->name('member.spots.index');
-    Route::post('member/sewaPemancingan/spots/reserve', [MemberSewaSpotController::class, 'reserve'])->name('member.spots.reserve');
+    Route::post('member/sewaPemancingan/spots/sewaSpot', [MemberSewaSpotController::class, 'store'])->name('member.spots.pesan-spot');
     // Daftar Alat yang Disewakan Member
     Route::get('/member/daftarAlat', [MemberDaftarAlatController::class, 'index'])->name('member.daftar-alat.index');
 });
