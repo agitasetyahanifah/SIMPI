@@ -23,32 +23,26 @@ class AdminSewaPemancinganController extends Controller
 
     public function search(Request $request)
     {
-        $search = $request->input('search');
-        $sewaPemancingan = SewaSpot::where(function ($query) use ($search) {
-            $query->where('kode_booking', 'like', '%' . $search . '%')
-                  ->orWhereHas('member', function($subquery) use ($search) {
-                      $subquery->where('nama', 'like', '%' . $search . '%');
-                  });
-        })->orderBy('tanggal_sewa', 'desc')->paginate(25);
-        
-        return response()->json($sewaPemancingan);
-    
-    }      
+        $query = SewaSpot::query();
 
-    // public function search(Request $request)
-    // {
-    //     $search = $request->input('search');
-    //     $sewaPemancingan = SewaSpot::whereHas('member', function($query) use ($search) {
-    //         $query->where('nama', 'like', '%' . $search . '%');
-    //     })
-    //     ->orWhere('kode_booking', 'like', '%' . $search . '%')
-    //     ->with('member')
-    //     ->get();
+        if ($request->filled('kode_booking')) {
+            $query->where('kode_booking', 'like', '%' . $request->kode_booking . '%');
+        }
 
-    //     return response()->json([
-    //         'data' => $sewaPemancingan,
-    //     ]);
-    // }
+        if ($request->filled('nama_pelanggan')) {
+            $namaPelanggan = $request->nama_pelanggan;
+            $query->whereHas('user', function ($q) use ($namaPelanggan) {
+                $q->where('nama', 'like', '%' . $namaPelanggan . '%');
+            });
+        }
+
+        $sewaPemancingan = $query->orderBy('tanggal_sewa', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
+        $lastItem = $sewaPemancingan->lastItem();
+        $member = User::where('role', 'member')->get();
+        $members = User::where('role', 'member')->orderBy('nama', 'asc')->get();
+
+        return view('admin.sewapemancingan.index', compact('sewaPemancingan', 'lastItem', 'member', 'members'));
+    }
 
     /**
      * Show the form for creating a new resource.

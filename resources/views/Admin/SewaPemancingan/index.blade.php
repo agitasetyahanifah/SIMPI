@@ -34,10 +34,16 @@
                 </div> --}}
 
             <!-- Form Search -->
-            <form id="searchForm" action="{{ route('admin.sewaPemancingan.search') }}" method="GET" class="mt-3">
-                <div class="input-group mb-3">
+            <form action="{{ route('admin.sewaPemancingan.search') }}" method="GET">
+                @if (request('kode_booking'))
+                    <input type="hidden" class="form-control" name="kode_booking" placeholder="Kode Booking" value="{{ request('kode_booking') }}">
+                @endif
+                @if (request('nama_pelanggan'))
+                    <input type="hidden" class="form-control" name="nama_pelanggan" placeholder="Nama Pelanggan" value="{{ request('nama_pelanggan') }}">
+                @endif
+                <div class="input-group mt-3">
                     <input type="text" class="form-control" id="searchInput" name="search" placeholder="Cari berdasarkan nama pelanggan/kode booking" aria-label="Cari berdasarkan nama pelanggan/kode booking" aria-describedby="button-addon2">
-                    <button class="btn btn-outline-primary mb-0" type="submit" id="button-addon2">Cari</button>
+                    <button class="btn btn-outline-primary mb-0" type="submit" id="button-addon2">Cari</button>                    
                 </div>
             </form>
             <!-- End Form Search -->
@@ -321,53 +327,6 @@
     </div>
 </div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#searchForm').on('submit', function(e) {
-            e.preventDefault();
-            var searchValue = $('#searchInput').val();
-            $.ajax({
-                type: 'GET',
-                url: '{{ route("admin.sewaPemancingan.search") }}',
-                data: { search: searchValue },
-                success: function(response) {
-                    // Update tampilan dengan data hasil pencarian
-                    var html = '';
-                    var currentNumber = 1; // Mulai nomor urut dari 1
-
-                    response.data.forEach(function(item) {
-                        html += '<tr>';
-                        html += '<td class="text-center">' + (currentNumber++) + '</td>';
-                        html += '<td>' + item.kode_booking + '</td>';
-                        html += '<td>' + item.member.nama + '</td>';
-                        html += '<td>' + item.tanggal_sewa + '</td>';
-                        html += '<td class="align-middle text-center text-sm"><span class="badge badge-sm ' +
-                                (item.status === 'sudah dibayar' ? 'bg-gradient-success' : 
-                                item.status === 'menunggu pembayaran' ? 'bg-gradient-secondary' : 
-                                item.status === 'dibatalkan' ? 'bg-gradient-danger' : '') + '">' + item.status + '</span></td>';
-                        html += '<td class="text-align-end">';
-                        html += '<a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailModal' + item.id + '"><i class="fas fa-eye"></i></a> ';
-                        html += '<a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal' + item.id + '"><i class="fas fa-edit"></i></a> ';
-                        html += '<button class="btn btn-danger delete" data-pemancinganid="' + item.id + '"><i class="fas fa-trash"></i></button>';
-                        html += '</td>';
-                        html += '</tr>';
-                    });
-
-                    if (html === '') {
-                        html = '<tr><td colspan="6" class="text-center">Belum ada data yang ditambahkan</td></tr>';
-                    }
-
-                    $('#sewaPemancinganTable tbody').html(html);
-                },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
-            });
-        });
-    });
-</script>
 
 <!-- Javascript Button Delete -->
 <script>
