@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Http\JsonResponse;
+use Carbon\Carbon;
 use App\Models\SewaSpot;
 use App\Models\User;
+use App\Models\Spot;
 
 class AdminSewaPemancinganController extends Controller
 {
@@ -17,33 +21,65 @@ class AdminSewaPemancinganController extends Controller
         $sewaPemancingan = SewaSpot::orderBy('tanggal_sewa', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
         $lastItem = $sewaPemancingan->lastItem();
         $member = User::where('role', 'member')->get();
-        $members = User::where('role', 'member')->orderBy('nama', 'asc')->get();        
-        return view('admin.sewapemancingan.index', compact('sewaPemancingan', 'lastItem', 'member', 'members'));
+        $members = User::where('role', 'member')->orderBy('nama', 'asc')->get();  
+
+        // Fetch all spots from 01-40
+        $allSpots = range(1, 40);
+
+        // Fetch all booked spots for today
+        $bookedSpots = SewaSpot::where('tanggal_sewa', Carbon::today()->format('Y-m-d'))
+            ->join('spots', 'sewa_spots.spot_id', '=', 'spots.id')
+            ->pluck('spots.nomor_spot')
+            ->toArray();
+
+        // Calculate available spots
+        $availableSpots = array_diff($allSpots, $bookedSpots);
+        
+        return view('admin.sewapemancingan.index', compact('sewaPemancingan', 'lastItem', 'member', 'members', 'availableSpots'));
     }
+
+    // public function search(Request $request)
+    // {
+    //     $query = SewaSpot::query();
+        
+    //     if ($request->filled('kode_booking')) {
+    //         $kodeBooking = $request->input('kode_booking');
+    //         Log::info('Searching by kode_booking: ' . $kodeBooking);
+    //         $query->where('kode_booking', 'like', '%' . $kodeBooking . '%');
+    //     }
+    //     if ($request->filled('nama_pelanggan')) {
+    //         $namaPelanggan = $request->input('nama_pelanggan');
+    //         Log::info('Searching by nama_pelanggan: ' . $namaPelanggan);
+    //         $query->whereHas('user', function ($q) use ($namaPelanggan) {
+    //             $q->where('nama', 'like', '%' . $namaPelanggan . '%');
+    //         });
+    //     }        
+        
+    //     $sewaPemancingan = $query->orderBy('tanggal_sewa', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
+    //     Log::info('Search results: ', $sewaPemancingan->toArray());
+        
+    //     return view('admin.sewapemancingan.index', compact('sewaPemancingan'));
+    // }
 
     public function search(Request $request)
     {
-        $query = SewaSpot::query();
-
-        if ($request->filled('kode_booking')) {
-            $query->where('kode_booking', 'like', '%' . $request->kode_booking . '%');
-        }
-
-        if ($request->filled('nama_pelanggan')) {
-            $namaPelanggan = $request->nama_pelanggan;
-            $query->whereHas('user', function ($q) use ($namaPelanggan) {
-                $q->where('nama', 'like', '%' . $namaPelanggan . '%');
-            });
-        }
-
-        $sewaPemancingan = $query->orderBy('tanggal_sewa', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
-        $lastItem = $sewaPemancingan->lastItem();
-        $member = User::where('role', 'member')->get();
-        $members = User::where('role', 'member')->orderBy('nama', 'asc')->get();
-
-        return view('admin.sewapemancingan.index', compact('sewaPemancingan', 'lastItem', 'member', 'members'));
+        $keyword = $request->input('keyword');
+        
+        // Query untuk mencari data berdasarkan keyword
+        $sewaPemancingan = Sewaspot::where('kode_booking', 'like', "%$keyword%")
+            ->whereHas('member', function ($query) use ($keyword) {
+                $query->where('nama', 'like', "%$keyword%")
+                    ->where('role', 'member');
+            })
+            ->orWhereHas('member', function ($query) use ($keyword) {
+                $query->where('role', 'member');
+            })
+            ->get();
+            
+        // Kirim data pencarian ke view
+        return view('admin.sewapemancingan.index', compact('sewaPemancingan'));
     }
-
+    
     /**
      * Show the form for creating a new resource.
      */
@@ -55,64 +91,64 @@ class AdminSewaPemancinganController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        // Validasi data yang diterima dari form
-        $validatedData = $request->validate([
-            'nama_pelanggan' => 'required|exists:user,id',
-            'tanggal_sewa' => 'required|date',
-            'jam_mulai' => 'required|date_format:H:i',
-            'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
-        ]);
+    // public function store(Request $request)
+    // {
+    //     // Validasi data yang diterima dari form
+    //     $validatedData = $request->validate([
+    //         'nama_pelanggan' => 'required|exists:user,id',
+    //         'tanggal_sewa' => 'required|date',
+    //         'jam_mulai' => 'required|date_format:H:i',
+    //         'jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
+    //     ]);
 
-        // Get the authenticated user's ID
-        // $userId = Auth::id();
+    //     // Get the authenticated user's ID
+    //     // $userId = Auth::id();
     
-        // Contoh untuk mengecek apakah jam yang dipilih sudah dipesan atau tidak
-        $jamMulai = \Carbon\Carbon::parse($validatedData['jam_mulai']);
-        $jamSelesai = \Carbon\Carbon::parse($validatedData['jam_selesai']);
-        $isTimeAvailable = !SewaSpot::where('tanggal_sewa', $validatedData['tanggal_sewa'])
-                         ->where(function ($query) use ($jamMulai, $jamSelesai) {
-                             $query->where(function ($q) use ($jamMulai, $jamSelesai) {
-                                 $q->where('jam_mulai', '>=', $jamMulai)
-                                     ->where('jam_mulai', '<', $jamSelesai);
-                             })->orWhere(function ($q) use ($jamMulai, $jamSelesai) {
-                                 $q->where('jam_selesai', '>', $jamMulai)
-                                     ->where('jam_selesai', '<=', $jamSelesai);
-                             });
-                         })
-                         ->exists();
+    //     // Contoh untuk mengecek apakah jam yang dipilih sudah dipesan atau tidak
+    //     $jamMulai = \Carbon\Carbon::parse($validatedData['jam_mulai']);
+    //     $jamSelesai = \Carbon\Carbon::parse($validatedData['jam_selesai']);
+    //     $isTimeAvailable = !SewaSpot::where('tanggal_sewa', $validatedData['tanggal_sewa'])
+    //                      ->where(function ($query) use ($jamMulai, $jamSelesai) {
+    //                          $query->where(function ($q) use ($jamMulai, $jamSelesai) {
+    //                              $q->where('jam_mulai', '>=', $jamMulai)
+    //                                  ->where('jam_mulai', '<', $jamSelesai);
+    //                          })->orWhere(function ($q) use ($jamMulai, $jamSelesai) {
+    //                              $q->where('jam_selesai', '>', $jamMulai)
+    //                                  ->where('jam_selesai', '<=', $jamSelesai);
+    //                          });
+    //                      })
+    //                      ->exists();
     
-        if (!$isTimeAvailable) {
-            return redirect()->back()->with('error', 'Waktu yang dipilih sudah dipesan.');
-        }
+    //     if (!$isTimeAvailable) {
+    //         return redirect()->back()->with('error', 'Waktu yang dipilih sudah dipesan.');
+    //     }
     
-        // Hitung selisih waktu dalam detik
-        $selisihDetik = $jamSelesai->diffInSeconds($jamMulai);
+    //     // Hitung selisih waktu dalam detik
+    //     $selisihDetik = $jamSelesai->diffInSeconds($jamMulai);
 
-        // Konversi selisih waktu ke jam (termasuk menit dan detik)
-        $selisihJam = $selisihDetik / 3600;
+    //     // Konversi selisih waktu ke jam (termasuk menit dan detik)
+    //     $selisihJam = $selisihDetik / 3600;
     
-        // Ambil harga sewa per jam (contoh: 10 ribu per jam)
-        $hargaSewaPerJam = 10000; // Ganti dengan harga sewa yang sesuai
+    //     // Ambil harga sewa per jam (contoh: 10 ribu per jam)
+    //     $hargaSewaPerJam = 10000; // Ganti dengan harga sewa yang sesuai
     
-        // Hitung biaya sewa berdasarkan rumus
-        $biayaSewa = $hargaSewaPerJam * $selisihJam;
+    //     // Hitung biaya sewa berdasarkan rumus
+    //     $biayaSewa = $hargaSewaPerJam * $selisihJam;
     
-        // Simpan data sewa pemancingan
-        $sewaPemancingan = new SewaSpot();
-        $sewaPemancingan->kode_booking = uniqid('BK');
-        // $sewaPemancingan->user_id = $userId;
-        $sewaPemancingan->user_id = $validatedData['nama_pelanggan'];
-        $sewaPemancingan->tanggal_sewa = $validatedData['tanggal_sewa'];
-        $sewaPemancingan->jam_mulai = $validatedData['jam_mulai'];
-        $sewaPemancingan->jam_selesai = $validatedData['jam_selesai'];
-        $sewaPemancingan->biaya_sewa = $biayaSewa;
-        $sewaPemancingan->save();
+    //     // Simpan data sewa pemancingan
+    //     $sewaPemancingan = new SewaSpot();
+    //     $sewaPemancingan->kode_booking = uniqid('BK');
+    //     // $sewaPemancingan->user_id = $userId;
+    //     $sewaPemancingan->user_id = $validatedData['nama_pelanggan'];
+    //     $sewaPemancingan->tanggal_sewa = $validatedData['tanggal_sewa'];
+    //     $sewaPemancingan->jam_mulai = $validatedData['jam_mulai'];
+    //     $sewaPemancingan->jam_selesai = $validatedData['jam_selesai'];
+    //     $sewaPemancingan->biaya_sewa = $biayaSewa;
+    //     $sewaPemancingan->save();
     
-        // Redirect atau berikan respons sesuai kebutuhan Anda
-        return redirect()->back()->with('success', 'Data sewa pemancingan berhasil disimpan.');
-    }
+    //     // Redirect atau berikan respons sesuai kebutuhan Anda
+    //     return redirect()->back()->with('success', 'Data sewa pemancingan berhasil disimpan.');
+    // }
 
     /**
      * Display the specified resource.
@@ -135,49 +171,136 @@ class AdminSewaPemancinganController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validasi data yang diterima dari form
         $validatedData = $request->validate([
-            'edit_tanggal_sewa' => 'required|date',
-            'edit_jam_mulai' => 'required|date_format:H:i',
-            'edit_jam_selesai' => 'required|date_format:H:i|after:jam_mulai',
+            'edit_tanggal_sewa' => 'required|date|after_or_equal:today',
+            'edit_spot_id' => 'required|integer|exists:spots,id',
+            'edit_sesi' => 'required|string|in:08.00-12.00,13.00-17.00',
         ]);
-        
-        // Cari data sewa pemancingan berdasarkan ID
-        $sewaPemancingan = SewaSpot::findOrFail($id);
+    
+        $tanggalSewa = $validatedData['edit_tanggal_sewa'];
+        $spotId = $validatedData['edit_spot_id'];
+        $sesi = $validatedData['edit_sesi'];
+    
+        // Cek apakah spot sudah dipesan
+        $isSpotBooked = SewaSpot::where('tanggal_sewa', $tanggalSewa)
+            ->where('spot_id', $spotId)
+            ->where('sesi', $sesi)
+            ->exists();
+    
+        if ($isSpotBooked) {
+            return redirect()->back()->withErrors(['error' => 'Spot atau sesi yang dipilih sudah dipesan.']);
+        }
     
         // Update data sewa pemancingan
-        $sewaPemancingan->tanggal_sewa = $validatedData['edit_tanggal_sewa'];
-        $sewaPemancingan->jam_mulai = $validatedData['edit_jam_mulai'];
-        $sewaPemancingan->jam_selesai = $validatedData['edit_jam_selesai'];
-
-         // Hitung selisih waktu dalam jam
-        $jamMulai = \Carbon\Carbon::parse($validatedData['edit_jam_mulai']);
-        $jamSelesai = \Carbon\Carbon::parse($validatedData['edit_jam_selesai']);
-        
-        // Hitung selisih waktu dalam detik
-        $selisihDetik = $jamSelesai->diffInSeconds($jamMulai);
-
-        // Konversi selisih waktu ke jam (termasuk menit dan detik)
-        $selisihJam = $selisihDetik / 3600;
-
-        // Ambil harga sewa per jam (misal: 10 ribu per jam)
-        $hargaSewaPerJam = 10000; // Ganti dengan harga sewa yang sesuai
-
-        // Hitung biaya sewa berdasarkan rumus
-        $biayaSewa = $hargaSewaPerJam * $selisihJam;
-
-        // Update biaya sewa dalam database
-        $sewaPemancingan->biaya_sewa = $biayaSewa;
-        
-        // Update biaya sewa dan status dalam database
-        $sewaPemancingan->biaya_sewa = $biayaSewa;
-        $sewaPemancingan->status = 'menunggu pembayaran';
+        $sewaPemancingan = SewaSpot::findOrFail($id);
+        $sewaPemancingan->tanggal_sewa = $tanggalSewa;
+        $sewaPemancingan->spot_id = $spotId;
+        $sewaPemancingan->sesi = $sesi;
         $sewaPemancingan->save();
-
-        // Redirect atau berikan respons sesuai kebutuhan Anda
+    
         return redirect()->back()->with('success', 'Data sewa pemancingan berhasil diupdate.');
     }
+    
+    // public function checkAvailability(Request $request)
+    // {
+    //     $tanggalSewa = $request->input('tanggal_sewa');
+    //     $selectedDate = Carbon::parse($tanggalSewa)->format('Y-m-d');
+    
+    //     // Fetch all spot IDs
+    //     $allSpots = Spot::pluck('id')->toArray();
+    
+    //     // Fetch spot IDs that are already booked on the selected date
+    //     $bookedSpots = SewaSpot::whereDate('tanggal_sewa', $selectedDate)
+    //         ->join('spots', 'sewa_spots.spot_id', '=', 'spots.id')
+    //         ->pluck('spots.id')
+    //         ->toArray();
+    
+    //     // Calculate available spots by removing booked spots from all spots
+    //     $availableSpots = array_diff($allSpots, $bookedSpots);
+    
+    //     // Determine available sessions for each spot
+    //     $availableSessions = [];
+    //     foreach ($availableSpots as $spotId) {
+    //         $sessions = [
+    //             '08.00-12.00' => SewaSpot::where('tanggal_sewa', $selectedDate)
+    //                                     ->where('spot_id', $spotId)
+    //                                     ->where('sesi', '08.00-12.00')
+    //                                     ->doesntExist(),
+    //             '13.00-17.00' => SewaSpot::where('tanggal_sewa', $selectedDate)
+    //                                     ->where('spot_id', $spotId)
+    //                                     ->where('sesi', '13.00-17.00')
+    //                                     ->doesntExist()
+    //         ];
+    
+    //         // Filter available sessions
+    //         $availableSessions[$spotId] = array_keys(array_filter($sessions));
+    //     }
+    
+    //     return new JsonResponse([
+    //         'availableSpots' => $availableSpots,
+    //         'availableSessions' => $availableSessions
+    //     ]);
+    // }
 
+    public function checkAvailability(Request $request)
+    {
+        $tanggalSewa = $request->input('tanggal_sewa');
+        $selectedDate = Carbon::parse($tanggalSewa)->format('Y-m-d');
+    
+        // Fetch spot IDs that are already booked on the selected date
+        $bookedSpots = SewaSpot::whereDate('tanggal_sewa', $selectedDate)
+            ->pluck('spot_id')
+            ->toArray();
+    
+        // Fetch available spots by excluding booked spots
+        $availableSpots = Spot::whereNotIn('id', $bookedSpots)
+            ->pluck('nomor_spot', 'id')
+            ->toArray();
+    
+        // Determine available sessions for each available spot
+        $availableSessions = [];
+        foreach ($availableSpots as $spotId => $spotNomor) {
+            $sessions = [
+                '08.00-12.00' => SewaSpot::where('tanggal_sewa', $selectedDate)
+                                        ->where('spot_id', $spotId)
+                                        ->where('sesi', '08.00-12.00')
+                                        ->doesntExist(),
+                '13.00-17.00' => SewaSpot::where('tanggal_sewa', $selectedDate)
+                                        ->where('spot_id', $spotId)
+                                        ->where('sesi', '13.00-17.00')
+                                        ->doesntExist()
+            ];
+    
+            // Filter available sessions
+            $availableSessions[$spotId] = array_keys(array_filter($sessions));
+        }
+    
+        return response()->json([
+            'availableSpots' => $availableSpots,
+            'availableSessions' => $availableSessions
+        ]);
+    }
+    
+
+    // public function checkAvailability(Request $request)
+    // {
+    //     $tanggalSewa = $request->input('tanggal_sewa');
+    //     $selectedDate = Carbon::parse($tanggalSewa)->format('Y-m-d');
+    
+    //     // Fetch all spot IDs
+    //     $allSpots = Spot::pluck('nomor_spot')->toArray();
+    
+    //     // Fetch spot IDs that are already booked on the selected date
+    //     $bookedSpots = SewaSpot::whereDate('tanggal_sewa', $selectedDate)
+    //         ->pluck('spot_id')
+    //         ->toArray();
+    
+    //     // Calculate available spots by removing booked spots from all spots
+    //     $availableSpots = array_diff($allSpots, $bookedSpots);
+    
+    //     return new JsonResponse(['availableSpots' => $availableSpots]);
+    // }    
+    
     /**
      * Remove the specified resource from storage.
      */

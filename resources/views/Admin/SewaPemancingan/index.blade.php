@@ -32,9 +32,9 @@
                 <div class="col-12 text-end">
                   <button class="btn btn-outline-primary mb-0" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
                 </div> --}}
-
+                
             <!-- Form Search -->
-            <form action="{{ route('admin.sewaPemancingan.search') }}" method="GET">
+            {{-- <form action="{{ route('admin.sewaPemancingan.search') }}" method="GET">
                 @if (request('kode_booking'))
                     <input type="hidden" class="form-control" name="kode_booking" placeholder="Kode Booking" value="{{ request('kode_booking') }}">
                 @endif
@@ -45,9 +45,16 @@
                     <input type="text" class="form-control" id="searchInput" name="search" placeholder="Cari berdasarkan nama pelanggan/kode booking" aria-label="Cari berdasarkan nama pelanggan/kode booking" aria-describedby="button-addon2">
                     <button class="btn btn-outline-primary mb-0" type="submit" id="button-addon2">Cari</button>                    
                 </div>
-            </form>
+            </form> --}}
             <!-- End Form Search -->
 
+            <form action="{{ route('admin.sewaPemancingan.search') }}" method="GET">
+                <div class="input-group mt-3">
+                    <input type="text" class="form-control" id="searchInput" name="keyword" placeholder="Cari berdasarkan nama pelanggan/kode booking" aria-label="Cari berdasarkan nama pelanggan/kode booking" aria-describedby="button-addon2">
+                    <button class="btn btn-outline-primary mb-0" type="submit" id="button-addon2">Cari</button>                    
+                </div>
+            </form>
+            
           </div>
           <!-- Modal Tambah Data Sewa Pemancingan -->
           {{-- <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
@@ -173,12 +180,12 @@
                                             <td>{{ $pemancingan->tanggal_sewa }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Jam Mulai</th>
-                                            <td>{{ \Carbon\Carbon::parse($pemancingan->jam_mulai)->format('H:i') }}</td>
+                                            <th>Nomor Spot</th>
+                                            <td>{{ $pemancingan->spot->nomor_spot }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Jam Selesai</th>
-                                            <td>{{ \Carbon\Carbon::parse($pemancingan->jam_selesai)->format('H:i') }}</td>
+                                            <th>Sesi</th>
+                                            <td>{{ $pemancingan->sesi }}</td>
                                         </tr>
                                         <tr>
                                             <th>Biaya Sewa</th>
@@ -186,7 +193,17 @@
                                         </tr>
                                         <tr>
                                             <th>Status Pembayaran</th>
-                                            <td>{{ $pemancingan->status }}</td>
+                                            <td>
+                                                @if($pemancingan->status === 'dibatalkan')
+                                                    <span class="text-danger">Dibatalkan</span>
+                                                @elseif($pemancingan->status === 'sudah dibayar')
+                                                    <span class="text-success">Sudah Dibayar</span>
+                                                @elseif($pemancingan->status === 'menunggu pembayaran')
+                                                    <span class="text-warning">Menunggu Pembayaran</span>
+                                                @else
+                                                    {{ $pemancingan->status }}
+                                                @endif
+                                            </td>
                                         </tr>
                                     </table>
                                     @if($pemancingan->status === 'menunggu pembayaran')
@@ -200,9 +217,11 @@
                                             </div>
                                             <button type="button" class="btn btn-success mt-3" onclick="showKonfirmasiModal({{ $pemancingan->id }})">Konfirmasi</button>
                                         </form>
-                                    @else
-                                        <p style="color: green"><i class="fas fa-check-circle" style="font-size: 18px"></i> Pembayaran sudah dikonfirmasi</p>
-                                    @endif                                   
+                                        @elseif($pemancingan->status === 'dibatalkan')
+                                            <p style="color: red"><i class="fas fa-times-circle" style="font-size: 18px"></i> Pembayaran dibatalkan</p>
+                                        @elseif($pemancingan->status === 'sudah dibayar')
+                                            <p style="color: green"><i class="fas fa-check-circle" style="font-size: 18px"></i> Pembayaran sudah dikonfirmasi</p>
+                                        @endif                                
                                 </div>
                             </div>
                         </div>
@@ -252,19 +271,54 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="edit_tanggal_sewa">Tanggal Sewa</label>
-                                    <input type="date" class="form-control" id="edit_tanggal_sewa" name="edit_tanggal_sewa" value="{{ $pemancingan->tanggal_sewa }}" required>
+                                    <input type="date" class="form-control" id="edit_tanggal_sewa" name="edit_tanggal_sewa" value="{{ $pemancingan->tanggal_sewa }}" min="{{ date('Y-m-d') }}" required>
                                 </div>
-                                <div class="row row-cols-2">
-                                    <div class="col form-group">
-                                        <label for="edit_jam_mulai">Jam Mulai</label>
-                                        <input type="time" class="form-control" id="edit_jam_mulai" name="edit_jam_mulai" value="{{ date('H:i', strtotime($pemancingan->jam_mulai)) }}" required>
-                                    </div>
-                                    <div class="col form-group">
-                                        <label for="edit_jam_selesai">Jam Selesai</label>
-                                        <input type="time" class="form-control" id="edit_jam_selesai" name="edit_jam_selesai" value="{{ date('H:i', strtotime($pemancingan->jam_selesai)) }}" required>
-                                    </div>
-                                </div>
-                            </div>
+                                {{-- <div class="form-group">
+                                    <label for="edit_spot_id">Nomor Spot</label>
+                                    <select class="form-control" id="edit_spot_id" name="edit_spot_id" required>
+                                        @foreach ($availableSpots as $spotNumber)
+                                            <option value="{{ $spotNumber }}" {{ $pemancingan->spot && $pemancingan->spot->nomor_spot == $spotNumber ? 'selected' : '' }}>
+                                                {{ sprintf('%02d', $spotNumber) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>    --}}
+                                <div class="form-group">
+                                    <label for="edit_spot_id">Nomor Spot</label>
+                                    <select class="form-control" id="edit_spot_id" name="edit_spot_id" required>
+                                        @foreach ($availableSpots as $spotId => $spotNumber)
+                                            <option value="{{ $spotId }}" {{ $pemancingan->spot && $pemancingan->spot->id == $spotId ? 'selected' : '' }}>
+                                                {{ sprintf('%02d', $spotNumber) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>                             
+                                {{-- <div class="form-group">
+                                    <label for="edit_spot_id">Nomor Spot</label>
+                                    <select class="form-control" id="edit_spot_id" name="edit_spot_id" required>
+                                        @if($pemancingan->spot)
+                                            <option value="{{ $pemancingan->spot->id }}" selected>{{ sprintf('%02d', $pemancingan->spot->nomor_spot) }}</option>
+                                        @endif
+                                        @foreach ($availableSpots as $spotNumber)
+                                            <option value="{{ $spotNumber }}">{{ sprintf('%02d', $spotNumber) }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>  --}}
+                                <div class="form-group">
+                                    <label for="edit_sesi">Sesi</label>
+                                    <select class="form-control" id="edit_sesi" name="edit_sesi" required>
+                                        @if(!empty($availableSessions))
+                                            @foreach ($availableSessions as $spot => $sessions)
+                                                @foreach ($sessions as $session)
+                                                    <option value="{{ $session }}">{{ $session }}</option>
+                                                @endforeach
+                                            @endforeach
+                                        @else
+                                            <option value="">Tidak ada sesi yang tersedia</option>
+                                        @endif
+                                    </select>
+                                </div>                                
+                            </div>                            
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -272,7 +326,7 @@
                         </form>
                     </div>
                 </div>
-            </div>
+            </div>            
             @endforeach        
             <!-- Modal Delete -->
             <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -361,6 +415,46 @@
     function submitKonfirmasiForm(id) {
         document.getElementById('konfirmasiForm' + id).submit();
     }
+</script>
+
+<!-- Tambahkan jQuery library jika belum ada -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Ketika tanggal sewa diubah
+        $('#edit_tanggal_sewa').on('change', function() {
+            var tanggalSewa = $(this).val();
+            updateAvailableSpots(tanggalSewa);
+        });
+
+        // Fungsi untuk mengisi opsi spot berdasarkan tanggal sewa
+        function updateAvailableSpots(tanggalSewa) {
+            $.ajax({
+                url: '/admin/sewaPemancingan/checkAvailability',
+                type: 'GET',
+                data: { tanggal_sewa: tanggalSewa },
+                success: function(data) {
+                    $('#edit_spot_id').empty();
+                    if (data.availableSpots && Object.keys(data.availableSpots).length > 0) {
+                        $.each(data.availableSpots, function(id, nomor) {
+                            $('#edit_spot_id').append('<option value="' + id + '">' + ('0' + nomor).slice(-2) + '</option>');
+                        });
+                    } else {
+                        $('#edit_spot_id').append('<option value="" disabled>Tidak ada spot tersedia</option>');
+                    }
+                },
+                error: function() {
+                    alert('Gagal memeriksa ketersediaan. Silakan coba lagi.');
+                }
+            });
+        }
+
+        // Panggil fungsi saat halaman pertama kali dimuat
+        var initialTanggalSewa = $('#edit_tanggal_sewa').val();
+        if (initialTanggalSewa) {
+            updateAvailableSpots(initialTanggalSewa);
+        }
+    });
 </script>
 
 @endsection
