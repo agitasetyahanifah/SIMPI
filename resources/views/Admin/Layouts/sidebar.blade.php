@@ -19,6 +19,14 @@
           </a>
         </li> --}}
         <li class="nav-item">
+          <a class="nav-link {{ request()->routeIs('admin.dashboard.index') ? 'active' : '' }}" href="{{ route('admin.dashboard.index') }}">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-air-baloon"></i>
+            </div>
+            <span class="nav-link-text ms-1">Galeri Pemancingan</span>
+          </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link {{ request()->routeIs('admin.keuangan.index') ? 'active' : '' }}" href="{{ route('admin.keuangan.index') }}">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-money-coins"></i>
@@ -73,14 +81,6 @@
              </div>
              <span class="nav-link-text ms-1">Blog Pemancingan</span>
            </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link {{ request()->routeIs('admin.dashboard.index') ? 'active' : '' }}" href="{{ route('admin.dashboard.index') }}">
-            <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-air-baloon"></i>
-            </div>
-            <span class="nav-link-text ms-1">Galeri Pemancingan</span>
-          </a>
         </li>
          
         {{-- <li class="nav-item">

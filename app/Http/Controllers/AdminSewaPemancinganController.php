@@ -54,25 +54,44 @@ class AdminSewaPemancinganController extends Controller
         return view('admin.sewapemancingan.index', compact('sewaPemancingan', 'lastItem', 'member', 'members', 'allSpots', 'tanggalSewa', 'availableSpots', 'availableSessions'));
     }
     
-    private function getAvailableSpots($tanggalSewa)
+    public function getAvailableSpots(Request $request)
     {
-        // Mendapatkan spot-spot yang telah disewa pada tanggal tersebut
-        $sewaSpots = SewaSpot::whereDate('tanggal_sewa', $tanggalSewa)->pluck('spot_id')->toArray();
+        // $tanggal = $request->query('tanggal');
+        // $sesi = $request->query('sesi');
+        $tanggal = $request->input('tanggal');
+        $sesi = $request->input('sesi');
     
-        // Mengambil spot-spot yang tersedia pada tanggal tersebut
-        return Spot::whereNotIn('id', $sewaSpots)->get();
-    }
+        // Ambil spot yang sudah dipesan pada tanggal dan sesi tertentu
+        $reservedSpots = SewaSpot::where('tanggal', $tanggal)
+                                 ->where('sesi', $sesi)
+                                 ->pluck('spot_id');
     
-    private function getAvailableSessions($spotId, $tanggalSewa)
+        // Ambil spot yang belum dipesan
+        $availableSpots = Spot::whereNotIn('id', $reservedSpots)->get();
+    
+        // return response()->json($availableSpots);
+        return response()->json(['message' => 'Success']);
+
+    }  
+
+    public function getAvailableSessions(Request $request)
     {
-        // Mendapatkan sesi yang telah disewa pada spot dan tanggal sewa tertentu
-        $sewaSessions = SewaSpot::where('spot_id', $spotId)->whereDate('tanggal_sewa', $tanggalSewa)->pluck('sesi')->toArray();
-    
-        // Mengembalikan sesi yang tersedia pada spot dan tanggal sewa tertentu
-        return array_diff(['08.00-12.00', '13.00-17.00'], $sewaSessions);
+        $spotId = $request->query('spot_id');
+        $tanggal = $request->query('tanggal');
+
+        // Ambil sesi yang sudah dipesan pada tanggal tertentu
+        $reservedSessions = SewaSpot::where('tanggal', $tanggal)
+                                    ->where('spot_id', $spotId)
+                                    ->pluck('sesi');
+
+        // Semua sesi yang tersedia
+        $allSessions = ['08.00-12.00', '13.00-17.00'];
+
+        // Sesi yang belum dipesan
+        $availableSessions = array_diff($allSessions, $reservedSessions->toArray());
+
+        return response()->json($availableSessions);
     }
-    
-    
 
     // public function search(Request $request)
     // {

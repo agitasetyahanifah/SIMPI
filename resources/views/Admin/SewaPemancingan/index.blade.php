@@ -140,7 +140,7 @@
                         ">{{ $pemancingan->status }}</span>
                         </td>
                         <td class="text-align-end">
-                            <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailModal{{ $pemancingan->id }}"><i class="fas fa-eye"></i></a>
+                            <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailModal{{ $pemancingan->id }}" data-id="{{ $pemancingan->id }}"><i class="fas fa-eye"></i></a>
                             <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $pemancingan->id }}"><i class="fas fa-edit"></i></a>
                             <button class="btn btn-danger delete" data-pemancinganid="{{ $pemancingan->id }}"><i class="fas fa-trash"></i></button>                            
                         </td>
@@ -279,20 +279,21 @@
                                     <select class="form-control edit_spot_id" id="edit_spot_id_{{ $pemancingan->id }}" name="edit_spot_id_{{ $pemancingan->id }}" required>
                                         <option value="{{ $pemancingan->spot_id }}" selected>{{ $pemancingan->spot->nomor_spot }}</option>
                                         <!-- Pilihan akan diisi oleh AJAX -->
+                                        {{-- @foreach ($availableSpots as $spot)
+                                            <option value="{{ $spot->id }}" {{ $pemancingan->spot_id == $spot->id ? 'selected' : '' }}>
+                                                {{ sprintf('%02d', $spot->nomor_spot) }}
+                                            </option>
+                                        @endforeach --}}
                                     </select>
-                                </div>
-                                @php
-                                    $spotId = $pemancingan->spot_id;
-                                    $availableSessions = $availableSessions[$spotId] ?? []; // Tambahkan pengecekan untuk kunci yang mungkin tidak ada
-                                @endphp
+                                </div>                                
                                 <div class="form-group">
                                     <label for="edit_sesi_{{ $pemancingan->id }}">Sesi</label>
                                     <select class="form-control edit_sesi" id="edit_sesi_{{ $pemancingan->id }}" name="edit_sesi_{{ $pemancingan->id }}" required>
                                         <option value="{{ $pemancingan->sesi }}" selected>{{ $pemancingan->sesi }}</option>
                                         <!-- Pilihan akan diisi oleh AJAX -->
-                                        @foreach($availableSessions as $session)
+                                        {{-- @foreach($availableSessions as $session)
                                         <option value="{{ $session }}">{{ $session }}</option>
-                                        @endforeach
+                                        @endforeach --}}
                                     </select>
                                 </div>
                             </div>                            
@@ -481,82 +482,73 @@
     }
 </script>
 
+@routes
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    var editTanggalSewaInputs = document.querySelectorAll('.edit_tanggal_sewa');
+$(document).ready(function() {
+    $('.modal').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget);
+        var pemancinganId = button.data('id');
+        var modal = $(this);
+        var tanggalInput = modal.find('.edit_tanggal_sewa');
+        var sesiSelect = modal.find('.edit_sesi');
+        var spotSelect = modal.find('.edit_spot_id');
 
-    editTanggalSewaInputs.forEach(function(input) {
-        input.addEventListener('change', function() {
-            var date = this.value;
-            var pemancinganId = this.dataset.pemancinganId;
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', '{{ route("spots.available") }}?date=' + date + '&pemancingan_id=' + pemancinganId);
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    var spotSelect = document.querySelector('#edit_spot_id_' + pemancinganId);
-                    spotSelect.innerHTML = '';
-
-                    if (response.length > 0) {
-                        response.forEach(function(spot) {
-                            var option = document.createElement('option');
-                            option.value = spot.id;
-                            option.textContent = spot.nomor_spot;
-                            spotSelect.appendChild(option);
-                        });
-                    } else {
-                        var option = document.createElement('option');
-                        option.value = '';
-                        option.textContent = 'No spots available';
-                        spotSelect.appendChild(option);
-                    }
-                } else {
-                    console.error('Request failed. Status: ' + xhr.status);
+        function fetchAvailableSpots(tanggal, sesi) {
+            $.ajax({
+                url: route('available-spots'), // Ubah url menjadi rute Laravel
+                type: 'GET',
+                data: { tanggal: tanggal, sesi: sesi },
+                success: function(data) {
+                    spotSelect.empty();
+                    $.each(data.availableSpots, function(index, spot) {
+                        spotSelect.append(`<option value="${spot.id}">${('0' + spot.nomor_spot).slice(-2)}</option>`);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
                 }
-            };
-            xhr.send();
-        });
-    });
-
-    document.addEventListener('change', function(event) {
-        if (event.target.classList.contains('edit_spot_id')) {
-            var spotId = event.target.value;
-            var date = document.querySelector('#edit_tanggal_sewa_' + event.target.dataset.pemancinganId).value;
-            var pemancinganId = event.target.dataset.pemancinganId;
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', '{{ route("sessions.available") }}?date=' + date + '&spot_id=' + spotId + '&pemancingan_id=' + pemancinganId);
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    var sessionSelect = document.querySelector('#edit_sesi_' + pemancinganId);
-                    sessionSelect.innerHTML = '';
-
-                    if (response.length > 0) {
-                        response.forEach(function(session) {
-                            var option = document.createElement('option');
-                            option.value = session;
-                            option.textContent = session;
-                            sessionSelect.appendChild(option);
-                        });
-                    } else {
-                        var option = document.createElement('option');
-                        option.value = '';
-                        option.textContent = 'No sessions available';
-                        sessionSelect.appendChild(option);
-                    }
-                } else {
-                    console.error('Request failed. Status: ' + xhr.status);
-                }
-            };
-            xhr.send();
+            });
         }
+
+        function fetchAvailableSessions(tanggal, spotId) {
+            $.ajax({
+                url: route('available-sessions'), // Ubah url menjadi rute Laravel
+                type: 'GET',
+                data: { tanggal: tanggal, spot_id: spotId },
+                success: function(data) {
+                    sesiSelect.empty();
+                    $.each(data.availableSessions, function(index, session) {
+                        sesiSelect.append(`<option value="${session}">${session}</option>`);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+        tanggalInput.change(function() {
+            var tanggal = $(this).val();
+            var sesi = sesiSelect.val();
+            fetchAvailableSpots(tanggal, sesi);
+        });
+
+        sesiSelect.change(function() {
+            var tanggal = tanggalInput.val();
+            var spotId = spotSelect.val();
+            fetchAvailableSessions(tanggal, spotId);
+        });
+
+        // Initialize when modal is shown
+        var tanggalAwal = tanggalInput.val();
+        var sesiAwal = sesiSelect.val();
+        fetchAvailableSpots(tanggalAwal, sesiAwal);
+        fetchAvailableSessions(tanggalAwal, spotSelect.val());
     });
 });
 </script>
-
 
 @endsection
 

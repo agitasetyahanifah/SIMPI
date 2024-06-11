@@ -101,8 +101,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('/admin/sewaPemancingan', AdminSewaPemancinganController::class);
     Route::get('/admin/sewaPemancingan/search', [AdminSewaPemancinganController::class, 'search'])->name('admin.sewaPemancingan.search');
     // Route::get('/admin/sewaPemancingan/checkAvailability', [AdminSewaPemancinganController::class, 'checkAvailability']);
-    Route::get('/spots/available', [AdminSewaPemancinganController::class, 'getAvailableSpots'])->name('spots.available');
-    Route::get('/sessions/available', [AdminSewaPemancinganController::class, 'getAvailableSessions'])->name('sessions.available');
+    Route::get('/available-spots', [AdminSewaPemancinganController::class, 'getAvailableSpots'])->name('available-spots');
+    Route::get('/available-sessions', [AdminSewaPemancinganController::class, 'getAvailableSessions'])->name('available-sessions');
     Route::post('/admin/sewaPemancingan/konfirmasi-pembayaran/{id}', [AdminSewaPemancinganController::class, 'konfirmasiPembayaran'])->name('admin.sewaPemancingan.konfirmasiPembayaran');
 });
 
