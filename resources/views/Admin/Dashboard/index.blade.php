@@ -1,6 +1,6 @@
 @extends('Admin.Layouts.main')
 
-@section('title', 'Dashboard')
+@section('title', 'Galeri Pemancingan')
 
 @section('content')
 
@@ -22,7 +22,7 @@
 
 <div class="container-fluid py-4">
     {{-- Update Ketersediaan Spot Pemancingan --}}
-    <div class="row row-cols-md-2">
+    {{-- <div class="row row-cols-md-2">
         <div class="col">
             <div class="card">
                 <div class="row p-3">
@@ -56,7 +56,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     
     {{-- Galeri --}}
     <div class="row mt-3">

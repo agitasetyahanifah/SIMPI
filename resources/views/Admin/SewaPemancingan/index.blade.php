@@ -252,8 +252,62 @@
                 </div>
             </div>
             @endforeach
+            
             <!-- Modal Edit Sewa Pemancingan -->
             @foreach ($sewaPemancingan as $pemancingan)
+            <div class="modal fade" id="editModal{{ $pemancingan->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $pemancingan->id }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editModalLabel{{ $pemancingan->id }}">Edit Penyewaan Pemancingan</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form action="/admin/sewaPemancingan/{{ $pemancingan->id }}" method="post">
+                            @csrf
+                            @method('PUT')
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="edit_nama_pelanggan">Nama Pelanggan</label>
+                                    <input type="text" class="form-control" id="edit_nama_pelanggan" name="edit_nama_pelanggan" value="{{ $pemancingan->member->nama }}" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit_tanggal_sewa_{{ $pemancingan->id }}">Tanggal Sewa</label>
+                                    <input type="date" class="form-control edit_tanggal_sewa" id="edit_tanggal_sewa_{{ $pemancingan->id }}" name="edit_tanggal_sewa" value="{{ $pemancingan->tanggal_sewa }}" min="{{ date('Y-m-d') }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit_spot_id_{{ $pemancingan->id }}">Nomor Spot</label>
+                                    <select class="form-control edit_spot_id" id="edit_spot_id_{{ $pemancingan->id }}" name="edit_spot_id_{{ $pemancingan->id }}" required>
+                                        <option value="{{ $pemancingan->spot_id }}" selected>{{ $pemancingan->spot->nomor_spot }}</option>
+                                        <!-- Pilihan akan diisi oleh AJAX -->
+                                    </select>
+                                </div>
+                                @php
+                                    $spotId = $pemancingan->spot_id;
+                                    $availableSessions = $availableSessions[$spotId] ?? []; // Tambahkan pengecekan untuk kunci yang mungkin tidak ada
+                                @endphp
+                                <div class="form-group">
+                                    <label for="edit_sesi_{{ $pemancingan->id }}">Sesi</label>
+                                    <select class="form-control edit_sesi" id="edit_sesi_{{ $pemancingan->id }}" name="edit_sesi_{{ $pemancingan->id }}" required>
+                                        <option value="{{ $pemancingan->sesi }}" selected>{{ $pemancingan->sesi }}</option>
+                                        <!-- Pilihan akan diisi oleh AJAX -->
+                                        @foreach($availableSessions as $session)
+                                        <option value="{{ $session }}">{{ $session }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>                            
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                <button type="submit" class="btn btn-primary">Simpan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>            
+            @endforeach            
+            
+            
+            {{-- @foreach ($sewaPemancingan as $pemancingan)
             <div class="modal fade" id="editModal{{ $pemancingan->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $pemancingan->id }}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -273,26 +327,33 @@
                                     <label for="edit_tanggal_sewa">Tanggal Sewa</label>
                                     <input type="date" class="form-control" id="edit_tanggal_sewa" name="edit_tanggal_sewa" value="{{ $pemancingan->tanggal_sewa }}" min="{{ date('Y-m-d') }}" required>
                                 </div>
+                                <div class="form-group">
+                                    <label for="edit_spot_id_{{ $pemancingan->id }}">Nomor Spot</label>
+                                    <select class="form-control edit_spot_id" id="edit_spot_id_{{ $pemancingan->id }}" name="edit_spot_id" required>
+                                        <option value="{{ $pemancingan->spot_id }}" selected>{{ $pemancingan->spot->nomor_spot }}</option>
+                                        <!-- Pilihan akan diisi oleh AJAX -->
+                                        @foreach ($availableSpots as $spotNumber)
+                                            <option id="" value="{{ $spotNumber }}">{{ sprintf('%02d', $spotNumber) }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="edit_sesi_{{ $pemancingan->id }}">Sesi</label>
+                                    <select class="form-control edit_sesi" id="edit_sesi_{{ $pemancingan->id }}" name="edit_sesi" required>
+                                        <option value="{{ $pemancingan->sesi }}" selected>{{ $pemancingan->sesi }}</option>
+                                        <!-- Pilihan akan diisi oleh AJAX -->
+                                    </select>
+                                </div>
                                 {{-- <div class="form-group">
                                     <label for="edit_spot_id">Nomor Spot</label>
                                     <select class="form-control" id="edit_spot_id" name="edit_spot_id" required>
                                         @foreach ($availableSpots as $spotNumber)
-                                            <option value="{{ $spotNumber }}" {{ $pemancingan->spot && $pemancingan->spot->nomor_spot == $spotNumber ? 'selected' : '' }}>
+                                            <option value="{{ $spotNumber }}" {{  $pemancingan->spot->nomor_spot == $spotNumber ? 'selected' : '' }}>
                                                 {{ sprintf('%02d', $spotNumber) }}
                                             </option>
                                         @endforeach
                                     </select>
-                                </div>    --}}
-                                <div class="form-group">
-                                    <label for="edit_spot_id">Nomor Spot</label>
-                                    <select class="form-control" id="edit_spot_id" name="edit_spot_id" required>
-                                        @foreach ($availableSpots as $spotId => $spotNumber)
-                                            <option value="{{ $spotId }}" {{ $pemancingan->spot && $pemancingan->spot->id == $spotId ? 'selected' : '' }}>
-                                                {{ sprintf('%02d', $spotNumber) }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>                             
+                                </div>                      --}}
                                 {{-- <div class="form-group">
                                     <label for="edit_spot_id">Nomor Spot</label>
                                     <select class="form-control" id="edit_spot_id" name="edit_spot_id" required>
@@ -304,7 +365,7 @@
                                         @endforeach
                                     </select>
                                 </div>  --}}
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label for="edit_sesi">Sesi</label>
                                     <select class="form-control" id="edit_sesi" name="edit_sesi" required>
                                         @if(!empty($availableSessions))
@@ -317,8 +378,8 @@
                                             <option value="">Tidak ada sesi yang tersedia</option>
                                         @endif
                                     </select>
-                                </div>                                
-                            </div>                            
+                                 </div> --}}
+                            {{-- </div>                            
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -327,7 +388,10 @@
                     </div>
                 </div>
             </div>            
-            @endforeach        
+            @endforeach         --}}
+
+
+
             <!-- Modal Delete -->
             <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -387,7 +451,7 @@
     $(document).ready(function() {
         // Menangani button delete
         $(document).on('click', '.delete', function() {
-            const pemancinganid = $(this).data('pemancinganid'); // Perhatikan penggunaan snake_case di sini
+            const pemancinganid = $(this).data('pemancinganid');
             $('#deleteModal').modal('show');
 
             // Mengubah action form berdasarkan ID data yang dipilih
@@ -417,45 +481,82 @@
     }
 </script>
 
-<!-- Tambahkan jQuery library jika belum ada -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-    $(document).ready(function() {
-        // Ketika tanggal sewa diubah
-        $('#edit_tanggal_sewa').on('change', function() {
-            var tanggalSewa = $(this).val();
-            updateAvailableSpots(tanggalSewa);
-        });
+document.addEventListener('DOMContentLoaded', function() {
+    var editTanggalSewaInputs = document.querySelectorAll('.edit_tanggal_sewa');
 
-        // Fungsi untuk mengisi opsi spot berdasarkan tanggal sewa
-        function updateAvailableSpots(tanggalSewa) {
-            $.ajax({
-                url: '/admin/sewaPemancingan/checkAvailability',
-                type: 'GET',
-                data: { tanggal_sewa: tanggalSewa },
-                success: function(data) {
-                    $('#edit_spot_id').empty();
-                    if (data.availableSpots && Object.keys(data.availableSpots).length > 0) {
-                        $.each(data.availableSpots, function(id, nomor) {
-                            $('#edit_spot_id').append('<option value="' + id + '">' + ('0' + nomor).slice(-2) + '</option>');
+    editTanggalSewaInputs.forEach(function(input) {
+        input.addEventListener('change', function() {
+            var date = this.value;
+            var pemancinganId = this.dataset.pemancinganId;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '{{ route("spots.available") }}?date=' + date + '&pemancingan_id=' + pemancinganId);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    var spotSelect = document.querySelector('#edit_spot_id_' + pemancinganId);
+                    spotSelect.innerHTML = '';
+
+                    if (response.length > 0) {
+                        response.forEach(function(spot) {
+                            var option = document.createElement('option');
+                            option.value = spot.id;
+                            option.textContent = spot.nomor_spot;
+                            spotSelect.appendChild(option);
                         });
                     } else {
-                        $('#edit_spot_id').append('<option value="" disabled>Tidak ada spot tersedia</option>');
+                        var option = document.createElement('option');
+                        option.value = '';
+                        option.textContent = 'No spots available';
+                        spotSelect.appendChild(option);
                     }
-                },
-                error: function() {
-                    alert('Gagal memeriksa ketersediaan. Silakan coba lagi.');
+                } else {
+                    console.error('Request failed. Status: ' + xhr.status);
                 }
-            });
-        }
+            };
+            xhr.send();
+        });
+    });
 
-        // Panggil fungsi saat halaman pertama kali dimuat
-        var initialTanggalSewa = $('#edit_tanggal_sewa').val();
-        if (initialTanggalSewa) {
-            updateAvailableSpots(initialTanggalSewa);
+    document.addEventListener('change', function(event) {
+        if (event.target.classList.contains('edit_spot_id')) {
+            var spotId = event.target.value;
+            var date = document.querySelector('#edit_tanggal_sewa_' + event.target.dataset.pemancinganId).value;
+            var pemancinganId = event.target.dataset.pemancinganId;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '{{ route("sessions.available") }}?date=' + date + '&spot_id=' + spotId + '&pemancingan_id=' + pemancinganId);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    var sessionSelect = document.querySelector('#edit_sesi_' + pemancinganId);
+                    sessionSelect.innerHTML = '';
+
+                    if (response.length > 0) {
+                        response.forEach(function(session) {
+                            var option = document.createElement('option');
+                            option.value = session;
+                            option.textContent = session;
+                            sessionSelect.appendChild(option);
+                        });
+                    } else {
+                        var option = document.createElement('option');
+                        option.value = '';
+                        option.textContent = 'No sessions available';
+                        sessionSelect.appendChild(option);
+                    }
+                } else {
+                    console.error('Request failed. Status: ' + xhr.status);
+                }
+            };
+            xhr.send();
         }
     });
+});
 </script>
+
 
 @endsection
 

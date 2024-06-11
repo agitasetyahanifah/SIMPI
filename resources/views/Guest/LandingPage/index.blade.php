@@ -74,7 +74,7 @@
       {{-- Ketersediaan Spot Pemancingan dan Informasi Cuaca --}}
       <div class="row row-cols-md-2">
         {{-- Ketersediaan Spot Pemancingan --}}
-        <div class="col-md-4 mt-2">
+        {{-- <div class="col-md-4 mt-2">
           <div class="col-12">
             <div class="card shadow-sm border-0">
                 <div class="card-body">
@@ -90,9 +90,9 @@
                 </div>
             </div>
           </div>
-        </div>
+        </div> --}}
         {{-- Informasi Cuaca --}}
-        <div class="col-md-8 mt-2">
+        <div class="col-md-12 mt-2">
           <div class="col-12">
               <div class="card shadow-sm border-0">
                   <div class="card-body">

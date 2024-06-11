@@ -366,6 +366,81 @@
         });
     });
   </script>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var editTanggalSewaInputs = document.querySelectorAll('.edit_tanggal_sewa');
+
+    editTanggalSewaInputs.forEach(function(input) {
+        input.addEventListener('change', function() {
+            var date = this.value;
+            var pemancinganId = this.dataset.pemancinganId;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/api/available-spots?date=' + date + '&pemancingan_id=' + pemancinganId);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    var spotSelect = document.querySelector('#edit_spot_id_' + pemancinganId);
+                    spotSelect.innerHTML = '';
+
+                    if (response.length > 0) {
+                        response.forEach(function(spot) {
+                            var option = document.createElement('option');
+                            option.value = spot.id;
+                            option.textContent = spot.nomor_spot;
+                            spotSelect.appendChild(option);
+                        });
+                    } else {
+                        var option = document.createElement('option');
+                        option.value = '';
+                        option.textContent = 'No spots available';
+                        spotSelect.appendChild(option);
+                    }
+                } else {
+                    console.error('Request failed. Status: ' + xhr.status);
+                }
+            };
+            xhr.send();
+        });
+    });
+
+    document.addEventListener('change', function(event) {
+        if (event.target.classList.contains('edit_spot_id')) {
+            var spotId = event.target.value;
+            var date = document.querySelector('#edit_tanggal_sewa_' + event.target.dataset.pemancinganId).value;
+            var pemancinganId = event.target.dataset.pemancinganId;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/api/available-sessions?date=' + date + '&spot_id=' + spotId + '&pemancingan_id=' + pemancinganId);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    var sessionSelect = document.querySelector('#edit_sesi_' + pemancinganId);
+                    sessionSelect.innerHTML = '';
+
+                    if (response.length > 0) {
+                        response.forEach(function(session) {
+                            var option = document.createElement('option');
+                            option.value = session;
+                            option.textContent = session;
+                            sessionSelect.appendChild(option);
+                        });
+                    } else {
+                        var option = document.createElement('option');
+                        option.value = '';
+                        option.textContent = 'No sessions available';
+                        sessionSelect.appendChild(option);
+                    }
+                } else {
+                    console.error('Request failed. Status: ' + xhr.status);
+                }
+            };
+            xhr.send();
+        }
+    });
+});
+  </script>
   
 </body>
 </html>

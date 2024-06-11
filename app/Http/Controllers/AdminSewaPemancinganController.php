@@ -16,27 +16,63 @@ class AdminSewaPemancinganController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    // public function index(Request $request)
+    // {
+    //     $sewaPemancingan = SewaSpot::orderBy('tanggal_sewa', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
+    //     $lastItem = $sewaPemancingan->lastItem();
+    //     $member = User::where('role', 'member')->get();
+    //     $members = User::where('role', 'member')->orderBy('nama', 'asc')->get(); 
+    //     $allSpots = Spot::all();
+    //     $sewaSpots = SewaSpot::pluck('spot_id')->toArray();
+    //     $availableSpots = Spot::whereNotIn('id', $sewaSpots)->get(); 
+      
+    //     return view('admin.sewapemancingan.index', compact('sewaPemancingan', 'lastItem', 'member', 'members','allSpots', 'sewaSpots', 'availableSpots'));
+    // }
+
+    public function index(Request $request)
     {
         $sewaPemancingan = SewaSpot::orderBy('tanggal_sewa', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
         $lastItem = $sewaPemancingan->lastItem();
         $member = User::where('role', 'member')->get();
-        $members = User::where('role', 'member')->orderBy('nama', 'asc')->get();  
-
-        // Fetch all spots from 01-40
-        $allSpots = range(1, 40);
-
-        // Fetch all booked spots for today
-        $bookedSpots = SewaSpot::where('tanggal_sewa', Carbon::today()->format('Y-m-d'))
-            ->join('spots', 'sewa_spots.spot_id', '=', 'spots.id')
-            ->pluck('spots.nomor_spot')
-            ->toArray();
-
-        // Calculate available spots
-        $availableSpots = array_diff($allSpots, $bookedSpots);
-        
-        return view('admin.sewapemancingan.index', compact('sewaPemancingan', 'lastItem', 'member', 'members', 'availableSpots'));
+        $members = User::where('role', 'member')->orderBy('nama', 'asc')->get(); 
+        $allSpots = Spot::all();
+    
+        // Mengambil tanggal sewa dari request
+        $tanggalSewa = $request->input('tanggal_sewa', date('Y-m-d'));
+    
+        // Mendapatkan spot-spot yang tersedia pada tanggal sewa tertentu
+        $availableSpots = $this->getAvailableSpots($tanggalSewa);
+    
+        // Menyediakan data sesi untuk spot-spot yang tersedia pada tanggal sewa
+        $availableSessions = [];
+        foreach ($availableSpots as $spot) {
+            // Mendapatkan sesi yang tersedia untuk setiap spot pada tanggal sewa
+            $availableSessions[$spot->id] = $this->getAvailableSessions($spot->id, $tanggalSewa);
+        }
+    
+        // Menyediakan data untuk dipass ke view
+        return view('admin.sewapemancingan.index', compact('sewaPemancingan', 'lastItem', 'member', 'members', 'allSpots', 'tanggalSewa', 'availableSpots', 'availableSessions'));
     }
+    
+    private function getAvailableSpots($tanggalSewa)
+    {
+        // Mendapatkan spot-spot yang telah disewa pada tanggal tersebut
+        $sewaSpots = SewaSpot::whereDate('tanggal_sewa', $tanggalSewa)->pluck('spot_id')->toArray();
+    
+        // Mengambil spot-spot yang tersedia pada tanggal tersebut
+        return Spot::whereNotIn('id', $sewaSpots)->get();
+    }
+    
+    private function getAvailableSessions($spotId, $tanggalSewa)
+    {
+        // Mendapatkan sesi yang telah disewa pada spot dan tanggal sewa tertentu
+        $sewaSessions = SewaSpot::where('spot_id', $spotId)->whereDate('tanggal_sewa', $tanggalSewa)->pluck('sesi')->toArray();
+    
+        // Mengembalikan sesi yang tersedia pada spot dan tanggal sewa tertentu
+        return array_diff(['08.00-12.00', '13.00-17.00'], $sewaSessions);
+    }
+    
+    
 
     // public function search(Request $request)
     // {
@@ -244,20 +280,20 @@ class AdminSewaPemancinganController extends Controller
 
     public function checkAvailability(Request $request)
     {
-        $tanggalSewa = $request->input('tanggal_sewa');
+        $tanggalSewa = $request->query('edit_tanggal_sewa');
         $selectedDate = Carbon::parse($tanggalSewa)->format('Y-m-d');
     
-        // Fetch spot IDs that are already booked on the selected date
+        // Ambil ID spot yang sudah dipesan pada tanggal yang dipilih
         $bookedSpots = SewaSpot::whereDate('tanggal_sewa', $selectedDate)
             ->pluck('spot_id')
             ->toArray();
     
-        // Fetch available spots by excluding booked spots
+        // Ambil spot yang tersedia dengan mengeluarkan spot yang sudah dipesan
         $availableSpots = Spot::whereNotIn('id', $bookedSpots)
             ->pluck('nomor_spot', 'id')
             ->toArray();
     
-        // Determine available sessions for each available spot
+        // Tentukan sesi yang tersedia untuk setiap spot yang tersedia
         $availableSessions = [];
         foreach ($availableSpots as $spotId => $spotNomor) {
             $sessions = [
@@ -271,7 +307,7 @@ class AdminSewaPemancinganController extends Controller
                                         ->doesntExist()
             ];
     
-            // Filter available sessions
+            // Filter sesi yang tersedia
             $availableSessions[$spotId] = array_keys(array_filter($sessions));
         }
     
@@ -281,7 +317,6 @@ class AdminSewaPemancinganController extends Controller
         ]);
     }
     
-
     // public function checkAvailability(Request $request)
     // {
     //     $tanggalSewa = $request->input('tanggal_sewa');
@@ -330,5 +365,41 @@ class AdminSewaPemancinganController extends Controller
 
         return redirect()->back()->with('success', 'Pembayaran berhasil dikonfirmasi.');
     }
+
+
+    // public function getAvailableSpots(Request $request)
+    // {
+    //     $date = $request->input('date');
+    //     $pemancinganId = $request->input('pemancingan_id');
+    
+    //     // Query to get spots that are not booked on the given date except the current booking
+    //     $availableSpots = Spot::whereDoesntHave('sewaSpots', function ($query) use ($date, $pemancinganId) {
+    //         $query->whereDate('tanggal', $date)
+    //               ->where('id', '!=', $pemancinganId);
+    //     })->get(['id', 'nomor_spot']);
+    
+    //     return response()->json($availableSpots);
+    // }
+    
+    // public function getAvailableSessions(Request $request)
+    // {
+    //     $date = $request->input('date');
+    //     $spotId = $request->input('spot_id');
+    //     $pemancinganId = $request->input('pemancingan_id');
+    
+    //     // Default sessions
+    //     $sessions = ['08:00-12:00', '13:00-17:00'];
+    
+    //     // Query to get booked sessions for the given spot and date except the current booking
+    //     $bookedSessions = SewaSpot::where('spot_id', $spotId)
+    //                                 ->whereDate('tanggal', $date)
+    //                                 ->where('id', '!=', $pemancinganId)
+    //                                 ->pluck('sesi')->toArray();
+    
+    //     // Filter available sessions
+    //     $availableSessions = array_diff($sessions, $bookedSessions);
+    
+    //     return response()->json($availableSessions);
+    // }
 
 }
