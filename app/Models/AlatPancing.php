@@ -13,14 +13,14 @@ class AlatPancing extends Model
 
     protected $guarded = ['id'];
 
-    public function sewaAlat()
+    public function sewaAlats()
     {
-        return $this->belongsToMany(SewaAlat::class, 'alat_sewa', 'alat_id', 'sewa_id');
+        return $this->hasMany(SewaAlat::class);
     }
 
-    public function alatSewa()
-    {
-        return $this->hasMany(AlatSewa::class, 'alat_id');
-        // return $this->hasMany(AlatSewa::class);
-    }
+    // public function alatSewa()
+    // {
+    //     return $this->hasMany(AlatSewa::class, 'alat_id');
+    //     // return $this->hasMany(AlatSewa::class);
+    // }
 }

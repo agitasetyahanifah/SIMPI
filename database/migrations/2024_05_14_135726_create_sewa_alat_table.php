@@ -15,25 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('kode_sewa')->unique();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('alat_id');
             $table->date('tgl_pinjam');
             $table->date('tgl_kembali');
+            $table->integer('jumlah');
             $table->integer('biaya_sewa')->nullable();
-            $table->enum('status', ['sudah dibayar', 'belum dibayar'])->default('belum dibayar');
+            $table->enum('status', ['menunggu pembayaran', 'sudah dibayar', 'dibatalkan'])->default('menunggu pembayaran');
+            $table->enum('status_pengembalian', ['proses', 'sudah kembali', 'terlambat kembali'])->nullable();
             $table->timestamps();
-
+        
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        });
-
-        // Tabel pivot untuk relasi many-to-many
-        Schema::create('alat_sewa', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('sewa_id');
-            $table->unsignedBigInteger('alat_id');
-            $table->timestamps();
-
-            $table->foreign('sewa_id')->references('id')->on('sewa_alat')->onDelete('cascade');
             $table->foreign('alat_id')->references('id')->on('alat_pancing')->onDelete('cascade');
-        });
+        });        
 
     }
 
@@ -42,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('alat_sewa');
-        Schema::dropIfExists('sewa_alat');    }
+        Schema::dropIfExists('sewa_alat');    
+    }
 };

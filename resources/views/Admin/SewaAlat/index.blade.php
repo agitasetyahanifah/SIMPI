@@ -25,16 +25,16 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header pb-0">
-            <h4 class="font-weight-bolder mb-0">Manajemen Penyewaan Alat Pancing</h4>
+            <h4 class="font-weight-bolder mb-0">Manajemen Sewa Alat Pancing</h4>
             {{-- Button Tambah --}}
-            <form action="/admin/sewaAlat" method="post">
+            {{-- <form action="/admin/sewaAlat" method="post">
                 @csrf
                 <div class="col-12 text-end">
                   <button class="btn btn-outline-primary mb-0" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
-                </div>
+                </div> --}}
           </div>
           <!-- Modal Tambah Data Sewa Alat -->
-          <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
+          {{-- <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered" role="document">
                   <div class="modal-content">
                       <div class="modal-header">
@@ -96,18 +96,17 @@
                       </form>
                   </div>
               </div>
-          </div>
+          </div> --}}
           <div class="card-body ">
             <div class="table-responsive p-0">
               <table class="table table-hover">
                 <thead>
                   <tr>
                     <th class="text-center">No</th>
-                    <th>Kode</th>
+                    <th>Kode Sewa</th>
                     <th>Nama Pelanggan</th>
-                    <th>Tanggal Pinjam</th>
-                    <th>Tanggal Kembali</th>
-                    <th>Status</th>
+                    <th>Status Pembayaran</th>
+                    <th>Status Pengembalian</th>
                     <th>Aksi</th>
                   </tr>
                 </thead>
@@ -120,10 +119,27 @@
                         <td class="text-center">{{ $currentNumber++ }}</td>
                         <td>{{ $alat->kode_sewa}}</td>
                         <td>{{ $alat->member->nama }}</td>
-                        <td>{{ $alat->tgl_pinjam }}</td>
-                        <td>{{ $alat->tgl_kembali }}</td>
                         <td class="align-middle text-center text-sm">
-                            <span class="badge badge-sm {{ $alat->status == 'sudah dibayar' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $alat->status }}</span>
+                            <span class="badge badge-sm
+                            @if($alat->status == 'sudah dibayar')
+                                bg-gradient-success
+                            @elseif($alat->status == 'menunggu pembayaran')
+                                bg-gradient-secondary
+                            @elseif($alat->status == 'dibatalkan')
+                                bg-gradient-danger
+                            @endif
+                        ">{{ $alat->status }}</span>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                            <span class="badge badge-sm
+                            @if($alat->status_pengembalian == 'sudah kembali')
+                                bg-gradient-success
+                            @elseif($alat->status_pengembalian == 'proses')
+                                bg-gradient-warning
+                            @elseif($alat->status_pengembalian == 'terlambat kembali')
+                                bg-gradient-danger
+                            @endif
+                        ">{{ $alat->status_pengembalian }}</span>
                         </td>
                         <td class="text-align-end">
                             <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailModal{{ $alat->id }}"><i class="fas fa-eye"></i></a>
@@ -147,7 +163,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="detailModalLabel{{ $alat->id }}">Detail Penyewaan Alat Pancing</h5>
+                            <h5 class="modal-title" id="detailModalLabel{{ $alat->id }}">Detail Sewa Alat Pancing</h5>
                             <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
@@ -162,6 +178,14 @@
                                             <td>{{ $alat->member->nama }}</td>
                                         </tr>
                                         <tr>
+                                            <th>Nama Alat</th>
+                                            <td>{{ $alat->alatPancing->nama_alat }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Jumlah</th>
+                                            <td>{{ $alat->jumlah }}</td>
+                                        </tr>
+                                        <tr>
                                             <th>Tanggal Pinjam</th>
                                             <td>{{ $alat->tgl_pinjam }}</td>
                                         </tr>
@@ -170,24 +194,16 @@
                                             <td>{{ $alat->tgl_kembali }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Alat Pancing yang Dipinjam</th>
-                                            <td>
-                                                @if($alat->alatPancing->isNotEmpty())
-                                                    @foreach($alat->alatPancing as $alatPancing)
-                                                        {{ $alatPancing->nama_alat }}@if(!$loop->last), @endif
-                                                    @endforeach
-                                                @else
-                                                    No Alat Pancing
-                                                @endif
-                                            </td>
-                                        </tr>
-                                        <tr>
                                             <th>Biaya Sewa</th>
                                             <td>{{ $alat->biaya_sewa }}</td>
                                         </tr>
                                         <tr>
                                             <th>Status Pembayaran</th>
                                             <td>{{ $alat->status }}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Status Pengembalian</th>
+                                            <td>{{ $alat->status_pengembalian }}</td>
                                         </tr>
                                     </table>
                                     @if($alat->status === 'belum dibayar')
@@ -256,13 +272,13 @@
                                 <div class="form-group">
                                     <label for="edit_alat_pancing">Alat Pancing</label>
                                     <div id="alat-pancing-container">
-                                        @foreach ($sewaAlat as $sewa)
+                                        {{-- @foreach ($sewaAlat as $sewa)
                                             @foreach ($sewa->alatSewa as $alatSewa)
                                                 <div class="row g-3 align-items-center alat-pancing-item">
                                                     <div class="col-md-11 col-10 form-group">
                                                         <select name="edit_alat_pancing[]" class="form-control">
                                                             @foreach ($alatSewa->alatPancing as $ap)
-                                                                {{-- <option value="{{ $ap->id }}" {{ $alatSewa->alat_id == $ap->id ? 'selected' : '' }}>{{ $ap->nama_alat }}</option> --}}
+                                                                <option value="{{ $ap->id }}" {{ $alatSewa->alat_id == $ap->id ? 'selected' : '' }}>{{ $ap->nama_alat }}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -271,7 +287,7 @@
                                                     </div>
                                                 </div>
                                             @endforeach
-                                        @endforeach
+                                        @endforeach --}}
                                     </div>
                                     <a class="btn btn-primary" onclick="addAlat()"><i class="fas fa-plus"></i> Tambah Alat Pancing</a>
                                 

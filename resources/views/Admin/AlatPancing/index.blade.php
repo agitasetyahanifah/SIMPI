@@ -54,14 +54,16 @@
                                 <label for="nama_alat" class="col-form-label">Nama Alat</label>
                                 <input type="text" class="form-control" id="nama_alat" name="nama_alat" required>
                             </div>
-                            <div class="form-group">
-                                <label for="harga" class="col-form-label">Harga</label>
-                                <input type="number" class="form-control" id="harga" name="harga" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="jumlah" class="col-form-label">Jumlah</label>
-                                <input type="number" class="form-control" id="jumlah" name="jumlah" required>
-                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="harga" class="col-form-label">Harga Sewa Per Hari</label>
+                                    <input type="number" class="form-control" id="harga" name="harga" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="jumlah" class="col-form-label">Jumlah Barang</label>
+                                    <input type="number" class="form-control" id="jumlah" name="jumlah" required>
+                                </div>
+                            </div>                                                       
                             <div class="form-group">
                                 <label for="status" class="col-form-label">Status</label>
                                 <select class="form-select" id="status" name="status" required>
@@ -180,14 +182,16 @@
                                       <label for="nama_alat{{ $alat->id }}" class="col-form-label">Nama Alat</label>
                                       <input type="text" class="form-control" id="nama_alat{{ $alat->id }}" name="nama_alat" value="{{ $alat->nama_alat }}" required>
                                   </div>
-                                  <div class="form-group">
-                                      <label for="harga{{ $alat->id }}" class="col-form-label">Harga</label>
-                                      <input type="number" class="form-control" id="harga{{ $alat->id }}" name="harga" value="{{ $alat->harga }}" required>
-                                  </div>
-                                  <div class="form-group">
-                                      <label for="jumlah{{ $alat->id }}" class="col-form-label">Jumlah</label>
-                                      <input type="number" class="form-control" id="jumlah{{ $alat->id }}" name="jumlah" value="{{ $alat->jumlah }}" required>
-                                  </div>
+                                  <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="harga{{ $alat->id }}" class="col-form-label">Harga Sewa Per Hari</label>
+                                        <input type="number" class="form-control" id="harga{{ $alat->id }}" name="harga" value="{{ $alat->harga }}" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="jumlah{{ $alat->id }}" class="col-form-label">Jumlah Barang</label>
+                                        <input type="number" class="form-control" id="jumlah{{ $alat->id }}" name="jumlah" value="{{ $alat->jumlah }}" required>
+                                    </div>
+                                  </div> 
                                   <div class="form-group">
                                       <label for="status{{ $alat->id }}" class="col-form-label">Status</label>
                                       <select class="form-select" id="status{{ $alat->id }}" name="status" required>

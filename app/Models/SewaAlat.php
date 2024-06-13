@@ -15,18 +15,12 @@ class SewaAlat extends Model
 
     public function member()
     {
-        return $this->belongsTo(Member::class, 'user_id');
-    }
-
-    public function alatSewa()
-    {
-        return $this->hasMany(AlatSewa::class, 'sewa_id');
-        // return $this->hasMany(AlatSewa::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function alatPancing()
     {
-        return $this->belongsToMany(AlatPancing::class, 'alat_sewa', 'sewa_id', 'alat_id');
+        return $this->belongsTo(AlatPancing::class, 'alat_id');
     }
 
     protected static function booted()

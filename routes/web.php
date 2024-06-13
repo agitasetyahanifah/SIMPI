@@ -37,7 +37,8 @@ use App\Http\Controllers\MemberSewaPemancinganController;
 //     return view('welcome');
 // })
 
-Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
+// Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
+Route::get('/', [GuestLandingPageController::class, 'index'])->name('landingpage.index');
 
 // Routes Login
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -123,10 +124,15 @@ Route::middleware(['auth', 'member'])->group(function () {
     Route::post('/member/sewaPemancingan/spots/sewaSpot', [MemberSewaSpotController::class, 'store'])->name('member.spots.pesan-spot');
     Route::get('/member/sewaPemancingan/spots/riwayatSewa', [MemberSewaSpotController::class, 'riwayatSewa'])->name('member.spots.riwayat-sewa');
     Route::delete('/member/sewaPemancingan/spots/cancel/{sewaSpot}', [MemberSewaSpotController::class, 'cancelOrder'])->name('member.spots.cancel');
-    Route::post('/member/sewaPemancingan/spos/auto-cancel/{id}', [MemberSewaSpotController::class, 'autoCancel'])->name('member.spots.autoCancel');
+    Route::post('/member/sewaPemancingan/sposts/auto-cancel/{id}', [MemberSewaSpotController::class, 'autoCancel'])->name('member.spots.autoCancel');
     Route::get('/cek-ketersediaan', [MemberSewaSpotController::class, 'cekKetersediaan']);
     // Daftar Alat yang Disewakan Member
     Route::get('/member/daftarAlat', [MemberDaftarAlatController::class, 'index'])->name('member.daftar-alat.index');
+    Route::post('/member/daftarAlat/sewaAlat', [MemberDaftarAlatController::class, 'store'])->name('member.sewa-alat');
+    Route::get('/member/daftarAlat/sewaAlat/riwayatSewa', [MemberDaftarAlatController::class, 'riwayatSewaAlat'])->name('member.riwayat-sewa');
+    Route::delete('/member/daftarAlat/sewaAlat/cancel/{sewaAlat}', [MemberDaftarAlatController::class, 'cancelOrder'])->name('member.sewa-alat.cancel');
+    Route::post('/member/daftarAlat/sewaAlat/auto-cancel/{id}', [MemberDaftarAlatController::class, 'autoCancel'])->name('member.sewa-alat.autoCancel');
+
 });
 
 

@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 use App\Models\SewaAlat;
-use App\Models\Member;
+use App\Models\User;
 use App\Models\AlatPancing;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -16,23 +16,26 @@ class SewaAlatFactory extends Factory
 
     public function definition()
     {
-        $startDate = $this->faker->dateTimeBetween('2024-01-01', '2024-06-31');
-        $endDate = $this->faker->dateTimeBetween($startDate, '2024-06-31');
+        $tglPinjam = $this->faker->dateTimeBetween('-1 month', 'now');
+        $tglKembali = $this->faker->dateTimeBetween($tglPinjam, '+1 month');
+
+        // Get random user ID and alat pancing ID
+        $user = User::inRandomOrder()->first();
+        $alatPancing = AlatPancing::inRandomOrder()->first();
+
+        // Calculate biaya sewa based on random number
+        $biayaSewa = $this->faker->numberBetween(10000, 100000);
 
         return [
-            'user_id' => Member::factory(),
-            'tgl_pinjam' => $startDate->format('Y-m-d'),
-            'tgl_kembali' => $endDate->format('Y-m-d'),
-            'biaya_sewa' => $this->faker->numberBetween(1000, 10000),
-            // 'status' => $this->faker->randomElement(['sudah dibayar', 'belum dibayar']),
+            'kode_sewa' => strtoupper('LN' . uniqid()),
+            'user_id' => $user->id,
+            'alat_id' => $alatPancing->id,
+            'tgl_pinjam' => $tglPinjam,
+            'tgl_kembali' => $tglKembali,
+            'biaya_sewa' => $biayaSewa,
+            'jumlah' => $this->faker->numberBetween(1, 5), // Random quantity between 1 to 5 units
+            'status' => $this->faker->randomElement(['menunggu pembayaran', 'sudah dibayar', 'dibatalkan']),
+            'status_pengembalian' => $this->faker->optional()->randomElement(['proses', 'sudah kembali', 'terlambat kembali']),
         ];
-    }
-
-    public function configure()
-    {
-        return $this->afterCreating(function (SewaAlat $sewaAlat) {
-            $alatIds = AlatPancing::inRandomOrder()->take(rand(1, 3))->pluck('id');
-            $sewaAlat->alat()->attach($alatIds);
-        });
     }
 }

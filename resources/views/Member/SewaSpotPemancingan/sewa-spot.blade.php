@@ -124,8 +124,8 @@
       <div class="mt-3 mb-2">
         <a href="{{ route('member.landingpage.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Kembali</a>
       </div>
-      <div class="mt-3 mb-4 d-flex justify-content-between align-items-center flex-wrap">
-        <h2 class="font-weight-bolder mt-4 mb-3 text-center flex-grow-1">Sewa Spot Pemancingan</h2>
+      <div class="mt-3 mb-4 d-flex justify-content-between align-items-center">
+        <h2 class="font-weight-bolder mt-4 mb-3 mx-auto">Sewa Spot Pemancingan</h2>
         <a href="{{ route('member.spots.riwayat-sewa') }}" class="btn btn-primary mb-3 mb-sm-0">Riwayat Sewa</a>
       </div>      
       @if(session('success'))
@@ -249,7 +249,9 @@
                           </div>
 
                           <input type="hidden" id="sesi" name="sesi" required>
-
+                      </div>
+                      <div class="mb-3">
+                        <a><strong>Note: </strong>Biaya Sewa Spot Pemancingan Setiap Sesi Rp. 10.000,-</a>
                       </div>
 
                       <div class="modal-footer">

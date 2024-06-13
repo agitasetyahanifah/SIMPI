@@ -12,7 +12,7 @@
           <a class="nav-link  {{ request()->routeIs('member.galeri.index') ? 'active' : '' }}" aria-current="page" href="{{ route('member.galeri.index') }}">Galeri</a>
           <a class="nav-link  {{ request()->routeIs('member.blog.index') ? 'active' : '' }}" aria-current="page" href="{{ route('member.blog.index') }}">Blog</a>
           <a class="nav-link  {{ request()->routeIs('member.spots.index') ? 'active' : '' }}" aria-current="page" href="{{ route('member.spots.index') }}">Sewa Spot Pemancingan</a>
-          <a class="nav-link  {{ request()->routeIs('member.daftar-alat.index') ? 'active' : '' }}" aria-current="page" href="{{ route('member.daftar-alat.index') }}">Daftar Alat Pancing</a>
+          <a class="nav-link  {{ request()->routeIs('member.daftar-alat.index') ? 'active' : '' }}" aria-current="page" href="{{ route('member.daftar-alat.index') }}">Sewa Alat Pancing</a>
         </div>
         <ul class="navbar-nav ms-lg-auto">
           <li class="nav-item dropdown" style="padding: 0px 4px;">
