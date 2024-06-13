@@ -69,8 +69,8 @@ class AdminSewaPemancinganController extends Controller
         // Ambil spot yang belum dipesan
         $availableSpots = Spot::whereNotIn('id', $reservedSpots)->get();
     
-        // return response()->json($availableSpots);
-        return response()->json(['message' => 'Success']);
+        return response()->json($availableSpots);
+        // return response()->json(['message' => 'Success']);
 
     }  
 
@@ -92,6 +92,33 @@ class AdminSewaPemancinganController extends Controller
 
         return response()->json($availableSessions);
     }
+
+    public function checkAvailability(Request $request)
+    {
+        $tanggalSewa = $request->input('edit_tanggal_sewa');
+        $selectedDate = Carbon::parse($tanggalSewa)->format('Y-m-d');
+    
+        // Call the getAvailableSpots method with the correct argument
+        $availableSpotsResponse = $this->getAvailableSpots($request);
+    
+        // Tentukan sesi yang tersedia untuk setiap spot yang tersedia
+        $availableSessions = [];
+        foreach ($availableSpotsResponse->original['availableSpots'] as $spotId => $spotNomor) {
+            $sessions = [
+                '08.00-12.00' => $this->getAvailableSessions($request, $spotId, $selectedDate, '08.00-12.00'),
+                '13.00-17.00' => $this->getAvailableSessions($request, $spotId, $selectedDate, '13.00-17.00'),
+            ];
+    
+            // Filter sesi yang tersedia
+            $availableSessions[$spotId] = array_keys(array_filter($sessions));
+        }
+    
+        return response()->json([
+            'availableSpots' => $availableSpotsResponse->original['availableSpots'],
+            'availableSessions' => $availableSessions
+        ]);
+    }    
+    
 
     // public function search(Request $request)
     // {
@@ -297,44 +324,44 @@ class AdminSewaPemancinganController extends Controller
     //     ]);
     // }
 
-    public function checkAvailability(Request $request)
-    {
-        $tanggalSewa = $request->query('edit_tanggal_sewa');
-        $selectedDate = Carbon::parse($tanggalSewa)->format('Y-m-d');
+    // public function checkAvailability(Request $request)
+    // {
+    //     $tanggalSewa = $request->query('edit_tanggal_sewa');
+    //     $selectedDate = Carbon::parse($tanggalSewa)->format('Y-m-d');
     
-        // Ambil ID spot yang sudah dipesan pada tanggal yang dipilih
-        $bookedSpots = SewaSpot::whereDate('tanggal_sewa', $selectedDate)
-            ->pluck('spot_id')
-            ->toArray();
+    //     // Ambil ID spot yang sudah dipesan pada tanggal yang dipilih
+    //     $bookedSpots = SewaSpot::whereDate('tanggal_sewa', $selectedDate)
+    //         ->pluck('spot_id')
+    //         ->toArray();
     
-        // Ambil spot yang tersedia dengan mengeluarkan spot yang sudah dipesan
-        $availableSpots = Spot::whereNotIn('id', $bookedSpots)
-            ->pluck('nomor_spot', 'id')
-            ->toArray();
+    //     // Ambil spot yang tersedia dengan mengeluarkan spot yang sudah dipesan
+    //     $availableSpots = Spot::whereNotIn('id', $bookedSpots)
+    //         ->pluck('nomor_spot', 'id')
+    //         ->toArray();
     
-        // Tentukan sesi yang tersedia untuk setiap spot yang tersedia
-        $availableSessions = [];
-        foreach ($availableSpots as $spotId => $spotNomor) {
-            $sessions = [
-                '08.00-12.00' => SewaSpot::where('tanggal_sewa', $selectedDate)
-                                        ->where('spot_id', $spotId)
-                                        ->where('sesi', '08.00-12.00')
-                                        ->doesntExist(),
-                '13.00-17.00' => SewaSpot::where('tanggal_sewa', $selectedDate)
-                                        ->where('spot_id', $spotId)
-                                        ->where('sesi', '13.00-17.00')
-                                        ->doesntExist()
-            ];
+    //     // Tentukan sesi yang tersedia untuk setiap spot yang tersedia
+    //     $availableSessions = [];
+    //     foreach ($availableSpots as $spotId => $spotNomor) {
+    //         $sessions = [
+    //             '08.00-12.00' => SewaSpot::where('tanggal_sewa', $selectedDate)
+    //                                     ->where('spot_id', $spotId)
+    //                                     ->where('sesi', '08.00-12.00')
+    //                                     ->doesntExist(),
+    //             '13.00-17.00' => SewaSpot::where('tanggal_sewa', $selectedDate)
+    //                                     ->where('spot_id', $spotId)
+    //                                     ->where('sesi', '13.00-17.00')
+    //                                     ->doesntExist()
+    //         ];
     
-            // Filter sesi yang tersedia
-            $availableSessions[$spotId] = array_keys(array_filter($sessions));
-        }
+    //         // Filter sesi yang tersedia
+    //         $availableSessions[$spotId] = array_keys(array_filter($sessions));
+    //     }
     
-        return response()->json([
-            'availableSpots' => $availableSpots,
-            'availableSessions' => $availableSessions
-        ]);
-    }
+    //     return response()->json([
+    //         'availableSpots' => $availableSpots,
+    //         'availableSessions' => $availableSessions
+    //     ]);
+    // }
     
     // public function checkAvailability(Request $request)
     // {

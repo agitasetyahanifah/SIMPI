@@ -254,7 +254,7 @@
             @endforeach
             
             <!-- Modal Edit Sewa Pemancingan -->
-            @foreach ($sewaPemancingan as $pemancingan)
+             @foreach ($sewaPemancingan as $pemancingan)
             <div class="modal fade" id="editModal{{ $pemancingan->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $pemancingan->id }}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
@@ -271,32 +271,62 @@
                                     <input type="text" class="form-control" id="edit_nama_pelanggan" name="edit_nama_pelanggan" value="{{ $pemancingan->member->nama }}" disabled>
                                 </div>
                                 <div class="form-group">
-                                    <label for="edit_tanggal_sewa_{{ $pemancingan->id }}">Tanggal Sewa</label>
-                                    <input type="date" class="form-control edit_tanggal_sewa" id="edit_tanggal_sewa_{{ $pemancingan->id }}" name="edit_tanggal_sewa" value="{{ $pemancingan->tanggal_sewa }}" min="{{ date('Y-m-d') }}" required>
+                                    <label for="edit_tanggal_sewa">Tanggal Sewa</label>
+                                    <input type="date" class="form-control" id="edit_tanggal_sewa" name="edit_tanggal_sewa" value="{{ $pemancingan->tanggal_sewa }}" min="{{ date('Y-m-d') }}" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="edit_spot_id_{{ $pemancingan->id }}">Nomor Spot</label>
-                                    <select class="form-control edit_spot_id" id="edit_spot_id_{{ $pemancingan->id }}" name="edit_spot_id_{{ $pemancingan->id }}" required>
+                                    <select class="form-control edit_spot_id" id="edit_spot_id_{{ $pemancingan->id }}" name="edit_spot_id" required>
                                         <option value="{{ $pemancingan->spot_id }}" selected>{{ $pemancingan->spot->nomor_spot }}</option>
                                         <!-- Pilihan akan diisi oleh AJAX -->
-                                        {{-- @foreach ($availableSpots as $spot)
-                                            <option value="{{ $spot->id }}" {{ $pemancingan->spot_id == $spot->id ? 'selected' : '' }}>
-                                                {{ sprintf('%02d', $spot->nomor_spot) }}
-                                            </option>
-                                        @endforeach --}}
-                                    </select>
-                                </div>                                
-                                <div class="form-group">
-                                    <label for="edit_sesi_{{ $pemancingan->id }}">Sesi</label>
-                                    <select class="form-control edit_sesi" id="edit_sesi_{{ $pemancingan->id }}" name="edit_sesi_{{ $pemancingan->id }}" required>
-                                        <option value="{{ $pemancingan->sesi }}" selected>{{ $pemancingan->sesi }}</option>
-                                        <!-- Pilihan akan diisi oleh AJAX -->
-                                        {{-- @foreach($availableSessions as $session)
-                                        <option value="{{ $session }}">{{ $session }}</option>
-                                        @endforeach --}}
+                                        @foreach ($availableSpots as $spotNumber)
+                                            <option id="" value="{{ $spotNumber }}">{{ sprintf('%02d', $spotNumber) }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
-                            </div>                            
+                                <div class="form-group">
+                                    <label for="edit_sesi_{{ $pemancingan->id }}">Sesi</label>
+                                    <select class="form-control edit_sesi" id="edit_sesi_{{ $pemancingan->id }}" name="edit_sesi" required>
+                                        <option value="{{ $pemancingan->sesi }}" selected>{{ $pemancingan->sesi }}</option>
+                                        <!-- Pilihan akan diisi oleh AJAX -->
+                                    </select>
+                                </div>
+                                {{-- <div class="form-group">
+                                    <label for="edit_spot_id">Nomor Spot</label>
+                                    <select class="form-control" id="edit_spot_id" name="edit_spot_id" required>
+                                        @foreach ($availableSpots as $spotNumber)
+                                            <option value="{{ $spotNumber }}" {{  $pemancingan->spot->nomor_spot == $spotNumber ? 'selected' : '' }}>
+                                                {{ sprintf('%02d', $spotNumber) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>                      --}}
+                                {{-- <div class="form-group">
+                                    <label for="edit_spot_id">Nomor Spot</label>
+                                    <select class="form-control" id="edit_spot_id" name="edit_spot_id" required>
+                                        @if($pemancingan->spot)
+                                            <option value="{{ $pemancingan->spot->id }}" selected>{{ sprintf('%02d', $pemancingan->spot->nomor_spot) }}</option>
+                                        @endif
+                                        @foreach ($availableSpots as $spotNumber)
+                                            <option value="{{ $spotNumber }}">{{ sprintf('%02d', $spotNumber) }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>  --}}
+                                {{-- <div class="form-group">
+                                    <label for="edit_sesi">Sesi</label>
+                                    <select class="form-control" id="edit_sesi" name="edit_sesi" required>
+                                        @if(!empty($availableSessions))
+                                            @foreach ($availableSessions as $spot => $sessions)
+                                                @foreach ($sessions as $session)
+                                                    <option value="{{ $session }}">{{ $session }}</option>
+                                                @endforeach
+                                            @endforeach
+                                        @else
+                                            <option value="">Tidak ada sesi yang tersedia</option>
+                                        @endif
+                                    </select>
+                                 </div> --}}
+                            {{-- </div>                            
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -305,7 +335,7 @@
                     </div>
                 </div>
             </div>            
-            @endforeach            
+            @endforeach         --}}         
             
             
             {{-- @foreach ($sewaPemancingan as $pemancingan)
