@@ -213,7 +213,8 @@
                 @if($alat->foto && file_exists(public_path('images/'.$alat->foto)))
                   <img src="{{ asset('images/'.$alat->foto) }}" class="card-img-top fixed-image" alt="{{ $alat->nama_alat }}">
                 @else
-                   <img src="https://source.unsplash.com/random/450x450?fishing" class="card-img-top fixed-image" alt="Fishing Image">
+                   {{-- <img src="https://source.unsplash.com/random/450x450?fishing" class="card-img-top fixed-image" alt="Fishing Image"> --}}
+                   <img src="{{ asset('../images/logo.png') }}" class="card-img-top fixed-image" alt="Default Image">
                 @endif
                 <div class="card-body2">
                     <h5 class="card-title2">{{ $alat->nama_alat }}</h5>
@@ -254,8 +255,10 @@
                               @if($alat->foto && file_exists(public_path('images/'.$alat->foto)))
                                 <img src="{{ asset('images/'.$alat->foto) }}" class="img-fluid" alt="{{ $alat->nama_alat }}">
                               @else
-                                <img src="https://source.unsplash.com/random/450x450?fishing" class="img-fluid" alt="Fishing Image">
-                              @endif                        </div>
+                                {{-- <img src="https://source.unsplash.com/random/450x450?fishing" class="img-fluid" alt="Fishing Image"> --}}
+                                <img src="{{ asset('../images/logo.png') }}" class="img-fluid" alt="Default Image">
+                              @endif                        
+                            </div>
                             <div class="col-md-6">
                                 <h5>{{ $alat->nama_alat }}</h5>
                                 <p>Harga: {{ number_format($alat->harga, 0, ',', '.') }} /hari</p>
