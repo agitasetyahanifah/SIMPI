@@ -34,32 +34,36 @@ class MemberDaftarAlatController extends Controller
     public function store(Request $request)
     {
         // dd($request->all()); 
-        // Validate the form data
+        // Validate date
         $validatedData = $request->validate([
             'tgl_pinjam' => 'required|date',
             'tgl_kembali' => 'required|date|after_or_equal:tgl_pinjam',
             'jumlah' => 'required|integer|min:1',
         ]);
 
-        // Calculate the rental duration in days
+        // hitung selisih hari
         $tglPinjam = new \DateTime($validatedData['tgl_pinjam']);
         $tglKembali = new \DateTime($validatedData['tgl_kembali']);
         $rentalDays = $tglPinjam->diff($tglKembali)->days;
 
-        // Check if rental duration is 0 (same date), set it to 1 day
+        // cek jika hari pinjam dan kembali sama
         if ($rentalDays === 0) {
             $rentalDays = 1;
         }
 
-        // Get the rental price and quantity from the form
+        // ambil biaya sewa dan jumlah
         $alatPancing = AlatPancing::findOrFail($request->input('alat_id'));
         $hargaSewa = $alatPancing->harga;
         $jumlah = $validatedData['jumlah'];
 
-        // Calculate the total rental cost (biaya_sewa)
+        if ($jumlah > $alatPancing->jumlah) {
+            return redirect()->back()->with('error', 'Jumlah alat pancing yang tersedia tidak mencukupi.');
+        }
+
+        // hitung total biaya dengan rumus
         $biayaSewa = $hargaSewa * $rentalDays * $jumlah;
 
-        // Create a new SewaAlat instance
+        // buat sewa
         $sewa = new SewaAlat();
         $sewa->kode_sewa = strtoupper('LN' . uniqid());
         $sewa->user_id = auth()->id();
@@ -70,6 +74,13 @@ class MemberDaftarAlatController extends Controller
         $sewa->jumlah = $jumlah;
         $sewa->status = 'menunggu pembayaran';
         $sewa->save();
+
+        // Kurangi jumlah alat pancing yang tersedia
+        $alatPancing->jumlah -= $jumlah;
+        if ($alatPancing->jumlah <= 0) {
+            $alatPancing->status = 'not available';
+        }
+        $alatPancing->save();
 
         // Redirect back with success message
         return redirect()->back()->with('success', 'Sewa alat pancing berhasil!');
@@ -126,6 +137,16 @@ class MemberDaftarAlatController extends Controller
             // Ubah status pesanan menjadi "dibatalkan"
             $sewaAlat->status = 'dibatalkan';
             $sewaAlat->save();
+
+            // Kembalikan jumlah alat pancing yang dibatalkan ke database
+            $alatPancing = AlatPancing::findOrFail($sewaAlat->alat_id);
+            $alatPancing->jumlah += $sewaAlat->jumlah;
+
+            if ($alatPancing->jumlah > 0) {
+                $alatPancing->status = 'available';
+            }
+
+            $alatPancing->save();
     
             return redirect()->back()->with('success', 'Pesanan berhasil dibatalkan.');
         }
@@ -136,18 +157,53 @@ class MemberDaftarAlatController extends Controller
     public function autoCancel($id)
     {
         $sewa = SewaAlat::find($id);
-
+    
         if ($sewa && $sewa->status === 'menunggu pembayaran') {
             $createdTime = $sewa->created_at;
             $currentTime = now();
             $hoursDifference = $createdTime->diffInHours($currentTime);
-
+    
             if ($hoursDifference >= 24) {
                 $sewa->status = 'dibatalkan';
                 $sewa->save();
+    
+                // Kembalikan jumlah alat pancing yang dibatalkan ke database
+                $alatPancing = AlatPancing::findOrFail($sewa->alat_id);
+                $alatPancing->jumlah += $sewa->jumlah;
+    
+                if ($alatPancing->jumlah > 0) {
+                    $alatPancing->status = 'available';
+                }
+    
+                $alatPancing->save();
             }
         }
-
+    
         return response()->json(['success' => true]);
+    }    
+
+    public function markAsReturned($id)
+    {
+        $sewa = SewaAlat::findOrFail($id);
+    
+        if ($sewa->status !== 'sudah kembali') {
+            $alatPancing = AlatPancing::findOrFail($sewa->alat_id);
+            $alatPancing->jumlah += $sewa->jumlah;
+    
+            if ($alatPancing->jumlah > 0) {
+                $alatPancing->status = 'available';
+            }
+    
+            $alatPancing->save();
+    
+            $sewa->status_pengembalian = 'sudah kembali';
+            $sewa->returned_at = now();
+            $sewa->save();
+    
+            return redirect()->back()->with('success', 'Status pengembalian berhasil diubah dan jumlah alat diperbarui.');
+        }
+    
+        return redirect()->back()->with('error', 'Alat ini sudah ditandai sebagai kembali.');
     }
+    
 }

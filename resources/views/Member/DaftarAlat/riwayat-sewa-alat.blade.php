@@ -66,16 +66,16 @@
                             <div class="col-md-12">
                                 <h5 class="card-title"><strong>Kode Sewa:</strong> {{ $sewaAlat->kode_sewa }}</h5>
                                 <div class="row mb-2">
-                                    <div class="col-md-2"><strong>Nama Alat</strong></div>
-                                    <div class="col-md-10">{{ $sewaAlat->alatPancing->nama_alat }}</div>
+                                    <div class="col-md-3"><strong>Nama Alat</strong></div>
+                                    <div class="col-md-9">{{ $sewaAlat->alatPancing->nama_alat }}</div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-md-2"><strong>Biaya Sewa</strong></div>
-                                    <div class="col-md-10">{{ $sewaAlat->biaya_sewa}}</div>
+                                    <div class="col-md-3"><strong>Biaya Sewa</strong></div>
+                                    <div class="col-md-9">Rp {{ number_format($sewaAlat->biaya_sewa, 0, ',', '.') }} ,-</div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-md-2"><strong>Status Pembayaran</strong></div>
-                                    <div class="col-md-10">
+                                    <div class="col-md-3"><strong>Status Pembayaran</strong></div>
+                                    <div class="col-md-9">
                                         @if($sewaAlat->status === 'dibatalkan')
                                             <span class="text-danger">Dibatalkan</span>
                                         @elseif($sewaAlat->status === 'sudah dibayar')
@@ -89,8 +89,8 @@
                                 </div>
                                 @if($sewaAlat->status === 'menunggu pembayaran')
                                 <div class="row mb-2">
-                                    <div class="col-md-2"><strong>Waktu Tersisa Pembayaran</strong></div>
-                                    <div class="col-md-10 text-danger" id="countdown-{{ $sewaAlat->id }}"></div>
+                                    <div class="col-md-3"><strong>Waktu Tersisa Pembayaran</strong></div>
+                                    <div class="col-md-9 text-danger" id="countdown-payment-{{ $sewaAlat->id }}"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12 text-end">
@@ -100,8 +100,8 @@
                                 </div>
                                 @elseif($sewaAlat->status === 'sudah dibayar')
                                 <div class="row mb-2">
-                                    <div class="col-md-2"><strong>Status Pengembalian</strong></div>
-                                    <div class="col-md-10">
+                                    <div class="col-md-3"><strong>Status Pengembalian</strong></div>
+                                    <div class="col-md-9">
                                         @if($sewaAlat->status_pengembalian === 'terlambat kembali')
                                             <span class="text-danger">Terlambat Kembali</span>
                                         @elseif($sewaAlat->status_pengembalian === 'sudah kembali')
@@ -115,9 +115,13 @@
                                 </div>
                                 @if($sewaAlat->status_pengembalian === 'proses')
                                 <div class="row mb-2">
-                                    <div class="col-md-2"><strong>Waktu Tersisa Pengembalian</strong></div>
-                                    <div class="col-md-10 text-danger" id="countdown-{{ $sewaAlat->id }}"></div>
+                                    <div class="col-md-3"><strong>Waktu Tersisa Pengembalian</strong></div>
+                                    <div class="col-md-9 text-danger" id="countdown-return-{{ $sewaAlat->id }}"></div>
                                 </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-3"><strong>Denda Terlambat</strong></div>
+                                    <div class="col-md-9" id="denda-{{ $sewaAlat->id }}"></div>
+                                </div>                                
                                 @endif
                                 <div class="row">
                                     <div class="col-md-12 text-end">
@@ -144,12 +148,12 @@
                                                 Apakah Anda yakin ingin membatalkan sewa ini?
                                             </div>
                                             <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                                 <form id="cancelForm{{ $sewaAlat->id }}" action="{{ route('member.sewa-alat.cancel', $sewaAlat->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Ya, Batalkan Sewa</button>
                                                 </form>
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                             </div>
                                         </div>
                                     </div>
@@ -171,7 +175,7 @@
                                                         <p class="me-3" style="font-size: 18pt"><b>Kode Sewa: {{ $sewaAlat->kode_sewa }}</b></p>
                                                         <table class="table">
                                                             <tr>
-                                                                <th style="width: 35%">Nama Pelanggan</th>
+                                                                <th style="width: 40%">Nama Pelanggan</th>
                                                                 <td>{{ $sewaAlat->member->nama }}</td>
                                                             </tr>
                                                             <tr>
@@ -293,48 +297,80 @@
         }
     </script>
     
-    <!-- JavaScript Hitung Mundur -->
-    <script>  
+    <!-- JavaScript Hitung Mundur dan hitung denda -->
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             @foreach($riwayatSewaAlat as $sewaAlat)
+                // Perhitungan untuk countdown pembayaran
                 var createdAt{{ $sewaAlat->id }} = new Date("{{ $sewaAlat->created_at }}").getTime();
                 var expireAt{{ $sewaAlat->id }} = createdAt{{ $sewaAlat->id }} + (24 * 60 * 60 * 1000);
-                var countdownElement{{ $sewaAlat->id }} = document.getElementById("countdown-{{ $sewaAlat->id }}");
-        
-                var countdownInterval{{ $sewaAlat->id }} = setInterval(function() {
+                var countdownPaymentElement{{ $sewaAlat->id }} = document.getElementById("countdown-payment-{{ $sewaAlat->id }}");
+    
+                var countdownPaymentInterval{{ $sewaAlat->id }} = setInterval(function() {
                     var now = new Date().getTime();
                     var distance = expireAt{{ $sewaAlat->id }} - now;
-        
+    
                     if (distance < 0) {
-                        clearInterval(countdownInterval{{ $sewaAlat->id }});
-                        countdownElement{{ $sewaAlat->id }}.innerHTML = "Waktu Pembayaran Telah Habis";
+                        clearInterval(countdownPaymentInterval{{ $sewaAlat->id }});
+                        countdownPaymentElement{{ $sewaAlat->id }}.innerHTML = "Waktu Pembayaran Telah Habis";
                         cancelOrderAutomatically({{ $sewaAlat->id }});
                     } else {
                         var hours = Math.floor((distance % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
                         var minutes = Math.floor((distance % (60 * 60 * 1000)) / (60 * 1000));
                         var seconds = Math.floor((distance % (60 * 1000)) / 1000);
-        
-                        countdownElement{{ $sewaAlat->id }}.innerHTML = hours + " jam " + minutes + " menit " + seconds + " detik ";
+    
+                        countdownPaymentElement{{ $sewaAlat->id }}.innerHTML = hours + " jam " + minutes + " menit " + seconds + " detik ";
                     }
                 }, 1000);
-        
+    
+                // Perhitungan untuk countdown pengembalian
+                var tglKembali{{ $sewaAlat->id }} = new Date("{{ $sewaAlat->tgl_kembali }}").getTime();
+                var countdownReturnElement{{ $sewaAlat->id }} = document.getElementById("countdown-return-{{ $sewaAlat->id }}");
+                var dendaElement{{ $sewaAlat->id }} = document.getElementById("denda-{{ $sewaAlat->id }}");
+    
+                var countdownReturnInterval{{ $sewaAlat->id }} = setInterval(function() {
+                    var now = new Date().getTime();
+                    var distance = tglKembali{{ $sewaAlat->id }} - now;
+    
+                    if (distance < 0) {
+                        clearInterval(countdownReturnInterval{{ $sewaAlat->id }});
+                        countdownReturnElement{{ $sewaAlat->id }}.innerHTML = "Waktu Pengembalian Telah Habis";
+                        dendaElement{{ $sewaAlat->id }}.classList.add("text-danger");
+    
+                        var terlambatHari = Math.floor(Math.abs(distance) / (1000 * 60 * 60 * 24));
+                        var denda = terlambatHari * 5000;
+                        dendaElement{{ $sewaAlat->id }}.innerHTML = "Rp " + denda.toLocaleString() + " (Terlambat " + terlambatHari + " hari)";
+                    } else {
+                        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                        var hours = Math.floor((distance % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+                        var minutes = Math.floor((distance % (60 * 60 * 1000)) / (60 * 1000));
+                        var seconds = Math.floor((distance % (60 * 1000)) / 1000);
+    
+                        countdownReturnElement{{ $sewaAlat->id }}.innerHTML = days + " hari " + hours + " jam " + minutes + " menit " + seconds + " detik ";
+                        dendaElement{{ $sewaAlat->id }}.innerHTML = "Belum ada denda";
+                        dendaElement{{ $sewaAlat->id }}.classList.remove("text-danger");
+                    }
+                }, 1000);
+    
                 function cancelOrderAutomatically(sewaId) {
                     var xhr = new XMLHttpRequest();
                     xhr.open("POST", "{{ route('member.sewa-alat.autoCancel', '') }}/" + sewaId, true);
                     xhr.setRequestHeader("Content-Type", "application/json");
                     xhr.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}");
-        
+    
                     xhr.onreadystatechange = function() {
                         if (xhr.readyState === 4 && xhr.status === 200) {
                             location.reload();
                         }
                     };
-        
+    
                     xhr.send();
                 }
             @endforeach
         });
     </script>
-
+    
+    
+    
 </body>
 </html>

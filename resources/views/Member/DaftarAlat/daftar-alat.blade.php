@@ -169,7 +169,7 @@
                         <div class="col-md-6">
                             <h5>{{ $alat->nama_alat }}</h5>
                             <p>Harga: {{ number_format($alat->harga, 0, ',', '.') }} /hari</p>
-                            <p>Jumlah: {{ $alat->jumlah }}</p>
+                            <p>Jumlah Tersedia: {{ $alat->jumlah }}</p>
                             <p>Status: <span class="badge {{ $alat->status == 'available' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $alat->status }}</span></p>
                             <p>Spesifikasi: </p><p style="text-align: justify;">{!! nl2br(e($alat->spesifikasi)) !!}</p>
                         </div>

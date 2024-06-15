@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" type="image/png" sizes="16x16" href="../images/logo.png">
   <title>
-    SIMPI | Alat Pancing
+    SIMPI | Sewa Alat Pancing
   </title>
   <!-- Fonts and icons -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -73,10 +73,27 @@
       <div class="mt-3 mb-2">
         <a href="{{ route('guest.landingpage.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Kembali</a>
       </div>
-      <div class="mt-3 mb-4">
-        <h2 class="font-weight-bolder mt-4 mb-3 text-center"><b>Daftar Alat Pancing yang Disewakan</b></h2>
+      <div class="mt-3 mb-4 d-flex justify-content-between align-items-center">
+        <h2 class="font-weight-bolder mt-4 mb-0 mx-auto"><b>Daftar Alat Pancing yang Disewakan</b></h2>
       </div>
-      <div class="row gx-2">
+     
+      @if(session('success'))
+          <div class="alert alert-success">
+              {{ session('success') }}
+          </div>
+      @endif
+
+      @if ($errors->any())
+          <div class="alert alert-danger">
+              <ul>
+                  @foreach ($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                  @endforeach
+              </ul>
+          </div>
+      @endif
+
+      <div class="row gx-2 p-3">
         @foreach($alatPancing as $alat)
         <div class="col-lg-2 col-md-3 col-sm-4 col-4 g-1 mb-1">
           <div class="card h-100">
@@ -91,6 +108,7 @@
                   <p class="card-text2" style="color: orangered;">Rp {{ number_format($alat->harga, 0, ',', '.') }}/hari</p>
                   <div class="text-center">
                     <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#detailModal{{ $alat->id }}">Detail</button>
+                    <button class="btn {{ $alat->status == 'not available' ? 'btn-secondary' : 'btn-warning' }} mt-2" data-bs-toggle="modal" data-bs-target="#sewaModal{{ $alat->id }}" {{ $alat->status == 'not available' ? 'disabled' : '' }}>Sewa</button>
                   </div>
               </div>
             </div>
@@ -127,6 +145,7 @@
       </ul>
     </nav>
     <!-- End Pagination -->
+
     <!-- Modal Detail Alat Pancing -->
     @foreach($alatPancing as $alat)
     <div class="modal fade" id="detailModal{{ $alat->id }}" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel{{ $alat->id }}" aria-hidden="true">
@@ -149,7 +168,7 @@
                         <div class="col-md-6">
                             <h5>{{ $alat->nama_alat }}</h5>
                             <p>Harga: {{ number_format($alat->harga, 0, ',', '.') }} /hari</p>
-                            <p>Jumlah: {{ $alat->jumlah }}</p>
+                            <p>Jumlah Tersedia: {{ $alat->jumlah }}</p>
                             <p>Status: <span class="badge {{ $alat->status == 'available' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $alat->status }}</span></p>
                             <p>Spesifikasi: </p><p style="text-align: justify;">{!! nl2br(e($alat->spesifikasi)) !!}</p>
                         </div>
@@ -162,6 +181,65 @@
         </div>
     </div>
     @endforeach
+
+    <!-- Sewa Alat Modal -->
+    @foreach($alatPancing as $alat)
+    <div class="modal fade" id="sewaModal{{ $alat->id }}" tabindex="-1" aria-labelledby="sewaModalLabel{{ $alat->id }}" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="sewaModalLabel{{ $alat->id }}">Sewa Alat Pancing</h5>
+                  <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  <form id="sewaForm{{ $alat->id }}">
+                      @csrf
+                      <input type="hidden" name="alat_id" value="{{ $alat->id }}">
+                      <div class="mb-3">
+                        <label for="nama_pelanggan_{{ $alat->id }}" class="form-label">Nama Pelanggan</label>
+                        <input type="text" class="form-control" id="nama_pelanggan_{{ $alat->id }}" disabled>
+                      </div>
+                      <div class="row mb-3">
+                        <div class="col">
+                            <label for="tgl-pinjam_{{ $alat->id }}" class="form-label">Tanggal Pinjam</label>
+                            <input type="date" class="form-control" id="tgl-pinjam_{{ $alat->id }}" value="{{ date('Y-m-d') }}" min="{{ date('Y-m-d') }}" onchange="updateBiayaSewa()" required>
+                        </div>
+                        <div class="col">
+                            <label for="tgl-kembali_{{ $alat->id }}" class="form-label">Tanggal Kembali</label>
+                            <input type="date" class="form-control" id="tgl-kembali_{{ $alat->id }}" value="{{ date('Y-m-d') }}" min="{{ date('Y-m-d') }}" onchange="updateBiayaSewa()" required>
+                        </div>
+                      </div>
+                      <div class="row mb-3">
+                          <div class="col">
+                              <label for="harga-sewa_{{ $alat->id }}" class="form-label">Harga Sewa Per Hari</label>
+                              <?php
+                                $harga = $alat->harga;
+                                $harga_formatted = "Rp " . number_format($harga, 0, ",", ".") . ",-";
+                              ?>
+                              <input type="text" class="form-control" id="harga-sewa_{{ $alat->id }}" value="{{ $harga_formatted }}" disabled>
+                          </div>
+                          <div class="col">
+                              <label for="jumlah_{{ $alat->id }}" class="form-label">Jumlah Sewa</label>
+                              <input type="number" class="form-control" id="jumlah_{{ $alat->id }}" onchange="updateBiayaSewa()" required>
+                          </div>
+                      </div>
+                      <div class="mb-3">
+                        <label for="biaya-sewa_{{ $alat->id }}" class="form-label">Total Biaya Sewa</label>
+                        <input type="text" class="form-control" id="biaya-sewa_{{ $alat->id }}" readonly>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                      <a class="btn btn-warning" href="{{ route('login') }}">Sewa</a>
+                  </div>
+                  </form>
+              </div>
+          </div>
+        </div>
+    @endforeach
+    </div>
 
     <footer class="footer pl-0 pb-3">
       <div class="container-fluid">
@@ -192,6 +270,14 @@
     </div>
   </div>
 
+  <script src="../assets/js/core/popper.min.js"></script>
+  <script src="../assets/js/core/bootstrap.min.js"></script>
+  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script src="../assets/js/plugins/chartjs.min.js"></script>
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <script src="../assets/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(function() {
       $('.maximize').on('click', function() {
@@ -201,12 +287,47 @@
       });
     });
   </script>
-  <script src="../assets/js/core/popper.min.js"></script>
-  <script src="../assets/js/core/bootstrap.min.js"></script>
-  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-  <script src="../assets/js/plugins/chartjs.min.js"></script>
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <script src="../assets/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const calculateBiayaSewa = (id) => {
+          const hargaSewaInput = document.getElementById(`harga-sewa_${id}`);
+          const tglPinjamInput = document.getElementById(`tgl-pinjam_${id}`);
+          const tglKembaliInput = document.getElementById(`tgl-kembali_${id}`);
+          const jumlahInput = document.getElementById(`jumlah_${id}`);
+          const biayaSewaInput = document.getElementById(`biaya-sewa_${id}`);
+
+          const updateBiayaSewa = () => {
+              const hargaSewa = parseFloat(hargaSewaInput.value.replace('Rp ', '').replace('.', '').replace(',', ''));
+              const tglPinjam = new Date(tglPinjamInput.value);
+              const tglKembali = new Date(tglKembaliInput.value);
+              const jumlah = parseInt(jumlahInput.value);
+
+              if (tglPinjam && tglKembali && jumlah) {
+                  let diffDays = Math.ceil((tglKembali - tglPinjam) / (1000 * 60 * 60 * 24));
+                  if (diffDays === 0) {
+                      diffDays = 1;
+                  }
+                  const biayaSewa = hargaSewa * diffDays * jumlah;
+                  biayaSewaInput.value = 'Rp ' + biayaSewa.toLocaleString('id-ID') + ',-';
+              } else {
+                  biayaSewaInput.value = 'Rp 0';
+              }
+          };
+
+          tglPinjamInput.addEventListener('input', updateBiayaSewa);
+          tglKembaliInput.addEventListener('input', updateBiayaSewa);
+          jumlahInput.addEventListener('input', updateBiayaSewa);
+
+          updateBiayaSewa(); // Call initially to calculate the rental cost
+      };
+
+      // Call calculateBiayaSewa for each alatPancing item
+      @foreach($alatPancing as $alat)
+          calculateBiayaSewa('{{ $alat->id }}');
+      @endforeach
+    });
+  </script>   
+
 </body>
 </html>

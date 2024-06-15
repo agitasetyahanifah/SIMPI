@@ -112,22 +112,50 @@ class AdminSewaAlatController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // Validasi data yang dikirim dari form
         $request->validate([
+            'edit_alat' => 'required',
+            'edit_jumlah' => 'required|numeric|min:1',
             'edit_tgl_pinjam' => 'required|date',
-            'edit_tgl_kembali' => 'required|date',
-            'edit_alat_pancing' => 'required|array',
+            'edit_tgl_kembali' => 'required|date|after_or_equal:edit_tgl_pinjam',
         ]);
     
+        // Cari data sewa alat berdasarkan ID
         $sewaAlat = SewaAlat::findOrFail($id);
+    
+        // Ambil data alat pancing sebelumnya yang terkait dengan sewa ini
+        $alatPancingSebelumnya = $sewaAlat->alatPancing;
+    
+        // Simpan data stok alat sebelumnya
+        $jumlahSebelumnya = $sewaAlat->jumlah;
+    
+        // Perbarui data sewa alat
         $sewaAlat->tgl_pinjam = $request->edit_tgl_pinjam;
         $sewaAlat->tgl_kembali = $request->edit_tgl_kembali;
-        $sewaAlat->save();
+        $sewaAlat->jumlah = $request->edit_jumlah;
     
-        // Sync alat pancing
-        $sewaAlat->alatPancing()->sync($request->edit_alat_pancing);
-
-        return redirect()->route('admin.sewaAlat.index')->with('success', 'Data penyewaan berhasil diperbarui.');
-    }
+        // Cari data alat pancing berdasarkan ID
+        $alatPancing = AlatPancing::findOrFail($request->edit_alat);
+    
+        // Kembalikan stok alat yang tidak jadi dipilih ke stok awal
+        if ($alatPancingSebelumnya->id !== $alatPancing->id) {
+            $alatPancingSebelumnya->jumlah += $jumlahSebelumnya;
+            $alatPancingSebelumnya->save();
+        } else {
+            // Jika alat yang dipilih tetap sama, tambahkan kembali jumlah yang dipinjam sebelumnya sebelum pengurangan baru
+            $alatPancing->jumlah += $jumlahSebelumnya;
+        }
+    
+        // Kurangi stok alat yang baru dipilih sesuai dengan jumlah yang baru
+        $alatPancing->jumlah -= $request->edit_jumlah;
+    
+        // Simpan relasi antara sewa alat dan alat pancing
+        $sewaAlat->alatPancing()->associate($alatPancing);
+        $sewaAlat->save();
+        $alatPancing->save();
+    
+        return redirect()->back()->with('success', 'Data sewa alat pancing berhasil diperbarui.');
+    }    
 
     /**
      * Remove the specified resource from storage.
@@ -158,4 +186,27 @@ class AdminSewaAlatController extends Controller
 
         return redirect()->back()->with('success', 'Pembayaran berhasil dikonfirmasi.');
     }
+
+    public function konfirmasiPengembalian($id, Request $request)
+    {
+        $sewaAlat = SewaAlat::findOrFail($id);
+        $status_pengembalian = $request->input('status_pengembalian', 'sudah kembali');
+    
+        // Periksa apakah status pengembalian berubah menjadi 'sudah kembali'
+        if ($status_pengembalian === 'sudah kembali' && $sewaAlat->status_pengembalian !== 'sudah kembali') {
+            // Ambil jumlah alat pancing yang dikembalikan
+            $jumlah_dikembalikan = $sewaAlat->jumlah;
+            // Ambil alat pancing yang dipinjam pada sewa ini
+            $alatPancing = $sewaAlat->alatPancing;
+            // Perbarui jumlah stok alat pancing yang dikembalikan
+            $alatPancing->jumlah += $jumlah_dikembalikan;
+            $alatPancing->save();
+        }
+    
+        $sewaAlat->status_pengembalian = $status_pengembalian;
+        $sewaAlat->save();
+    
+        return redirect()->back()->with('success', 'Status pengembalian telah diperbarui.');
+    }    
+    
 }

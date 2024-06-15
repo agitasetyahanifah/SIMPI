@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminBlogController;
 use App\Http\Controllers\GuestBlogController;
+use App\Http\Controllers\GuestSpotController;
 use App\Http\Controllers\MemberBlogController;
-use App\Http\Controllers\MemberSewaSpotController;
 use App\Http\Controllers\AdminMemberController;
 use App\Http\Controllers\GuestGaleriController;
 use App\Http\Controllers\MemberGaleriController;
@@ -13,6 +13,7 @@ use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\AdminKeuanganController;
 use App\Http\Controllers\AdminSewaAlatController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\MemberSewaSpotController;
 use App\Http\Controllers\GuestDaftarAlatController;
 use App\Http\Controllers\AdminAlatPancingController;
 use App\Http\Controllers\GuestLandingPageController;
@@ -77,6 +78,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('/admin/sewaAlat', AdminSewaAlatController::class);
     Route::put('/admin/sewaAlat/{id}', [AdminSewaAlatController::class, 'update'])->name('admin.sewaAlat.update');
     Route::post('/admin/sewaAlat/konfirmasi-pembayaran/{id}', [AdminSewaAlatController::class, 'konfirmasiPembayaran'])->name('admin.sewaAlat.konfirmasiPembayaran');
+    Route::post('/sewa-alat/konfirmasi-pengembalian/{id}', [AdminSewaAlatController::class, 'konfirmasiPengembalian'])->name('admin.sewaAlat.konfirmasiPengembalian');
     // Rute untuk menampilkan halaman utama pengelolaan ikan
     Route::get('/admin/pengelolaanIkan', [AdminPengelolaanIkanController::class, 'index'])->name('admin.pengelolaanIkan.index');
     // Rute untuk jenis ikan
@@ -119,7 +121,6 @@ Route::middleware(['auth', 'member'])->group(function () {
     Route::get('/member/blogPemancingan', [MemberBlogController::class, 'index'])->name('member.blog.index');
     Route::get('/member/detailBlogPemancingan/{id}', [MemberBlogController::class, 'show'])->name('member.blog.detail-blog');
     // Sewa Spot Pemancingan
-    // Route::get('/member/sewaPemancingan', [MemberSewaPemancinganController::class, 'index'])->name('member.sewa-pemancingan.index');
     Route::get('/member/sewaPemancingan/spots', [MemberSewaSpotController::class, 'index'])->name('member.spots.index');
     Route::post('/member/sewaPemancingan/spots/sewaSpot', [MemberSewaSpotController::class, 'store'])->name('member.spots.pesan-spot');
     Route::get('/member/sewaPemancingan/spots/riwayatSewa', [MemberSewaSpotController::class, 'riwayatSewa'])->name('member.spots.riwayat-sewa');
@@ -132,6 +133,7 @@ Route::middleware(['auth', 'member'])->group(function () {
     Route::get('/member/daftarAlat/sewaAlat/riwayatSewa', [MemberDaftarAlatController::class, 'riwayatSewaAlat'])->name('member.riwayat-sewa');
     Route::delete('/member/daftarAlat/sewaAlat/cancel/{sewaAlat}', [MemberDaftarAlatController::class, 'cancelOrder'])->name('member.sewa-alat.cancel');
     Route::post('/member/daftarAlat/sewaAlat/auto-cancel/{id}', [MemberDaftarAlatController::class, 'autoCancel'])->name('member.sewa-alat.autoCancel');
+    Route::post('/member/sewa-alat/{id}/return', [MemberDaftarAlatController::class, 'markAsReturned'])->name('member.sewa-alat.return');
 
 });
 
@@ -140,16 +142,16 @@ Route::middleware(['auth', 'member'])->group(function () {
 Route::prefix('guest')->name('guest.')->group(function () {
     // Landing Page Guest 
     Route::get('/landingPage', [GuestLandingPageController::class, 'index'])->name('landingpage.index');
-
     // Galeri Guest 
     Route::get('/galeriPemancingan', [GuestGaleriController::class, 'index'])->name('galeri.index');
-
     // Blog Guest 
     Route::get('/blogPemancingan', [GuestBlogController::class, 'index'])->name('blog.index');
     Route::get('/detailBlogPemancingan/{id}', [GuestBlogController::class, 'show'])->name('blog.detail-blog');
-
     // Daftar Alat yang Disewakan Guest 
     Route::get('/daftarAlat', [GuestDaftarAlatController::class, 'index'])->name('daftar-alat.index');
+    // Sewa Spot Pemancingan
+    Route::get('/spots', [GuestSpotController::class, 'index'])->name('spots.index');
+
 });
 
 

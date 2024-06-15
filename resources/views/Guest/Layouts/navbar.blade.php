@@ -11,7 +11,8 @@
           <a class="nav-link  {{ request()->routeIs('guest.landingpage.index') ? 'active' : '' }}" aria-current="page" href="{{ route('guest.landingpage.index') }}">Home</a>
           <a class="nav-link  {{ request()->routeIs('guest.galeri.index') ? 'active' : '' }}" aria-current="page" href="{{ route('guest.galeri.index') }}">Galeri</a>
           <a class="nav-link  {{ request()->routeIs('guest.blog.index') ? 'active' : '' }}" aria-current="page" href="{{ route('guest.blog.index') }}">Blog</a>
-          <a class="nav-link  {{ request()->routeIs('guest.daftar-alat.index') ? 'active' : '' }}" aria-current="page" href="{{ route('guest.daftar-alat.index') }}">Daftar Alat Pancing</a>
+          <a class="nav-link  {{ request()->routeIs('guest.spots.index') ? 'active' : '' }}" aria-current="page" href="{{ route('guest.spots.index') }}">Sewa Spot Pemancingan</a>
+          <a class="nav-link  {{ request()->routeIs('guest.daftar-alat.index') ? 'active' : '' }}" aria-current="page" href="{{ route('guest.daftar-alat.index') }}">Sewa Alat Pancing</a>
         </div>
         <ul class="navbar-nav ms-lg-auto">
           @guest

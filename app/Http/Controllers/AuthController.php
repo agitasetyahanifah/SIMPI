@@ -72,11 +72,14 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
+        // Validate input
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
             'telepon' => 'nullable|string|max:20',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:users|ends_with:@gmail.com',
             'password' => 'required|string|min:8|confirmed',
+        ], [
+            'email.ends_with' => 'Email must be a valid Gmail address.',
         ]);
 
         $user = User::create([

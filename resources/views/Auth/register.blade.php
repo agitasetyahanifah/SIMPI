@@ -70,7 +70,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="telepon" class="form-label">Phone</label>
-                                        <input type="text" class="form-control" id="telepon" name="telepon" placeholder="08xxxxxxxxx" required>
+                                        <input type="text" class="form-control" id="telepon" name="telepon" placeholder="08xxxxxxxxx" maxlength="13" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -109,6 +109,7 @@
             </div>
         </div>
     </div>
+    
 </body>
 
 </html>

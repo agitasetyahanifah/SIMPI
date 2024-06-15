@@ -23,7 +23,7 @@
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-air-baloon"></i>
             </div>
-            <span class="nav-link-text ms-1">Galeri Pemancingan</span>
+            <span class="nav-link-text ms-1">Fishing Gallery</span>
           </a>
         </li>
         <li class="nav-item">
@@ -31,7 +31,7 @@
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-money-coins"></i>
             </div>
-            <span class="nav-link-text ms-1">Manajemen Keuangan</span>
+            <span class="nav-link-text ms-1">Financial Management</span>
           </a>
         </li>
         <li class="nav-item">
@@ -39,7 +39,7 @@
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-map-big"></i>
             </div>
-            <span class="nav-link-text ms-1">Sewa Spot Pemancingan</span>
+            <span class="nav-link-text ms-1">Fishing Spot Rental</span>
           </a>
         </li>
         <li class="nav-item">
@@ -47,7 +47,7 @@
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-box-2"></i>
             </div>
-            <span class="nav-link-text ms-1">Daftar Alat Pancing</span>
+            <span class="nav-link-text ms-1">Fishing Equipment List</span>
           </a>
         </li>
         <li class="nav-item">
@@ -55,7 +55,7 @@
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-bullet-list-67"></i>
             </div>
-            <span class="nav-link-text ms-1">Sewa Alat Pancing</span>
+            <span class="nav-link-text ms-1">Fishing Equipment Rental</span>
           </a>
         </li>
         <li class="nav-item">
@@ -63,7 +63,7 @@
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-app"></i>
             </div>
-            <span class="nav-link-text ms-1">Pengelolaan Ikan</span>
+            <span class="nav-link-text ms-1">Fish Management</span>
           </a>
         </li>
         <li class="nav-item">
@@ -71,7 +71,7 @@
               <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-badge"></i>
               </div>
-              <span class="nav-link-text ms-1">Manajemen Member</span>
+              <span class="nav-link-text ms-1">Member Management</span>
             </a>
         </li>
         <li class="nav-item">
@@ -79,8 +79,8 @@
              <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                <i class="ni ni-archive-2"></i>
              </div>
-             <span class="nav-link-text ms-1">Blog Pemancingan</span>
-           </a>
+             <span class="nav-link-text ms-1">Fishing Blog</span>
+            </a>
         </li>
          
         {{-- <li class="nav-item">
