@@ -32,6 +32,7 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
 
   <style>
     .fixed-image {
@@ -61,6 +62,116 @@
         margin-bottom: 5px; /* Kurangi margin bawah */
     }
 
+    .weather-container {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .current-weather {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 20px;
+    }
+
+    .weather-header {
+        display: flex;
+        align-items: center;
+    }
+
+    .weather-icon {
+        font-size: 64px;
+        margin-right: 20px;
+    }
+
+    .weather-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .temp {
+        font-size: 48px;
+        font-weight: bold;
+    }
+
+    .details span {
+        display: block;
+    }
+
+    .location-info {
+        text-align: right;
+    }
+
+    .location {
+        font-size: 24px;
+    }
+
+    .day, .condition {
+        font-size: 16px;
+        color: #666;
+    }
+
+    .weather-details {
+        margin-top: 20px;
+    }
+
+    .tabs {
+        display: flex;
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 20px;
+    }
+
+    .tab {
+        padding: 10px 20px;
+        cursor: pointer;
+    }
+
+    .tab.active {
+        border-bottom: 2px solid #ffcc00;
+        color: #ffcc00;
+    }
+
+    .chart {
+        text-align: center;
+        height: 150px;
+    }
+
+    .chart canvas {
+        max-width: 100%;
+        height: 100%;
+    }
+
+    .weekly-forecast {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .day-forecast {
+        text-align: center;
+        width: 11%;
+    }
+
+    .day-forecast .day {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .day-forecast .icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    .day-forecast .temp {
+        font-size: 14px;
+        color: #666;
+    }
+
   </style>
     
 </head>
@@ -73,46 +184,81 @@
     {{-- Content --}}
     <div class="container-fluid py-2">
 
-      {{-- Ketersediaan Spot Pemancingan dan Informasi Cuaca --}}
-      <div class="row row-cols-md-2">
-        {{-- Ketersediaan Spot Pemancingan --}}
-        {{-- <div class="col-md-4 mt-2">
-          <div class="col-12">
+      {{-- Informasi Cuaca --}}
+      <div class="col-md-12 mt-2">
+        <div class="col-12">
             <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <div class="row">
-                      <div class="col-12 col-md-6 mb-md-0">
-                        <h5 class="font-weight-bolder">Ketersediaan Spot Pemancingan</h5>
-                        <small class="text-muted">Terakhir diperbarui pada: {{ $waktuTerbaru }}</small>
+              <div class="card-body">
+                  <div class="current-weather">
+                      <div class="weather-header">
+                          <div class="weather-icon">
+                              <i class="wi wi-day-sunny"></i>
+                          </div>
+                          <div class="weather-info">
+                              <div class="temp">32°C</div>
+                              <div class="details">
+                                  <span>Presipitasi: 0%</span>
+                                  <span>Kelembapan: 77%</span>
+                                  <span>Angin: 16 km/h</span>
+                              </div>
+                          </div>
                       </div>
-                      <div class="col-12 col-md-6 d-flex align-items-center justify-content-center justify-content-md-end mt-3 mt-md-2">
-                        <a class="btn btn-outline-primary" style="font-size: 25pt">{{ $terakhirDiperbaruiKetersediaan }}</a>
+                      <div class="location-info">
+                          <div class="location">Cuaca</div>
+                          <div class="day">Minggu</div>
+                          <div class="condition">Sebagian besar cerah</div>
                       </div>
-                    </div>
-                </div>
-            </div>
-          </div>
-        </div> --}}
-        {{-- Informasi Cuaca --}}
-        <div class="col-md-12 mt-2">
-          <div class="col-12">
-              <div class="card shadow-sm border-0">
-                  <div class="card-body">
-                      <div class="row">
-                          <h5 class="font-weight-bolder">Informasi Cuaca</h5>
+                  </div>
+                  <div class="weather-details">
+                      <div class="chart">
+                          <canvas id="weatherChart"></canvas>
                       </div>
-                      <div class="row mt-3">
-                        <div class="container">
-                          <!-- Menampilkan data cuaca -->
-                          <div id="weather-info"></div>
-                          <!-- Menampilkan grafik cuaca -->
-                          <canvas id="weather-chart"></canvas>
-                        </div>
+                  </div>
+                  <div class="weekly-forecast">
+                      <div class="day-forecast">
+                          <div class="day">Min</div>
+                          <div class="icon"><i class="wi wi-day-cloudy"></i></div>
+                          <div class="temp">32° 22°</div>
+                      </div>
+                      <div class="day-forecast">
+                          <div class="day">Sen</div>
+                          <div class="icon"><i class="wi wi-day-cloudy"></i></div>
+                          <div class="temp">33° 23°</div>
+                      </div>
+                      <div class="day-forecast">
+                          <div class="day">Sel</div>
+                          <div class="icon"><i class="wi wi-rain"></i></div>
+                          <div class="temp">32° 22°</div>
+                      </div>
+                      <div class="day-forecast">
+                          <div class="day">Rab</div>
+                          <div class="icon"><i class="wi wi-day-cloudy"></i></div>
+                          <div class="temp">32° 22°</div>
+                      </div>
+                      <div class="day-forecast">
+                          <div class="day">Kam</div>
+                          <div class="icon"><i class="wi wi-day-cloudy"></i></div>
+                          <div class="temp">32° 22°</div>
+                      </div>
+                      <div class="day-forecast">
+                          <div class="day">Jum</div>
+                          <div class="icon"><i class="wi wi-day-cloudy"></i></div>
+                          <div class="temp">32° 22°</div>
+                      </div>
+                      <div class="day-forecast">
+                          <div class="day">Sab</div>
+                          <div class="icon"><i class="wi wi-day-cloudy"></i></div>
+                          <div class="temp">32° 22°</div>
+                      </div>
+                      <div class="day-forecast">
+                          <div class="day">Min</div>
+                          <div class="icon"><i class="wi wi-day-cloudy"></i></div>
+                          <div class="temp">32° 22°</div>
                       </div>
                   </div>
               </div>
-          </div>
-      </div>      
+            </div>
+        </div>
       </div>
 
       {{-- Card Body --}}
@@ -372,6 +518,8 @@
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
   </script>
+
+  {{-- Maxime gambar --}}
   <script>
     $(document).ready(function() {
         // Menangani klik tombol maximize
@@ -413,7 +561,7 @@
 
 
     <!-- Script untuk menampilkan informasi cuaca -->
-    <script>
+    {{-- <script>
       $(document).ready(function () {
         // Ganti dengan API key OpenWeatherMap Anda
         const apiKey = '8f6451a388d8d187d4edddbb1a50ca3a';
@@ -465,10 +613,68 @@
           $('#weather-info').html('<p>Informasi cuaca tidak tersedia.</p>');
         });
       });
-    </script>
+    </script> --}}
 
+  {{-- Javascrip Chart Cuaca --}}
+  <script>
+    const ctx = document.getElementById('weatherChart').getContext('2d');
+    const weatherChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['14:00', '17:00', '20:00', '23:00', '02:00', '05:00', '08:00', '11:00'],
+            datasets: [{
+                label: 'Suhu (°C)',
+                data: [32, 29, 26, 24, 23, 24, 24, 30],
+                backgroundColor: 'rgba(255, 204, 0, 0.2)',
+                borderColor: 'rgba(255, 204, 0, 1)',
+                borderWidth: 2,
+                fill: true,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            }
+        }
+    });
+  </script>
 
+  <!-- Script JavaScript untuk mendapatkan data cuaca dari OpenWeatherMap -->
+  <script>
+    // Fungsi untuk mengambil data cuaca dari OpenWeatherMap
+    function getWeatherData() {
+        const apiKey = '8f6451a388d8d187d4edddbb1a50ca3a'; // Ganti dengan API key OpenWeatherMap Anda
+        const cityId = '1621158'; // Ganti dengan ID kota Malangjiwan
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?id=${cityId}&units=metric&appid=${apiKey}`;
 
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                updateWeatherUI(data);
+            })
+            .catch(error => console.error('Error fetching weather data:', error));
+    }
+
+    // Fungsi untuk memperbarui tampilan HTML dengan data cuaca
+    function updateWeatherUI(data) {
+        const weatherIcon = document.getElementById('weatherIcon');
+        const temperature = document.getElementById('temperature');
+        const description = document.getElementById('description');
+        const updatedInfo = document.getElementById('updatedInfo');
+
+        weatherIcon.innerHTML = `<img src="https://openweathermap.org/img/wn/${data.weather[0].icon}.png" alt="Weather Icon">`;
+        temperature.textContent = `${data.main.temp}°C`;
+        description.textContent = data.weather[0].description;
+        updatedInfo.textContent = `Data diperbarui: ${new Date().toLocaleTimeString('id-ID')}`;
+    }
+
+    getWeatherData();
+    setInterval(getWeatherData, 600000); // Perbarui data setiap 10 menit
+  </script>
 
 </body>
 
