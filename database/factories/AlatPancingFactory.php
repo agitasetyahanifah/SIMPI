@@ -17,7 +17,7 @@ class AlatPancingFactory extends Factory
     public function definition(): array
     {
         return [
-            'foto' => $this->faker->imageUrl(), // Generate random image URL
+            'foto' => '../images/ex-alat.png',
             'nama_alat' => $this->faker->word, // Generate random word
             'harga' => $this->faker->numberBetween(10000, 100000), // Generate random price
             'jumlah' => $this->faker->numberBetween(1, 50), // Generate random quantity

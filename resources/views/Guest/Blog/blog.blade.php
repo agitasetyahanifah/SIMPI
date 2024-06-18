@@ -83,7 +83,7 @@
             @if($blog->image && file_exists(public_path('images/'.$blog->image)))
               <img src="{{ asset('images/'.$blog->image) }}" class="card-img-top fixed-image" alt="{{ $blog->judul }}">
             @else
-              <img src="https://source.unsplash.com/random/450x150?fishing" class="card-img-top fixed-image" alt="Fishing Image">
+              <img src="{{ asset('../images/ex-blog.png') }}"  class="card-img-top fixed-image" alt="Fishing Image">
             @endif
             <div class="card-body">
               <h5 class="card-title">{{ $blog->judul }}</h5>

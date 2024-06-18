@@ -15,7 +15,6 @@ class MemberSewaSpotController extends Controller
     public function index()
     {
         $spots = Spot::all();
-        // $sewaSpots = SewaSpot::all()->groupBy('spot_id');
         $sewaSpots = SewaSpot::where('tanggal_sewa', '>=', Carbon::today())->get()->groupBy('spot_id');
         return view('member.sewaspotpemancingan.sewa-spot', compact('spots', 'sewaSpots'));
     }

@@ -55,11 +55,11 @@
     }
 
     .card-title2 {
-        margin-bottom: 2px; /* Kurangi margin bawah */
+        margin-bottom: 2px;
     }
 
     .card-text2 {
-        margin-bottom: 5px; /* Kurangi margin bawah */
+        margin-bottom: 5px;
     }
 
     .weather-container {
@@ -73,10 +73,13 @@
 
     .current-weather {
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
         border-bottom: 1px solid #ddd;
         padding-bottom: 20px;
+        /* max-width: 800px; */
+        margin: 0 auto;
     }
 
     .weather-header {
@@ -84,66 +87,15 @@
         align-items: center;
     }
 
-    .weather-icon {
-        font-size: 64px;
-        margin-right: 20px;
-    }
-
     .weather-info {
         display: flex;
         flex-direction: column;
     }
-
-    .temp {
-        font-size: 48px;
-        font-weight: bold;
-    }
-
-    .details span {
-        display: block;
-    }
-
-    .location-info {
-        text-align: right;
-    }
-
-    .location {
-        font-size: 24px;
-    }
-
-    .day, .condition {
-        font-size: 16px;
-        color: #666;
-    }
-
-    .weather-details {
-        margin-top: 20px;
-    }
-
-    .tabs {
-        display: flex;
-        border-bottom: 1px solid #ddd;
-        margin-bottom: 20px;
-    }
-
-    .tab {
-        padding: 10px 20px;
-        cursor: pointer;
-    }
-
-    .tab.active {
-        border-bottom: 2px solid #ffcc00;
+    
+    .weather-icon {
+        font-size: 64px;
+        margin-right: 20px;
         color: #ffcc00;
-    }
-
-    .chart {
-        text-align: center;
-        height: 150px;
-    }
-
-    .chart canvas {
-        max-width: 100%;
-        height: 100%;
     }
 
     .weekly-forecast {
@@ -151,6 +103,43 @@
         justify-content: space-between;
         margin-top: 20px;
     }
+
+    .temp {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .details span {
+        display: block;
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 3px;
+    }
+
+    .location-info {
+        text-align: right;
+        margin-top: 10px;
+    }
+
+    .location {
+        font-size: 20px; 
+        color: #333;
+        margin-bottom: 3px;
+        text-align: right;
+        margin-right: 5px;
+    }
+
+    .weather-details {
+        margin-top: 20px;
+    }
+
+    .day {
+      font-size: 16px;
+      color: #666;
+      text-align: right;
+      margin-right: 5px;
+  }
 
     .day-forecast {
         text-align: center;
@@ -172,6 +161,28 @@
         color: #666;
     }
 
+    @media (max-width: 600px) {
+        .weather-header {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .location-info {
+            margin-top: 50px;
+        }
+    }
+
+    .chart {
+        text-align: center;
+        height: 150px;
+    }
+
+    .chart canvas {
+        max-width: 100%;
+        height: 100%;
+    }
+
   </style>
     
 </head>
@@ -184,81 +195,43 @@
     {{-- Content --}}
     <div class="container-fluid py-2">
 
-      {{-- Informasi Cuaca --}}
+      <!-- Informasi Cuaca -->
       <div class="col-md-12 mt-2">
-        <div class="col-12">
-            <div class="card shadow-sm border-0">
-              <div class="card-body">
-                  <div class="current-weather">
-                      <div class="weather-header">
-                          <div class="weather-icon">
-                              <i class="wi wi-day-sunny"></i>
-                          </div>
-                          <div class="weather-info">
-                              <div class="temp">32°C</div>
-                              <div class="details">
-                                  <span>Presipitasi: 0%</span>
-                                  <span>Kelembapan: 77%</span>
-                                  <span>Angin: 16 km/h</span>
+          <div class="col-12">
+              <div class="card shadow-sm border-0">
+                  <div class="card-body">
+                      <div class="current-weather">
+                          <div class="weather-header">
+                              <div class="weather-icon" id="weatherIcon">
+                                  <!-- Weather icon will be updated dynamically -->
+                              </div>
+                              <div class="weather-info">
+                                  <div class="temp" id="temperature">
+                                      <!-- Temperature will be updated dynamically -->
+                                  </div>
+                                  <div class="details">
+                                      <span id="description"></span>
+                                      <span id="humidity"></span>
+                                      <span id="wind"></span>
+                                  </div>
                               </div>
                           </div>
+                          <div class="location-info">
+                              <div class="location" id="city"></div>
+                              <div class="day" id="day"></div>
+                          </div>
                       </div>
-                      <div class="location-info">
-                          <div class="location">Cuaca</div>
-                          <div class="day">Minggu</div>
-                          <div class="condition">Sebagian besar cerah</div>
+                      <div class="weather-details">
+                          <div class="chart">
+                              <canvas id="weatherChart"></canvas>
+                          </div>
                       </div>
-                  </div>
-                  <div class="weather-details">
-                      <div class="chart">
-                          <canvas id="weatherChart"></canvas>
-                      </div>
-                  </div>
-                  <div class="weekly-forecast">
-                      <div class="day-forecast">
-                          <div class="day">Min</div>
-                          <div class="icon"><i class="wi wi-day-cloudy"></i></div>
-                          <div class="temp">32° 22°</div>
-                      </div>
-                      <div class="day-forecast">
-                          <div class="day">Sen</div>
-                          <div class="icon"><i class="wi wi-day-cloudy"></i></div>
-                          <div class="temp">33° 23°</div>
-                      </div>
-                      <div class="day-forecast">
-                          <div class="day">Sel</div>
-                          <div class="icon"><i class="wi wi-rain"></i></div>
-                          <div class="temp">32° 22°</div>
-                      </div>
-                      <div class="day-forecast">
-                          <div class="day">Rab</div>
-                          <div class="icon"><i class="wi wi-day-cloudy"></i></div>
-                          <div class="temp">32° 22°</div>
-                      </div>
-                      <div class="day-forecast">
-                          <div class="day">Kam</div>
-                          <div class="icon"><i class="wi wi-day-cloudy"></i></div>
-                          <div class="temp">32° 22°</div>
-                      </div>
-                      <div class="day-forecast">
-                          <div class="day">Jum</div>
-                          <div class="icon"><i class="wi wi-day-cloudy"></i></div>
-                          <div class="temp">32° 22°</div>
-                      </div>
-                      <div class="day-forecast">
-                          <div class="day">Sab</div>
-                          <div class="icon"><i class="wi wi-day-cloudy"></i></div>
-                          <div class="temp">32° 22°</div>
-                      </div>
-                      <div class="day-forecast">
-                          <div class="day">Min</div>
-                          <div class="icon"><i class="wi wi-day-cloudy"></i></div>
-                          <div class="temp">32° 22°</div>
+                      <div class="weekly-forecast" id="weekly-forecast">
+                          <!-- Weekly forecast will be updated dynamically -->
                       </div>
                   </div>
               </div>
-            </div>
-        </div>
+          </div>
       </div>
 
       {{-- Card Body --}}
@@ -328,7 +301,7 @@
                     @if($blog->image && file_exists(public_path('images/'.$blog->image)))
                       <img src="{{ asset('images/'.$blog->image) }}" class="card-img-top fixed-image" alt="{{ $blog->judul }}">
                     @else
-                      <img src="https://source.unsplash.com/random/450x150?fishing" class="card-img-top fixed-image" alt="Fishing Image">
+                      <img src="{{ asset('../images/ex-blog.png') }}" class="card-img-top fixed-image" alt="Fishing Image">
                     @endif
                     <div class="card-body">
                       <h5 class="card-title">{{ $blog->judul }}</h5>
@@ -364,8 +337,7 @@
                 @if($alat->foto && file_exists(public_path('images/'.$alat->foto)))
                   <img src="{{ asset('images/'.$alat->foto) }}" class="card-img-top fixed-image" alt="{{ $alat->nama_alat }}">
                 @else
-                   {{-- <img src="https://source.unsplash.com/random/450x450?fishing" class="card-img-top fixed-image" alt="Fishing Image"> --}}
-                   <img src="{{ asset('../images/logo.png') }}" class="card-img-top fixed-image" alt="Default Image">
+                   <img src="{{ asset('../images/ex-alat.png') }}" class="card-img-top fixed-image" alt="Fishing Image">
                 @endif
                 <div class="card-body2">
                     <h5 class="card-title2">{{ $alat->nama_alat }}</h5>
@@ -406,8 +378,7 @@
                               @if($alat->foto && file_exists(public_path('images/'.$alat->foto)))
                                 <img src="{{ asset('images/'.$alat->foto) }}" class="img-fluid" alt="{{ $alat->nama_alat }}">
                               @else
-                                {{-- <img src="https://source.unsplash.com/random/450x450?fishing" class="img-fluid" alt="Fishing Image"> --}}
-                                <img src="{{ asset('../images/logo.png') }}" class="img-fluid" alt="Default Image">
+                                <img src="{{ asset('../images/ex-alat.png') }}" class="img-fluid" alt="Fishing Image">
                               @endif                        
                             </div>
                             <div class="col-md-6">
@@ -530,90 +501,11 @@
         });
     });
   </script>
+
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="../assets/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
-
-  {{-- <script>
-    $(document).ready(function() {
-        // Ganti dengan API key OpenWeatherMap Anda
-        const apiKey = '8f6451a388d8d187d4edddbb1a50ca3a';
-        // Ganti dengan nama kota yang ingin Anda tampilkan cuacanya
-        const city = 'Malangjiwan';
-
-        // URL API OpenWeatherMap
-        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=id`;
-
-        // Ambil data cuaca dari API
-        $.getJSON(apiUrl, function(data) {
-            const weatherInfo = `
-                <h6>Cuaca di ${city} saat ini:</h6>
-                <p>Suhu: ${data.main.temp}°C</p>
-                <p>Deskripsi: ${data.weather[0].description}</p>
-            `;
-            $('#weather-info').html(weatherInfo);
-        }).fail(function() {
-            $('#weather-info').html('<p>Informasi cuaca tidak tersedia.</p>');
-        });
-    });
-  </script> --}}
-
-
-    <!-- Script untuk menampilkan informasi cuaca -->
-    {{-- <script>
-      $(document).ready(function () {
-        // Ganti dengan API key OpenWeatherMap Anda
-        const apiKey = '8f6451a388d8d187d4edddbb1a50ca3a';
-        // Ganti dengan nama kota yang ingin Anda tampilkan cuacanya
-        const city = 'Malangjiwan';
-
-        // URL API OpenWeatherMap
-        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=id`;
-
-        // Ambil data cuaca dari API
-        $.getJSON(apiUrl, function (data) {
-          const weatherInfo = `
-            <p>Suhu: ${data.main.temp}°C</p>
-            <p>Deskripsi: ${data.weather[0].description}</p>
-          `;
-          $('#weather-info').html(weatherInfo);
-
-          // Menggambar grafik cuaca menggunakan Chart.js
-          const ctx = document.getElementById('weather-chart').getContext('2d');
-          const weatherChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-              labels: ['Suhu', 'Kelembaban', 'Kecepatan Angin'],
-              datasets: [{
-                label: 'Data Cuaca',
-                data: [data.main.temp, data.main.humidity, data.wind.speed],
-                backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)'
-                ],
-                borderColor: [
-                  'rgba(255, 99, 132, 1)',
-                  'rgba(54, 162, 235, 1)',
-                  'rgba(255, 206, 86, 1)'
-                ],
-                borderWidth: 1
-              }]
-            },
-            options: {
-              scales: {
-                y: {
-                  beginAtZero: true
-                }
-              }
-            }
-          });
-        }).fail(function () {
-          $('#weather-info').html('<p>Informasi cuaca tidak tersedia.</p>');
-        });
-      });
-    </script> --}}
 
   {{-- Javascrip Chart Cuaca --}}
   <script>
@@ -621,10 +513,10 @@
     const weatherChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['14:00', '17:00', '20:00', '23:00', '02:00', '05:00', '08:00', '11:00'],
+            labels: [], // Labels akan diisi dengan jam/jam tertentu dari data OpenWeatherMap
             datasets: [{
                 label: 'Suhu (°C)',
-                data: [32, 29, 26, 24, 23, 24, 24, 30],
+                data: [], // Data akan diisi dengan suhu pada jam tertentu dari data OpenWeatherMap
                 backgroundColor: 'rgba(255, 204, 0, 0.2)',
                 borderColor: 'rgba(255, 204, 0, 1)',
                 borderWidth: 2,
@@ -641,39 +533,100 @@
             }
         }
     });
+
+    async function fetchWeatherDataForChart() {
+        try {
+            const apiKey = "8f6451a388d8d187d4edddbb1a50ca3a";
+            const city = "malangjiwan";
+            const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
+
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            console.log(data);
+
+            const chartLabels = data.list.map(item => {
+                const date = new Date(item.dt * 1000);
+                return `${date.getHours()}:00`;
+            });
+
+            const chartData = data.list.map(item => item.main.temp);
+
+            weatherChart.data.labels = chartLabels;
+            weatherChart.data.datasets[0].data = chartData;
+            weatherChart.update();
+        } catch (error) {
+            console.error('Failed to fetch weather data for chart:', error);
+        }
+    }
+
+    fetchWeatherDataForChart();
   </script>
 
   <!-- Script JavaScript untuk mendapatkan data cuaca dari OpenWeatherMap -->
   <script>
-    // Fungsi untuk mengambil data cuaca dari OpenWeatherMap
-    function getWeatherData() {
-        const apiKey = '8f6451a388d8d187d4edddbb1a50ca3a'; // Ganti dengan API key OpenWeatherMap Anda
-        const cityId = '1621158'; // Ganti dengan ID kota Malangjiwan
-        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?id=${cityId}&units=metric&appid=${apiKey}`;
+    const apiKey = "8f6451a388d8d187d4edddbb1a50ca3a";
+    const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=malangjiwan";
 
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => {
-                updateWeatherUI(data);
-            })
-            .catch(error => console.error('Error fetching weather data:', error));
+    const iconMapping = {
+        "01d": "wi-day-sunny",
+        "01n": "wi-night-clear",
+        "02d": "wi-day-cloudy",
+        "02n": "wi-night-alt-cloudy",
+        "03d": "wi-cloud",
+        "03n": "wi-cloud",
+        "04d": "wi-cloudy",
+        "04n": "wi-cloudy",
+        "09d": "wi-showers",
+        "09n": "wi-showers",
+        "10d": "wi-day-rain",
+        "10n": "wi-night-alt-rain",
+        "11d": "wi-thunderstorm",
+        "11n": "wi-thunderstorm",
+        "13d": "wi-snow",
+        "13n": "wi-snow",
+        "50d": "wi-fog",
+        "50n": "wi-fog"
+    };
+
+    const descriptionMapping = {
+        "clear sky": "Langit Cerah",
+        "few clouds": "Sedikit Berawan",
+        "scattered clouds": "Berawan Tersebar",
+        "broken clouds": "Berawan Sebagian",
+        "shower rain": "Hujan Gerimis",
+        "rain": "Hujan",
+        "thunderstorm": "Badai Petir",
+        "snow": "Salju",
+        "mist": "Kabut"
+    };
+
+    function capitalizeWords(str) {
+        return str.replace(/\b\w/g, char => char.toUpperCase());
     }
 
-    // Fungsi untuk memperbarui tampilan HTML dengan data cuaca
-    function updateWeatherUI(data) {
-        const weatherIcon = document.getElementById('weatherIcon');
-        const temperature = document.getElementById('temperature');
-        const description = document.getElementById('description');
-        const updatedInfo = document.getElementById('updatedInfo');
+    async function checkWeather() {
+        const response = await fetch(apiUrl + `&appid=${apiKey}`);
+        const data = await response.json();
 
-        weatherIcon.innerHTML = `<img src="https://openweathermap.org/img/wn/${data.weather[0].icon}.png" alt="Weather Icon">`;
-        temperature.textContent = `${data.main.temp}°C`;
-        description.textContent = data.weather[0].description;
-        updatedInfo.textContent = `Data diperbarui: ${new Date().toLocaleTimeString('id-ID')}`;
-    }
+        console.log(data);
 
-    getWeatherData();
-    setInterval(getWeatherData, 600000); // Perbarui data setiap 10 menit
+        const iconClass = iconMapping[data.weather[0].icon];
+        document.getElementById("weatherIcon").innerHTML = `<i class="wi ${iconClass}"></i>`;
+        document.getElementById("temperature").innerHTML = `${data.main.temp}°C`;
+
+        const description = descriptionMapping[data.weather[0].description.toLowerCase()] || data.weather[0].description;
+        document.getElementById("description").innerHTML = capitalizeWords(description);
+
+        const dayName = new Date(data.dt * 1000).toLocaleDateString('id-ID', { weekday: 'long' });
+        document.getElementById("day").innerHTML = dayName;
+
+        document.getElementById("humidity").innerHTML = `Kelembapan: ${data.main.humidity}%`;
+        document.getElementById("wind").innerHTML = `Angin: ${data.wind.speed} km/h`;
+        document.getElementById("city").innerHTML = data.name;
+        
+      }
+
+      checkWeather();
   </script>
 
 </body>

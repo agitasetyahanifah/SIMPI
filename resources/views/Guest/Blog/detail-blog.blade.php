@@ -59,7 +59,7 @@
               @if($blog->image && file_exists(public_path('images/'.$blog->image)))
                 <img src="{{ asset('images/'.$blog->image) }}" class="card-img-top fixed-image" alt="{{ $blog->judul }}">
               @else
-                <img src="https://source.unsplash.com/random/450x300?fishing" class="card-img-top fixed-image" alt="Fishing Image">
+                <img src="{{ asset('../images/ex-blog.png') }}" class="card-img-top fixed-image" alt="Fishing Image">
               @endif
               <div class="card-body">
                 <h2 class="card-title mb-3">{{ $blog->judul }}</h2>
@@ -80,7 +80,7 @@
                   @if($latestBlog->image && file_exists(public_path('images/'.$latestBlog->image)))
                     <img src="{{ asset('images/'.$latestBlog->image) }}" class="img-fluid rounded-start latest-blog-image" alt="{{ $latestBlog->judul }}">
                   @else
-                    <img src="https://source.unsplash.com/random/450x300?fishing" class="img-fluid rounded-start latest-blog-image" alt="Fishing Image">
+                    <img src="{{ asset('../images/ex-blog.png') }}" class="img-fluid rounded-start latest-blog-image" alt="Fishing Image">
                   @endif
                 </div>
                 <div class="col-md-8">

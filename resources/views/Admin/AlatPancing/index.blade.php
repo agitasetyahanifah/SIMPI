@@ -112,7 +112,7 @@
                             @if($alat->foto && file_exists(public_path('images/'.$alat->foto)))
                                 <img src="{{ asset('images/'.$alat->foto) }}" class="cavatar avatar-xl me-3" alt="{{ $alat->nama_alat }}">
                             @else
-                                <img src="https://source.unsplash.com/random/150x150?fishing" class="avatar avatar-xl me-3" alt="Fishing Image">
+                                <img src="{{ asset('../images/ex-blog.png') }}" class="avatar avatar-xl me-3" alt="Fishing Image">
                             @endif
                           </div>
                           <div class="d-flex flex-column justify-content-center">
@@ -230,7 +230,7 @@
                                     @if($alat->foto && file_exists(public_path('images/'.$alat->foto)))
                                         <img src="{{ asset('images/'.$alat->foto) }}" class="img-fluid" alt="{{ $alat->nama_alat }}">
                                     @else
-                                        <img src="https://source.unsplash.com/random/?fishing" class="img-fluid" alt="Fishing Image">
+                                        <img src="{{ asset('../images/ex-blog.png') }}" class="img-fluid" alt="Fishing Image">
                                     @endif
                                   </div>
                                   <div class="col-md-6">

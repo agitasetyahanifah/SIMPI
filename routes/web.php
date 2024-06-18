@@ -103,9 +103,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Rute Booking Tempat Pemancingan
     Route::resource('/admin/sewaPemancingan', AdminSewaPemancinganController::class);
     Route::get('/admin/sewaPemancingan/search', [AdminSewaPemancinganController::class, 'search'])->name('admin.sewaPemancingan.search');
-    // Route::get('/admin/sewaPemancingan/checkAvailability', [AdminSewaPemancinganController::class, 'checkAvailability']);
-    Route::get('/available-spots', [AdminSewaPemancinganController::class, 'getAvailableSpots'])->name('available-spots');
-    Route::get('/available-sessions', [AdminSewaPemancinganController::class, 'getAvailableSessions'])->name('available-sessions');
+    Route::get('/admin/sewapemancingan/getAvailableSpots', [AdminSewaPemancinganController::class, 'getAvailableSpotsJson'])->name('admin.sewapemancingan.getAvailableSpotsJson');
     Route::post('/admin/sewaPemancingan/konfirmasi-pembayaran/{id}', [AdminSewaPemancinganController::class, 'konfirmasiPembayaran'])->name('admin.sewaPemancingan.konfirmasiPembayaran');
 });
 

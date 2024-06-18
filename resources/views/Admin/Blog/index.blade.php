@@ -311,7 +311,7 @@
                                 @if($blog->image && file_exists(public_path('images/'.$blog->image)))
                                     <img src="{{ asset('images/'.$blog->image) }}" class="img-fluid mt-2" alt="{{ $blog->judul }}" style="max-height: 450px">
                                 @else
-                                    <img src="https://source.unsplash.com/random/450x300?fishing" class="img-fluid mt-2" alt="Fishing Image" style="max-height: 450px">
+                                    {{-- <img src="{{ asset('../images/ex-blog.png') }}" class="img-fluid mt-2" alt="Fishing Image" style="max-height: 450px"> --}}
                                 @endif
                                 <div class="mt-4" style="text-align: justify;">
                                     {!! $blog->body !!}

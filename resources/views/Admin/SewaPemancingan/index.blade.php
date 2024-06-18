@@ -10,13 +10,9 @@
     </div>
 @endif
 
-@if ($errors->any())
+@if(session('error'))
     <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+        {{ session('error') }}
     </div>
 @endif
 
@@ -26,12 +22,6 @@
         <div class="card">
           <div class="card-header pb-0">
             <h4 class="font-weight-bolder mb-0">Manajemen Penyewaan Spot Pemancingan</h4>
-            {{-- Button Tambah --}}
-            {{-- <form action="/admin/sewaPemancingan" method="post">
-                @csrf
-                <div class="col-12 text-end">
-                  <button class="btn btn-outline-primary mb-0" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
-                </div> --}}
                 
             <!-- Form Search -->
             {{-- <form action="{{ route('admin.sewaPemancingan.search') }}" method="GET">
@@ -54,57 +44,7 @@
                     <button class="btn btn-outline-primary mb-0" type="submit" id="button-addon2">Cari</button>                    
                 </div>
             </form>
-            
           </div>
-          <!-- Modal Tambah Data Sewa Pemancingan -->
-          {{-- <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Tambah Data Sewa Spot Pemancingan</h5>
-                <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="nama_pelanggan" class="col-form-label">Nama Pelanggan</label>
-                        <select class="form-control" id="nama_pelanggan" name="nama_pelanggan" required>
-                            <option value="">Pilih Nama Pelanggan</option>
-                            @foreach($members as $member)
-                                @if($member->status == 'aktif')
-                                    <option value="{{ $member->id }}">{{ $member->nama }}</option>
-                                @endif
-                            @endforeach
-                        </select>                        
-                    </div>
-                    <div class="form-group">
-                        <label for="tanggal_sewa" class="col-form-label">Tanggal Sewa</label>
-                        <input type="date" class="form-control" id="tanggal_sewa" name="tanggal_sewa" required>
-                    </div>
-                    <div class="row row-cols-2">
-                        <div class="col form-group">
-                            <label for="jam_mulai">Jam Mulai</label>
-                            <input type="time" class="form-control" id="jam_mulai" name="jam_mulai" required>
-                        </div>
-                        <div class="col form-group">
-                            <label for="jam_selesai">Jam Selesai</label>
-                            <input type="time" class="form-control" id="jam_selesai" name="jam_selesai" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="jumlah_sewa">Jumlah Sewa</label>
-                        <input type="number" class="form-control" id="jumlah_sewa" name="jumlah_sewa" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Tambah</button>
-                </div>
-            </form>
-            </div>
-            </div>
-          </div> --}}
           <div class="card-body ">
             <div class="table-responsive p-0">
               <table class="table table-hover">
@@ -161,7 +101,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="detailModalLabel{{ $pemancingan->id }}">Detail Penyewaan Pemancingan</h5>
+                            <h5 class="modal-title" id="detailModalLabel{{ $pemancingan->id }}">Detail Spot Pemancingan</h5>
                             <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
@@ -215,7 +155,10 @@
                                                     Konfirmasi Pembayaran
                                                 </label>
                                             </div>
-                                            <button type="button" class="btn btn-success mt-3" onclick="showKonfirmasiModal({{ $pemancingan->id }})">Konfirmasi</button>
+                                            {{-- <button type="button" class="btn btn-success mt-3" onclick="showKonfirmasiModal({{ $pemancingan->id }})">Konfirmasi</button> --}}
+                                            <button type="button" class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#konfirmasiModal{{ $pemancingan->id }}">
+                                                Konfirmasi
+                                            </button>                                                                                    
                                         </form>
                                         @elseif($pemancingan->status === 'dibatalkan')
                                             <p style="color: red"><i class="fas fa-times-circle" style="font-size: 18px"></i> Pembayaran dibatalkan</p>
@@ -246,7 +189,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Batal</button>
-                            <button type="button" class="btn btn-primary" onclick="submitKonfirmasiForm({{ $pemancingan->id }})">Konfirmasi</button>
+                            <button type="button" class="btn btn-success" onclick="submitKonfirmasiForm({{ $pemancingan->id }})">Konfirmasi</button>
                         </div>
                     </div>
                 </div>
@@ -254,174 +197,59 @@
             @endforeach
             
             <!-- Modal Edit Sewa Pemancingan -->
-             @foreach ($sewaPemancingan as $pemancingan)
+            @foreach ($sewaPemancingan as $pemancingan)
             <div class="modal fade" id="editModal{{ $pemancingan->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $pemancingan->id }}" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="editModalLabel{{ $pemancingan->id }}">Edit Penyewaan Pemancingan</h5>
+                            <h5 class="modal-title" id="editModalLabel{{ $pemancingan->id }}">Edit Sewa Spot Pemancingan</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form action="/admin/sewaPemancingan/{{ $pemancingan->id }}" method="post">
                             @csrf
                             @method('PUT')
                             <div class="modal-body">
-                                <div class="form-group">
+                                <p class="me-3" style="font-size: 18pt"><b>Kode Booking: {{ $pemancingan->kode_booking }}</b></p>
+                                <div class="form-group mb-3">
                                     <label for="edit_nama_pelanggan">Nama Pelanggan</label>
                                     <input type="text" class="form-control" id="edit_nama_pelanggan" name="edit_nama_pelanggan" value="{{ $pemancingan->member->nama }}" disabled>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="edit_tanggal_sewa">Tanggal Sewa</label>
-                                    <input type="date" class="form-control" id="edit_tanggal_sewa" name="edit_tanggal_sewa" value="{{ $pemancingan->tanggal_sewa }}" min="{{ date('Y-m-d') }}" required>
+                                    <input type="date" class="form-control" id="edit_tanggal_sewa_{{ $pemancingan->id }}" name="edit_tanggal_sewa" value="{{ $pemancingan->tanggal_sewa }}" min="{{ date('Y-m-d') }}" required>
                                 </div>
-                                <div class="form-group">
-                                    <label for="edit_spot_id_{{ $pemancingan->id }}">Nomor Spot</label>
-                                    <select class="form-control edit_spot_id" id="edit_spot_id_{{ $pemancingan->id }}" name="edit_spot_id" required>
-                                        <option value="{{ $pemancingan->spot_id }}" selected>{{ $pemancingan->spot->nomor_spot }}</option>
-                                        <!-- Pilihan akan diisi oleh AJAX -->
-                                        @foreach ($availableSpots as $spotNumber)
-                                            <option id="" value="{{ $spotNumber }}">{{ sprintf('%02d', $spotNumber) }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="edit_sesi_{{ $pemancingan->id }}">Sesi</label>
-                                    <select class="form-control edit_sesi" id="edit_sesi_{{ $pemancingan->id }}" name="edit_sesi" required>
-                                        <option value="{{ $pemancingan->sesi }}" selected>{{ $pemancingan->sesi }}</option>
-                                        <!-- Pilihan akan diisi oleh AJAX -->
-                                    </select>
-                                </div>
-                                {{-- <div class="form-group">
-                                    <label for="edit_spot_id">Nomor Spot</label>
-                                    <select class="form-control" id="edit_spot_id" name="edit_spot_id" required>
-                                        @foreach ($availableSpots as $spotNumber)
-                                            <option value="{{ $spotNumber }}" {{  $pemancingan->spot->nomor_spot == $spotNumber ? 'selected' : '' }}>
-                                                {{ sprintf('%02d', $spotNumber) }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>                      --}}
-                                {{-- <div class="form-group">
-                                    <label for="edit_spot_id">Nomor Spot</label>
-                                    <select class="form-control" id="edit_spot_id" name="edit_spot_id" required>
-                                        @if($pemancingan->spot)
-                                            <option value="{{ $pemancingan->spot->id }}" selected>{{ sprintf('%02d', $pemancingan->spot->nomor_spot) }}</option>
-                                        @endif
-                                        @foreach ($availableSpots as $spotNumber)
-                                            <option value="{{ $spotNumber }}">{{ sprintf('%02d', $spotNumber) }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>  --}}
-                                {{-- <div class="form-group">
+                                <div class="form-group mb-3">
                                     <label for="edit_sesi">Sesi</label>
-                                    <select class="form-control" id="edit_sesi" name="edit_sesi" required>
-                                        @if(!empty($availableSessions))
-                                            @foreach ($availableSessions as $spot => $sessions)
-                                                @foreach ($sessions as $session)
-                                                    <option value="{{ $session }}">{{ $session }}</option>
-                                                @endforeach
-                                            @endforeach
-                                        @else
-                                            <option value="">Tidak ada sesi yang tersedia</option>
-                                        @endif
+                                    <select class="form-control" id="edit_sesi_{{ $pemancingan->id }}" name="edit_sesi" required>
+                                        <option value="08.00-12.00" {{ $pemancingan->sesi == '08.00-12.00' ? 'selected' : '' }}>08.00-12.00</option>
+                                        <option value="13.00-17.00" {{ $pemancingan->sesi == '13.00-17.00' ? 'selected' : '' }}>13.00-17.00</option>
                                     </select>
-                                 </div> --}}
-                            {{-- </div>                            
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="edit_nomor_spot">Nomor Spot</label>
+                                    <select class="form-control" id="edit_nomor_spot_{{ $pemancingan->id }}" name="edit_nomor_spot" required>
+                                        @foreach($spots as $spot)
+                                            @php
+                                                $availableSessions = $spot->getAvailableSessions($pemancingan->tanggal_sewa, $pemancingan->sesi);
+                                            @endphp
+                                            @if(count($availableSessions) > 0 || $spot->id == $pemancingan->spot->id)
+                                                <option value="{{ $spot->id }}" {{ $spot->id == $pemancingan->spot->id ? 'selected' : '' }}>
+                                                    {{ $spot->nomor_spot }}
+                                                </option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Batal</button>
                                 <button type="submit" class="btn btn-primary">Simpan</button>
                             </div>
                         </form>
                     </div>
                 </div>
-            </div>            
-            @endforeach         --}}         
-            
-            
-            {{-- @foreach ($sewaPemancingan as $pemancingan)
-            <div class="modal fade" id="editModal{{ $pemancingan->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $pemancingan->id }}" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="editModalLabel{{ $pemancingan->id }}">Edit Penyewaan Pemancingan</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <form action="/admin/sewaPemancingan/{{ $pemancingan->id }}" method="post">
-                            @csrf
-                            @method('PUT')
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <label for="edit_nama_pelanggan">Nama Pelanggan</label>
-                                    <input type="text" class="form-control" id="edit_nama_pelanggan" name="edit_nama_pelanggan" value="{{ $pemancingan->member->nama }}" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="edit_tanggal_sewa">Tanggal Sewa</label>
-                                    <input type="date" class="form-control" id="edit_tanggal_sewa" name="edit_tanggal_sewa" value="{{ $pemancingan->tanggal_sewa }}" min="{{ date('Y-m-d') }}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="edit_spot_id_{{ $pemancingan->id }}">Nomor Spot</label>
-                                    <select class="form-control edit_spot_id" id="edit_spot_id_{{ $pemancingan->id }}" name="edit_spot_id" required>
-                                        <option value="{{ $pemancingan->spot_id }}" selected>{{ $pemancingan->spot->nomor_spot }}</option>
-                                        <!-- Pilihan akan diisi oleh AJAX -->
-                                        @foreach ($availableSpots as $spotNumber)
-                                            <option id="" value="{{ $spotNumber }}">{{ sprintf('%02d', $spotNumber) }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="edit_sesi_{{ $pemancingan->id }}">Sesi</label>
-                                    <select class="form-control edit_sesi" id="edit_sesi_{{ $pemancingan->id }}" name="edit_sesi" required>
-                                        <option value="{{ $pemancingan->sesi }}" selected>{{ $pemancingan->sesi }}</option>
-                                        <!-- Pilihan akan diisi oleh AJAX -->
-                                    </select>
-                                </div>
-                                {{-- <div class="form-group">
-                                    <label for="edit_spot_id">Nomor Spot</label>
-                                    <select class="form-control" id="edit_spot_id" name="edit_spot_id" required>
-                                        @foreach ($availableSpots as $spotNumber)
-                                            <option value="{{ $spotNumber }}" {{  $pemancingan->spot->nomor_spot == $spotNumber ? 'selected' : '' }}>
-                                                {{ sprintf('%02d', $spotNumber) }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>                      --}}
-                                {{-- <div class="form-group">
-                                    <label for="edit_spot_id">Nomor Spot</label>
-                                    <select class="form-control" id="edit_spot_id" name="edit_spot_id" required>
-                                        @if($pemancingan->spot)
-                                            <option value="{{ $pemancingan->spot->id }}" selected>{{ sprintf('%02d', $pemancingan->spot->nomor_spot) }}</option>
-                                        @endif
-                                        @foreach ($availableSpots as $spotNumber)
-                                            <option value="{{ $spotNumber }}">{{ sprintf('%02d', $spotNumber) }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>  --}}
-                                {{-- <div class="form-group">
-                                    <label for="edit_sesi">Sesi</label>
-                                    <select class="form-control" id="edit_sesi" name="edit_sesi" required>
-                                        @if(!empty($availableSessions))
-                                            @foreach ($availableSessions as $spot => $sessions)
-                                                @foreach ($sessions as $session)
-                                                    <option value="{{ $session }}">{{ $session }}</option>
-                                                @endforeach
-                                            @endforeach
-                                        @else
-                                            <option value="">Tidak ada sesi yang tersedia</option>
-                                        @endif
-                                    </select>
-                                 </div> --}}
-                            {{-- </div>                            
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="submit" class="btn btn-primary">Simpan</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>            
-            @endforeach         --}}
-
-
+            </div>
+            @endforeach
 
             <!-- Modal Delete -->
             <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -512,73 +340,52 @@
     }
 </script>
 
-@routes
-
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-$(document).ready(function() {
-    $('.modal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget);
-        var pemancinganId = button.data('id');
-        var modal = $(this);
-        var tanggalInput = modal.find('.edit_tanggal_sewa');
-        var sesiSelect = modal.find('.edit_sesi');
-        var spotSelect = modal.find('.edit_spot_id');
+    $(document).ready(function() {
+        function updateAvailableSpots(id) {
+            const tanggalSewa = $(`#edit_tanggal_sewa_${id}`).val();
+            const sesi = $(`#edit_sesi_${id}`).val();
+            const currentSpotId = $(`#edit_nomor_spot_${id}`).val();
+            const currentSesi = $(`#edit_sesi_${id} option:selected`).val();
 
-        function fetchAvailableSpots(tanggal, sesi) {
             $.ajax({
-                url: route('available-spots'), // Ubah url menjadi rute Laravel
+                url: '{{ route("admin.sewapemancingan.getAvailableSpotsJson") }}',
                 type: 'GET',
-                data: { tanggal: tanggal, sesi: sesi },
-                success: function(data) {
-                    spotSelect.empty();
-                    $.each(data.availableSpots, function(index, spot) {
-                        spotSelect.append(`<option value="${spot.id}">${('0' + spot.nomor_spot).slice(-2)}</option>`);
+                data: {
+                    tanggal_sewa: tanggalSewa,
+                    sesi: sesi,
+                    current_spot_id: currentSpotId,
+                    current_sesi: currentSesi
+                },
+                success: function(response) {
+                    const availableSpots = response.jsonSpots;
+                    let options = '';
+
+                    availableSpots.forEach(function(spot) {
+                        options += `<option value="${spot.id}">${spot.nomor_spot}</option>`;
                     });
+
+                    $(`#edit_nomor_spot_${id}`).html(options);
+                    $(`#edit_nomor_spot_${id}`).val(currentSpotId);
                 },
                 error: function(xhr, status, error) {
-                    console.error(error);
+                    console.error(xhr.responseText);
                 }
             });
         }
 
-        function fetchAvailableSessions(tanggal, spotId) {
-            $.ajax({
-                url: route('available-sessions'), // Ubah url menjadi rute Laravel
-                type: 'GET',
-                data: { tanggal: tanggal, spot_id: spotId },
-                success: function(data) {
-                    sesiSelect.empty();
-                    $.each(data.availableSessions, function(index, session) {
-                        sesiSelect.append(`<option value="${session}">${session}</option>`);
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);
-                }
-            });
-        }
-
-        tanggalInput.change(function() {
-            var tanggal = $(this).val();
-            var sesi = sesiSelect.val();
-            fetchAvailableSpots(tanggal, sesi);
+        $('[id^=edit_tanggal_sewa_], [id^=edit_sesi_]').change(function() {
+            const id = $(this).attr('id').split('_').pop();
+            updateAvailableSpots(id);
         });
 
-        sesiSelect.change(function() {
-            var tanggal = tanggalInput.val();
-            var spotId = spotSelect.val();
-            fetchAvailableSessions(tanggal, spotId);
+        $('[id^=edit_tanggal_sewa_], [id^=edit_sesi_]').each(function() {
+            const id = $(this).attr('id').split('_').pop();
+            updateAvailableSpots(id);
         });
-
-        // Initialize when modal is shown
-        var tanggalAwal = tanggalInput.val();
-        var sesiAwal = sesiSelect.val();
-        fetchAvailableSpots(tanggalAwal, sesiAwal);
-        fetchAvailableSessions(tanggalAwal, spotSelect.val());
     });
-});
 </script>
 
-@endsection
 
+@endsection

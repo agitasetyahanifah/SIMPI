@@ -28,7 +28,7 @@ class BlogFactory extends Factory
             'judul' => $judul,
             'slug' => Str::slug($judul),
             'kategori_id' => KategoriBlog::inRandomOrder()->first()->id,
-            'image' => 'path/to/your/image.jpg',
+            'image' => '../images/ex-blog.png',
             'body' => implode("\n\n", $this->faker->paragraphs(5)),
         ];
     }
