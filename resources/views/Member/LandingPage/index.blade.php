@@ -379,6 +379,7 @@
                                 <img src="{{ asset('images/'.$alat->foto) }}" class="img-fluid" alt="{{ $alat->nama_alat }}">
                               @else
                                 <img src="{{ asset('../images/ex-alat.png') }}" class="img-fluid" alt="Fishing Image">
+                                {{-- <img src="https://picsum.photos/750/750" class="img-fluid" alt="Fishing Image"> --}}
                               @endif                        
                             </div>
                             <div class="col-md-6">

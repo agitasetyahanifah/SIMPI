@@ -16,13 +16,6 @@ class MemberLandingPageController extends Controller
     /**
      * Display a listing of the resource.
      */
-    // public function index()
-    // {
-    //     $images = Galeri::orderBy('created_at', 'desc')->paginate(3);
-    //     $blogs = Blog::latest()->paginate(3);
-    //     $alatPancing = AlatPancing::orderBy('created_at', 'desc')->paginate(6);
-    //     return view('member.landingpage.index', compact(['images', 'blogs', 'alatPancing']));
-    // }
 
     public function index()
     {
