@@ -14,9 +14,9 @@ class AdminPengelolaanIkanController extends Controller
      */
     public function index()
     {
-        $ikanMasuk = IkanMasuk::orderBy('tanggal', 'desc')->paginate(25);
+        $ikanMasuk = IkanMasuk::orderBy('tanggal', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
         $lastItem1 = $ikanMasuk->lastItem();
-        $ikanKeluar = IkanKeluar::orderBy('tanggal', 'desc')->paginate(25);
+        $ikanKeluar = IkanKeluar::orderBy('tanggal', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
         $lastItem2 = $ikanKeluar->lastItem();
         $jenisIkan = JenisIkan::orderByDesc('created_at')->paginate(5);
         $lastItem3 = $jenisIkan->lastItem();

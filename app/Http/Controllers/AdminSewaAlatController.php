@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 use App\Models\AlatPancing;
-use App\Models\AlatSewa;
 use App\Models\SewaAlat;
 use App\Models\User;
-use App\Models\SewaPemancingan;
-use Illuminate\Http\Request;
+use App\Models\Keuangan;
+use Carbon\Carbon;
 
 class AdminSewaAlatController extends Controller
 {
@@ -53,8 +55,6 @@ class AdminSewaAlatController extends Controller
         $sewaAlat->tgl_kembali = $request->tgl_kembali;
         $sewaAlat->save();
     
-        // Attach selected fishing equipment to the SewaAlat model
-        // $sewaAlat->alatPancing()->attach($request->nama_alat);
         foreach ($request->nama_alat as $alatId) {
             $sewaAlat->alatPancing()->attach($alatId);
         }
@@ -173,16 +173,27 @@ class AdminSewaAlatController extends Controller
     public function konfirmasiPembayaran($id, Request $request)
     {
         $alat = SewaAlat::findOrFail($id);
-
+    
         // Periksa apakah status sudah 'sudah dibayar'
         if ($alat->status === 'sudah dibayar') {
             return redirect()->back()->with('error', 'Pembayaran sudah dikonfirmasi sebelumnya.');
         }
-
+    
         // Perbarui status pembayaran
         $alat->status = $request->status;
         $alat->save();
-
+    
+        // Simpan informasi transaksi keuangan
+        $keuangan = new Keuangan();
+        $keuangan->kode_transaksi = 'TRSA' . strtoupper(Str::random(10));
+        $keuangan->user_id = Auth::id();
+        $keuangan->tanggal_transaksi = Carbon::now()->toDateString();
+        $keuangan->waktu_transaksi = Carbon::now()->toTimeString();
+        $keuangan->jumlah = $alat->biaya_sewa;
+        $keuangan->jenis_transaksi = 'pemasukan';
+        $keuangan->keterangan = 'Pembayaran Sewa Alat oleh ' . $alat->member->nama;
+        $keuangan->save();
+    
         return redirect()->back()->with('success', 'Pembayaran berhasil dikonfirmasi.');
     }
 
@@ -204,6 +215,22 @@ class AdminSewaAlatController extends Controller
     
         $sewaAlat->status_pengembalian = $status_pengembalian;
         $sewaAlat->save();
+
+        // Ambil denda dari tabel sewa_alat kolom denda
+        $denda = $sewaAlat->denda;
+
+        // Jika ada denda, masukkan denda ke dalam tabel keuangan
+        if ($denda > 0) {
+            $keuanganDenda = new Keuangan();
+            $keuanganDenda->kode_transaksi = 'TRSA' . strtoupper(Str::random(10));
+            $keuanganDenda->user_id = Auth::id();
+            $keuanganDenda->tanggal_transaksi = Carbon::now()->toDateString();
+            $keuanganDenda->waktu_transaksi = Carbon::now()->toTimeString();
+            $keuanganDenda->jumlah = $denda;
+            $keuanganDenda->jenis_transaksi = 'pemasukan';
+            $keuanganDenda->keterangan = 'Denda Keterlambatan Pengembalian Alat oleh ' . $sewaAlat->member->nama;
+            $keuanganDenda->save();
+        }
     
         return redirect()->back()->with('success', 'Status pengembalian telah diperbarui.');
     }    

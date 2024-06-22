@@ -17,7 +17,7 @@ class GaleriFactory extends Factory
     public function definition(): array
     {
         return [
-            'filename' => '../images/galeri.png', // Set the source image path here
+            'filename' => '../images/galeri.png',
         ];
     }
 }

@@ -11,8 +11,8 @@
           <a class="nav-link  {{ request()->routeIs('member.landingpage.index') ? 'active' : '' }}" aria-current="page" href="{{ route('member.landingpage.index') }}">Home</a>
           <a class="nav-link  {{ request()->routeIs('member.galeri.index') ? 'active' : '' }}" aria-current="page" href="{{ route('member.galeri.index') }}">Gallery</a>
           <a class="nav-link  {{ request()->routeIs('member.blog.index') ? 'active' : '' }}" aria-current="page" href="{{ route('member.blog.index') }}">Blogs</a>
-          <a class="nav-link  {{ request()->routeIs('member.spots.index') ? 'active' : '' }}" aria-current="page" href="{{ route('member.spots.index') }}">Fishing Spot Rental</a>
-          <a class="nav-link  {{ request()->routeIs('member.daftar-alat.index') ? 'active' : '' }}" aria-current="page" href="{{ route('member.daftar-alat.index') }}">Fishing Equipment Rental</a>
+          <a class="nav-link  {{ request()->routeIs('member.spots.index') ? 'active' : '' }}" aria-current="page" href="{{ route('member.spots.index') }}">Fishing Spot</a>
+          <a class="nav-link  {{ request()->routeIs('member.daftar-alat.index') ? 'active' : '' }}" aria-current="page" href="{{ route('member.daftar-alat.index') }}">Fishing Equipment</a>
         </div>
         <ul class="navbar-nav ms-lg-auto">
           <li class="nav-item dropdown" style="padding: 0px 4px;">

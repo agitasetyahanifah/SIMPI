@@ -11,8 +11,8 @@
           <a class="nav-link  {{ request()->routeIs('guest.landingpage.index') ? 'active' : '' }}" aria-current="page" href="{{ route('guest.landingpage.index') }}">Home</a>
           <a class="nav-link  {{ request()->routeIs('guest.galeri.index') ? 'active' : '' }}" aria-current="page" href="{{ route('guest.galeri.index') }}">Gallery</a>
           <a class="nav-link  {{ request()->routeIs('guest.blog.index') ? 'active' : '' }}" aria-current="page" href="{{ route('guest.blog.index') }}">Blogs</a>
-          <a class="nav-link  {{ request()->routeIs('guest.spots.index') ? 'active' : '' }}" aria-current="page" href="{{ route('guest.spots.index') }}">Fishing Spot Rental</a>
-          <a class="nav-link  {{ request()->routeIs('guest.daftar-alat.index') ? 'active' : '' }}" aria-current="page" href="{{ route('guest.daftar-alat.index') }}">Fishing Equipment Rental</a>
+          <a class="nav-link  {{ request()->routeIs('guest.spots.index') ? 'active' : '' }}" aria-current="page" href="{{ route('guest.spots.index') }}">Fishing Spot</a>
+          <a class="nav-link  {{ request()->routeIs('guest.daftar-alat.index') ? 'active' : '' }}" aria-current="page" href="{{ route('guest.daftar-alat.index') }}">Fishing Equipment</a>
         </div>
         <ul class="navbar-nav ms-lg-auto">
           @guest

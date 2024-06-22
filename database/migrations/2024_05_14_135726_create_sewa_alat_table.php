@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('tgl_kembali');
             $table->integer('jumlah');
             $table->integer('biaya_sewa')->nullable();
+            $table->integer('denda')->nullable();
             $table->enum('status', ['menunggu pembayaran', 'sudah dibayar', 'dibatalkan'])->default('menunggu pembayaran');
             $table->enum('status_pengembalian', ['proses', 'sudah kembali', 'terlambat kembali'])->nullable();
             $table->timestamps();

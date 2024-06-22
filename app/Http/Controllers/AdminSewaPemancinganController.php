@@ -6,10 +6,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;
-use Carbon\Carbon;
+use Illuminate\Support\Str;
 use App\Models\SewaSpot;
 use App\Models\User;
 use App\Models\Spot;
+use App\Models\Keuangan;
+use Carbon\Carbon;
 
 class AdminSewaPemancinganController extends Controller
 {
@@ -151,6 +153,17 @@ class AdminSewaPemancinganController extends Controller
         // Perbarui status pembayaran
         $pemancingan->status = $request->status;
         $pemancingan->save();
+
+        // Simpan informasi transaksi keuangan
+        $keuangan = new Keuangan();
+        $keuangan->kode_transaksi = 'TRSS' . strtoupper(Str::random(10));
+        $keuangan->user_id = Auth::id();
+        $keuangan->tanggal_transaksi = Carbon::now()->toDateString();
+        $keuangan->waktu_transaksi = Carbon::now()->toTimeString();
+        $keuangan->jumlah = $pemancingan->biaya_sewa;
+        $keuangan->jenis_transaksi = 'pemasukan';
+        $keuangan->keterangan = 'Pembayaran Sewa Spot oleh ' . $pemancingan->member->nama;
+        $keuangan->save();
 
         return redirect()->back()->with('success', 'Pembayaran berhasil dikonfirmasi.');
     }

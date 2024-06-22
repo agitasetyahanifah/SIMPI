@@ -169,7 +169,7 @@
                                         <form id="deleteForm" action="/admin/dashboard/{id}" method="post">
                                             @csrf
                                             @method('DELETE')
-                                            <input type="hidden" name="image_id" id="deleteImageId"> <!-- Tambahkan input hidden untuk image_id -->
+                                            <input type="hidden" name="image_id" id="deleteImageId">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                             <button type="submit" class="btn btn-danger" id="confirmDelete">Hapus</button>
                                         </form>
@@ -209,19 +209,6 @@
         </div>
     </div>
 
-    {{-- Forum Pemancingan --}}
-    {{-- <div class="row mt-3">
-        <div class="col-lg-12">
-            <div class="card">
-                <div class="card-body p-3">
-                    <div class="d-flex flex-column">
-                        <h5 class="font-weight-bolder mb-0">Forum Pemancingan</h5>
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 </div>
 </div>
 
@@ -248,40 +235,5 @@
         });
     });
 </script>
-
-{{-- Grafik Jumlah Pengunjung --}}
-{{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    // Data untuk grafik (contoh data)
-    var data = {
-        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-        datasets: [{
-            label: "Jumlah Pengunjung",
-            backgroundColor: "rgba(75,192,192,0.2)",
-            borderColor: "rgba(75,192,192,1)",
-            borderWidth: 1,
-            data: [65, 59, 80, 81, 56, 55], // Contoh data jumlah pengunjung per bulan
-        }]
-    };
-
-    // Konfigurasi grafik
-    var options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    };
-
-    // Inisialisasi grafik
-    var ctx = document.getElementById('line-chart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'line',
-        data: data,
-        options: options
-    });
-</script> --}}
 
 @endsection

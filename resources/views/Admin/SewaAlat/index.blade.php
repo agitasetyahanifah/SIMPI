@@ -151,6 +151,17 @@
                                                             $alat->save();
                                                         @endphp
                                                     @endif
+
+                                                    @php
+                                                        $today = Carbon\Carbon::now();
+                                                        $tglKembali = Carbon\Carbon::parse($alat->tgl_kembali);
+                                                        // Tentukan status pengembalian apakah terlambat atau tidak
+                                                        if ($today->greaterThan($tglKembali) && $alat->status_pengembalian !== 'sudah kembali') {
+                                                            $alat->status_pengembalian = 'terlambat kembali';
+                                                            $alat->save();
+                                                        }
+                                                    @endphp
+
                                                     @if($alat->status_pengembalian === 'proses')
                                                         <span class="text-warning">Proses</span>
                                                     @elseif($alat->status_pengembalian === 'sudah kembali')
@@ -167,8 +178,19 @@
                                         @php
                                             $today = Carbon\Carbon::now();
                                             $tglKembali = Carbon\Carbon::parse($alat->tgl_kembali);
-                                            $selisihHari = $today->diffInDays($tglKembali);
-                                            $denda = $selisihHari > 0 ? $selisihHari * 5000 : 0;
+                                            $selisihHari = $tglKembali->diffInDays($today, false);
+                                            $denda = $today->gt($tglKembali) ? $selisihHari * 5000 : 0;
+
+                                            if ($alat->denda != $denda) {
+                                                $alat->denda = $denda;
+                                                $alat->save();
+                                            }
+                                        
+                                            // Debugging output
+                                            // echo "Today's Date: " . $today->toDateString() . "<br>";
+                                            // echo "Return Date: " . $tglKembali->toDateString() . "<br>";
+                                            // echo "Difference in Days: " . $selisihHari . "<br>";
+                                            // echo "Fine: Rp " . number_format($denda, 0, ',', '.') . " ,-<br>";
                                         @endphp
                                         <tr>
                                             <th>Denda Terlambat</th>
@@ -193,7 +215,8 @@
                                             </div>
                                             <button type="button" class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#konfirmasiModal{{ $alat->id }}">
                                                 Konfirmasi
-                                            </button>                                                                                    </form>
+                                            </button>                                                                                    
+                                        </form>
                                     @elseif($alat->status === 'sudah dibayar')
                                         <p style="color: green"><i class="fas fa-check-circle" style="font-size: 18px"></i> Pembayaran sudah dikonfirmasi</p>
                                     @elseif($alat->status === 'dibatalkan')

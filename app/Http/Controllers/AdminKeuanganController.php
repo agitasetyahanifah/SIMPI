@@ -4,14 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Keuangan;
+use Illuminate\Support\Str;
 
 class AdminKeuanganController extends Controller
 {
     public function index()
     {
-        $keuangans = Keuangan::orderBy('tanggal_transaksi', 'desc')->paginate(25);
+        $mutasiTransaksi = Keuangan::orderBy('tanggal_transaksi', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
+        $keuangans = Keuangan::orderBy('tanggal_transaksi', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
         $lastItem = $keuangans->lastItem();
-        return view('admin.keuangan.index', compact('keuangans', 'lastItem'));
+        return view('admin.keuangan.index', compact('keuangans', 'lastItem', 'mutasiTransaksi'));
     }
 
     public function store(Request $request)
@@ -23,21 +25,34 @@ class AdminKeuanganController extends Controller
             'jenis_transaksi' => 'required|in:pemasukan,pengeluaran',
             'keterangan' => 'nullable|string|max:255',
         ]);
-
+    
+        // Generate kode transaksi dengan awalan khusus
+        $prefix = $request->jenis_transaksi === 'pemasukan' ? 'IN' : 'OUT';
+        $kodeTransaksi = $prefix . strtoupper(Str::random(10));
+    
+        // Ambil user_id
+        $userId = auth()->user()->id;
+    
+        // Buat instance baru dari model Keuangan
+        $keuangan = new Keuangan();
+        $keuangan->kode_transaksi = $kodeTransaksi;
+        $keuangan->user_id = $userId;
+        $keuangan->tanggal_transaksi = $request->input('tanggal_transaksi');
+        $keuangan->waktu_transaksi = now()->format('H:i:s');
+        $keuangan->jumlah = $request->input('jumlah');
+        $keuangan->jenis_transaksi = $request->input('jenis_transaksi');
+        $keuangan->keterangan = $request->input('keterangan');
+    
         // Simpan data ke database
-        Keuangan::create($validatedData);
-
+        $keuangan->save();
+    
         // Redirect atau response sesuai kebutuhan
         return redirect()->route('admin.keuangan.index')->with('success', 'Transaksi berhasil ditambahkan!');
-    }
+    }    
 
     public function edit($id)
     {
-        // Mengambil data transaksi keuangan berdasarkan ID
-        $keuangan = Keuangan::findOrFail($id);
-        
-        // Mengembalikan view edit dengan data transaksi yang dipilih
-        return view('Admin.Keuangan.edit', compact('keuangan'));
+        //
     }
 
     public function update(Request $request, $id)
@@ -71,5 +86,15 @@ class AdminKeuanganController extends Controller
 
         return redirect()->back()->with('success', 'Transaksi berhasil dihapus.');
     }
+
+    public function hitungSaldo()
+    {
+        $totalPemasukan = Keuangan::where('jenis_transaksi', 'pemasukan')->sum('jumlah');
+        $totalPengeluaran = Keuangan::where('jenis_transaksi', 'pengeluaran')->sum('jumlah');
+        
+        $saldo = $totalPemasukan - $totalPengeluaran;
+        return $saldo;
+    }
+    
 
 }

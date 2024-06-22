@@ -18,9 +18,4 @@ class AlatPancing extends Model
         return $this->hasMany(SewaAlat::class);
     }
 
-    // public function alatSewa()
-    // {
-    //     return $this->hasMany(AlatSewa::class, 'alat_id');
-    //     // return $this->hasMany(AlatSewa::class);
-    // }
 }

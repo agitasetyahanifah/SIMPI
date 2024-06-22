@@ -47,11 +47,11 @@ class AdminAlatPancingController extends Controller
         // Membuat entri baru dalam tabel alat_pancing
         AlatPancing::create([
             'foto' => $fotoFileName, // Nama file foto
-            'nama_alat' => $request->nama_alat, // Nama alat
-            'harga' => $request->harga, // Harga
-            'jumlah' => $request->jumlah, // Jumlah
-            'status' => $request->status, // Status
-            'spesifikasi' => $request->spesifikasi, // Spesifikasi (opsional)
+            'nama_alat' => $request->nama_alat,
+            'harga' => $request->harga,
+            'jumlah' => $request->jumlah,
+            'status' => $request->status,
+            'spesifikasi' => $request->spesifikasi,
         ]);
 
         // Redirect kembali ke halaman dengan pesan sukses

@@ -168,7 +168,7 @@
                  <div class="tab-content mt-3">
                   {{-- Tab Pengelolaan Ikan Masuk --}}
                   <div class="tab-pane fade show active" id="profile-tabs-simple" role="tabpanel" aria-labelledby="profile-tabs-simple">
-                      <h5>Pengelolaan Ikan Masuk</h5>
+                      {{-- <h5>Pengelolaan Ikan Masuk</h5> --}}
                       {{-- Button Tambah --}}
                       <form action="{{ route('admin.pengelolaan_ikan.ikan_masuk.store') }}" method="post">
                         @csrf
@@ -190,7 +190,7 @@
                                     <div class="modal-body">
                                         <div class="form-group">
                                             <label for="tanggal_ikan_masuk" class="col-form-label">Tanggal Ikan Masuk</label>
-                                            <input type="date" class="form-control" id="tanggal_ikan_masuk" name="tanggal_ikan_masuk" required>
+                                            <input type="date" class="form-control" id="tanggal_ikan_masuk" name="tanggal_ikan_masuk" value="{{ date('Y-m-d') }}" required>
                                         </div>
                                         <div class="form-group">
                                           <label for="jenis_ikan" class="col-form-label">Jenis Ikan</label>
@@ -352,7 +352,7 @@
 
                   {{-- Tab Pengelolaan Ikan Keluar --}}
                   <div class="tab-pane fade" id="dashboard-tabs-simple" role="tabpanel" aria-labelledby="dashboard-tabs-simple">
-                      <h5>Pengelolaan Ikan Keluar</h5>
+                      {{-- <h5>Pengelolaan Ikan Keluar</h5> --}}
                       {{-- Button Tambah --}}
                       <form action="{{ route('admin.pengelolaan_ikan.ikan_keluar.store') }}" method="post">
                         @csrf
@@ -374,7 +374,7 @@
                                     <div class="modal-body">
                                         <div class="form-group">
                                             <label for="tanggal_ikan_keluar" class="col-form-label">Tanggal Ikan Keluar</label>
-                                            <input type="date" class="form-control" id="tanggal_ikan_keluar" name="tanggal_ikan_keluar" required>
+                                            <input type="date" class="form-control" id="tanggal_ikan_keluar" name="tanggal_ikan_keluar" value="{{ date('Y-m-d') }}" required>
                                         </div>
                                         <div class="form-group">
                                           <label for="jenis_ikan" class="col-form-label">Jenis Ikan</label>

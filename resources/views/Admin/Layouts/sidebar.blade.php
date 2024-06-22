@@ -39,7 +39,7 @@
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="ni ni-map-big"></i>
             </div>
-            <span class="nav-link-text ms-1">Fishing Spot Rental</span>
+            <span class="nav-link-text ms-1">Fishing Spot Reservations</span>
           </a>
         </li>
         <li class="nav-item">

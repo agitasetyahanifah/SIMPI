@@ -13,12 +13,18 @@ return new class extends Migration
     {
         Schema::create('keuangan', function (Blueprint $table) {
             $table->id();
+            $table->string('kode_transaksi')->unique();
+            $table->unsignedBigInteger('user_id');
             $table->date('tanggal_transaksi');
+            $table->time('waktu_transaksi');
             $table->integer('jumlah');
             $table->enum('jenis_transaksi', ['pemasukan', 'pengeluaran']);
             $table->string('keterangan')->nullable();
             $table->timestamps();
-        });
+        
+            // Menambahkan foreign key constraint pada kolom user_id
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        });        
     }
 
     /**
