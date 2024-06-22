@@ -36,7 +36,7 @@
           </div>
           {{-- Modal Tambah Member --}}
           <div class="modal fade" id="exampleModalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalMessageTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-dialog modal-dialog-centered modal-m" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Tambah Member</h5>
@@ -53,7 +53,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="telepon" class="col-form-label">Telepon</label>
-                                <input type="text" class="form-control" id="telepon" name="telepon" required oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                <input type="text" class="form-control" id="telepon" name="telepon" maxlength="13" required oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                             </div>
                             <div class="form-group">
                                 <label for="email" class="col-form-label">Email</label>
@@ -141,7 +141,7 @@
               <!-- Modal Edit member Pancing -->
               @foreach($members as $member)
               <div class="modal fade" id="editModal{{ $member->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $member->id }}" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                  <div class="modal-dialog modal-dialog-centered modal-m" role="document">
                       <div class="modal-content">
                           <div class="modal-header">
                               <h5 class="modal-title" id="editModalLabel{{ $member->id }}">Edit Data Member</h5>
@@ -159,7 +159,7 @@
                                   </div>
                                   <div class="form-group">
                                     <label for="telepon{{ $member->id }}" class="col-form-label">Telepon</label>
-                                    <input type="text" class="form-control" id="telepon{{ $member->id }}" name="telepon" value="{{ $member->telepon }}" required oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                                    <input type="text" class="form-control" id="telepon{{ $member->id }}" name="telepon" value="{{ $member->telepon }}" maxlength="13" required oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                                   </div>                                                               
                                   <div class="form-group">
                                       <label for="email{{ $member->id }}" class="col-form-label">Email</label>

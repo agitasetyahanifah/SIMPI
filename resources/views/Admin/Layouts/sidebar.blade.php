@@ -23,7 +23,7 @@
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-dark text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-air-baloon"></i>
             </div>
-            <span class="nav-link-text ms-1">Fishing Gallery</span>
+            <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
         <li class="nav-item">

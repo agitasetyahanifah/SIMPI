@@ -57,6 +57,19 @@
             </div>
         </div>
     </div> --}}
+
+    <div class="card p-3">
+        <div class="row">
+            <div class="col-md-3">
+                <img src="../images/hai.jpg" alt="hai.jpd" style="width: 300px; height:auto">
+            </div>
+            <div class="col-md-9 d-flex align-items-center">
+                <h2>
+                    Selamat Datang, <a style="color: #FF9940">{{ Auth::user()->nama }}</a> ! 
+                </h2>
+            </div>
+        </div>
+    </div>
     
     {{-- Galeri --}}
     <div class="row mt-3">

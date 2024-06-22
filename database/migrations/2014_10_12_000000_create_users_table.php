@@ -27,7 +27,7 @@ return new class extends Migration
 
         // Insert default admin
         DB::table('users')->insert([
-            'nama' => 'Admin2024',
+            'nama' => 'Admin 2024',
             'telepon' => '02717851580',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('@Admin2024'),

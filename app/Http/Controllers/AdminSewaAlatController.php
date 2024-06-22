@@ -22,7 +22,6 @@ class AdminSewaAlatController extends Controller
         $members = User::where('role', 'member')->orderBy('nama', 'asc')->get();        
         $alatPancing = AlatPancing::all();
         $alatPancings = AlatPancing::where('status', 'available')->get();
-        // $alatSewa = AlatSewa::all();
         return view('admin.sewaalat.index', compact('sewaAlat', 'lastItem', 'member', 'members', 'alatPancing', 'alatPancings'));
     }
 

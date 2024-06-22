@@ -155,35 +155,6 @@ class AdminSewaPemancinganController extends Controller
         return redirect()->back()->with('success', 'Pembayaran berhasil dikonfirmasi.');
     }
 
-    // public function getAvailableSpotsJson(Request $request)
-    // {
-    //     $tanggalSewa = $request->input('tanggal_sewa');
-    //     $sesi = $request->input('sesi');
-    //     $currentSpotId = $request->input('current_spot_id');
-        
-    //     // Ambil semua nomor spot yang belum dipesan pada tanggal dan sesi tertentu
-    //     $availableSpots = Spot::whereDoesntHave('sewaSpots', function ($query) use ($tanggalSewa, $sesi) {
-    //         $query->where('tanggal_sewa', $tanggalSewa)
-    //               ->where('sesi', $sesi);
-    //     })->get();
-        
-    //     // Filter nomor spot yang masih memiliki slot untuk disewa pada sesi lain
-    //     $availableSpots = $availableSpots->filter(function ($spot) use ($tanggalSewa) {
-    //         // Cek apakah spot ini memiliki sesi yang tersedia selain sesi yang sedang dicek
-    //         return !$spot->sewaSpots()->where('tanggal_sewa', $tanggalSewa)->exists();
-    //     });
-
-    //     // Tambahkan spot yang saat ini sedang dipilih jika ada
-    //     if ($currentSpotId) {
-    //         $currentSpot = Spot::find($currentSpotId);
-    //         if ($currentSpot) {
-    //             $availableSpots->push($currentSpot);
-    //         }
-    //     }
-        
-    //     return response()->json(['jsonSpots' => $availableSpots]);
-    // }
-
     public function getAvailableSpotsJson(Request $request)
     {
         $tanggalSewa = $request->input('tanggal_sewa');

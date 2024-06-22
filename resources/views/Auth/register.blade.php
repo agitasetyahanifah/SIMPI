@@ -70,7 +70,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="telepon" class="form-label">Phone</label>
-                                        <input type="text" class="form-control" id="telepon" name="telepon" placeholder="08xxxxxxxxx" maxlength="13" required>
+                                        <input type="text" class="form-control" id="telepon" name="telepon" placeholder="08xxxxxxxxx" maxlength="13" required oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                                     </div>
                                 </div>
                                 <div class="col-md-6">

@@ -139,7 +139,7 @@
       color: #666;
       text-align: right;
       margin-right: 5px;
-  }
+    }
 
     .day-forecast {
         text-align: center;

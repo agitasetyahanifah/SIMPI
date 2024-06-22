@@ -38,12 +38,12 @@
             </form> --}}
             <!-- End Form Search -->
 
-            <form action="{{ route('admin.sewaPemancingan.search') }}" method="GET">
+            {{-- <form action="{{ route('admin.sewaPemancingan.search') }}" method="GET">
                 <div class="input-group mt-3">
                     <input type="text" class="form-control" id="searchInput" name="keyword" placeholder="Cari berdasarkan nama pelanggan/kode booking" aria-label="Cari berdasarkan nama pelanggan/kode booking" aria-describedby="button-addon2">
                     <button class="btn btn-outline-primary mb-0" type="submit" id="button-addon2">Cari</button>                    
                 </div>
-            </form>
+            </form> --}}
           </div>
           <div class="card-body ">
             <div class="table-responsive p-0">

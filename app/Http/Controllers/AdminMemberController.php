@@ -33,7 +33,7 @@ class AdminMemberController extends Controller
         // Validasi input
         $request->validate([
             'nama' => 'required|string|max:255',
-            'telepon' => 'required|string|max:15', // Adjust max length as needed
+            'telepon' => 'required|string|max:15',
             'email' => 'required|email|max:255|unique:user,email',
             'password' => 'required|string|min:8',
             'status' => 'required|string|in:aktif,tidak aktif',

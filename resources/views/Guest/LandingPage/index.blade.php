@@ -52,11 +52,132 @@
     }
 
     .card-title2 {
-        margin-bottom: 2px; /* Kurangi margin bawah */
+        margin-bottom: 2px;
     }
 
     .card-text2 {
-        margin-bottom: 5px; /* Kurangi margin bawah */
+        margin-bottom: 5px;
+    }
+
+    .weather-container {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .current-weather {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 20px;
+        /* max-width: 800px; */
+        margin: 0 auto;
+    }
+
+    .weather-header {
+        display: flex;
+        align-items: center;
+    }
+
+    .weather-info {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .weather-icon {
+        font-size: 64px;
+        margin-right: 20px;
+        color: #ffcc00;
+    }
+
+    .weekly-forecast {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .temp {
+        font-size: 36px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .details span {
+        display: block;
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 3px;
+    }
+
+    .location-info {
+        text-align: right;
+        margin-top: 10px;
+    }
+
+    .location {
+        font-size: 20px; 
+        color: #333;
+        margin-bottom: 3px;
+        text-align: right;
+        margin-right: 5px;
+    }
+
+    .weather-details {
+        margin-top: 20px;
+    }
+
+    .day {
+      font-size: 16px;
+      color: #666;
+      text-align: right;
+      margin-right: 5px;
+    }
+
+    .day-forecast {
+        text-align: center;
+        width: 11%;
+    }
+
+    .day-forecast .day {
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .day-forecast .icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    .day-forecast .temp {
+        font-size: 14px;
+        color: #666;
+    }
+
+    @media (max-width: 600px) {
+        .weather-header {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .location-info {
+            margin-top: 50px;
+        }
+    }
+
+    .chart {
+        text-align: center;
+        height: 150px;
+    }
+
+    .chart canvas {
+        max-width: 100%;
+        height: 100%;
     }
 
   </style>
@@ -71,42 +192,42 @@
     {{-- Content --}}
     <div class="container-fluid py-2">
 
-      {{-- Ketersediaan Spot Pemancingan dan Informasi Cuaca --}}
-      <div class="row row-cols-md-2">
-        {{-- Ketersediaan Spot Pemancingan --}}
-        {{-- <div class="col-md-4 mt-2">
-          <div class="col-12">
+      <!-- Informasi Cuaca -->
+      <div class="col-md-12 mt-2">
+        <div class="col-12">
             <div class="card shadow-sm border-0">
                 <div class="card-body">
-                    <div class="row">
-                      <div class="col-12 col-md-6 mb-md-0">
-                        <h5 class="font-weight-bolder">Ketersediaan Spot Pemancingan</h5>
-                        <small class="text-muted">Terakhir diperbarui pada: {{ $waktuTerbaru }}</small>
-                      </div>
-                      <div class="col-12 col-md-6 d-flex align-items-center justify-content-center justify-content-md-end mt-3 mt-md-2">
-                        <a class="btn btn-outline-primary" style="font-size: 25pt">{{ $terakhirDiperbaruiKetersediaan }}</a>
-                      </div>
+                    <div class="current-weather">
+                        <div class="weather-header">
+                            <div class="weather-icon" id="weatherIcon">
+                                <!-- Weather icon will be updated dynamically -->
+                            </div>
+                            <div class="weather-info">
+                                <div class="temp" id="temperature">
+                                    <!-- Temperature will be updated dynamically -->
+                                </div>
+                                <div class="details">
+                                    <span id="description"></span>
+                                    <span id="humidity"></span>
+                                    <span id="wind"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="location-info">
+                            <div class="location" id="city"></div>
+                            <div class="day" id="day"></div>
+                        </div>
+                    </div>
+                    <div class="weather-details">
+                        <div class="chart">
+                            <canvas id="weatherChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="weekly-forecast" id="weekly-forecast">
+                        <!-- Weekly forecast will be updated dynamically -->
                     </div>
                 </div>
             </div>
-          </div>
-        </div> --}}
-        {{-- Informasi Cuaca --}}
-        <div class="col-md-12 mt-2">
-          <div class="col-12">
-              <div class="card shadow-sm border-0">
-                  <div class="card-body">
-                      <div class="row">
-                          <h5 class="font-weight-bolder">Informasi Cuaca</h5>
-                      </div>
-                      <div class="row mt-3">
-                          <div class="col">
-
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
         </div>
       </div>
 
@@ -356,176 +477,6 @@
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/chartjs.min.js"></script>
   <script>
-    var ctx = document.getElementById("chart-bars").getContext("2d");
-
-    new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        datasets: [{
-          label: "Sales",
-          tension: 0.4,
-          borderWidth: 0,
-          borderRadius: 4,
-          borderSkipped: false,
-          backgroundColor: "#fff",
-          data: [450, 200, 100, 220, 500, 100, 400, 230, 500],
-          maxBarThickness: 6
-        }, ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          }
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        scales: {
-          y: {
-            grid: {
-              drawBorder: false,
-              display: false,
-              drawOnChartArea: false,
-              drawTicks: false,
-            },
-            ticks: {
-              suggestedMin: 0,
-              suggestedMax: 500,
-              beginAtZero: true,
-              padding: 15,
-              font: {
-                size: 14,
-                family: "Open Sans",
-                style: 'normal',
-                lineHeight: 2
-              },
-              color: "#fff"
-            },
-          },
-          x: {
-            grid: {
-              drawBorder: false,
-              display: false,
-              drawOnChartArea: false,
-              drawTicks: false
-            },
-            ticks: {
-              display: false
-            },
-          },
-        },
-      },
-    });
-
-
-    var ctx2 = document.getElementById("chart-line").getContext("2d");
-
-    var gradientStroke1 = ctx2.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke1.addColorStop(1, 'rgba(203,12,159,0.2)');
-    gradientStroke1.addColorStop(0.2, 'rgba(72,72,176,0.0)');
-    gradientStroke1.addColorStop(0, 'rgba(203,12,159,0)'); //purple colors
-
-    var gradientStroke2 = ctx2.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke2.addColorStop(1, 'rgba(20,23,39,0.2)');
-    gradientStroke2.addColorStop(0.2, 'rgba(72,72,176,0.0)');
-    gradientStroke2.addColorStop(0, 'rgba(20,23,39,0)'); //purple colors
-
-    new Chart(ctx2, {
-      type: "line",
-      data: {
-        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        datasets: [{
-            label: "Mobile apps",
-            tension: 0.4,
-            borderWidth: 0,
-            pointRadius: 0,
-            borderColor: "#FF9940",
-            borderWidth: 3,
-            backgroundColor: gradientStroke1,
-            fill: true,
-            data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-            maxBarThickness: 6
-
-          },
-          {
-            label: "Websites",
-            tension: 0.4,
-            borderWidth: 0,
-            pointRadius: 0,
-            borderColor: "#3A416F",
-            borderWidth: 3,
-            backgroundColor: gradientStroke2,
-            fill: true,
-            data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
-            maxBarThickness: 6
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          }
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        scales: {
-          y: {
-            grid: {
-              drawBorder: false,
-              display: true,
-              drawOnChartArea: true,
-              drawTicks: false,
-              borderDash: [5, 5]
-            },
-            ticks: {
-              display: true,
-              padding: 10,
-              color: '#b2b9bf',
-              font: {
-                size: 11,
-                family: "Open Sans",
-                style: 'normal',
-                lineHeight: 2
-              },
-            }
-          },
-          x: {
-            grid: {
-              drawBorder: false,
-              display: false,
-              drawOnChartArea: false,
-              drawTicks: false,
-              borderDash: [5, 5]
-            },
-            ticks: {
-              display: true,
-              color: '#b2b9bf',
-              padding: 20,
-              font: {
-                size: 11,
-                family: "Open Sans",
-                style: 'normal',
-                lineHeight: 2
-              },
-            }
-          },
-        },
-      },
-    });
-  </script>
-  <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
       var options = {
@@ -548,6 +499,128 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="../assets/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
+
+    {{-- Javascrip Chart Cuaca --}}
+    <script>
+      const ctx = document.getElementById('weatherChart').getContext('2d');
+      const weatherChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: [], // Labels akan diisi dengan jam/jam tertentu dari data OpenWeatherMap
+              datasets: [{
+                  label: 'Suhu (°C)',
+                  data: [], // Data akan diisi dengan suhu pada jam tertentu dari data OpenWeatherMap
+                  backgroundColor: 'rgba(255, 204, 0, 0.2)',
+                  borderColor: 'rgba(255, 204, 0, 1)',
+                  borderWidth: 2,
+                  fill: true,
+              }]
+          },
+          options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                  y: {
+                      beginAtZero: false
+                  }
+              }
+          }
+      });
+  
+      async function fetchWeatherDataForChart() {
+          try {
+              const apiKey = "8f6451a388d8d187d4edddbb1a50ca3a";
+              const city = "malangjiwan";
+              const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
+  
+              const response = await fetch(apiUrl);
+              const data = await response.json();
+              console.log(data);
+  
+              const chartLabels = data.list.map(item => {
+                  const date = new Date(item.dt * 1000);
+                  return `${date.getHours()}:00`;
+              });
+  
+              const chartData = data.list.map(item => item.main.temp);
+  
+              weatherChart.data.labels = chartLabels;
+              weatherChart.data.datasets[0].data = chartData;
+              weatherChart.update();
+          } catch (error) {
+              console.error('Failed to fetch weather data for chart:', error);
+          }
+      }
+  
+      fetchWeatherDataForChart();
+    </script>
+  
+    <!-- Script JavaScript untuk mendapatkan data cuaca dari OpenWeatherMap -->
+    <script>
+      const apiKey = "8f6451a388d8d187d4edddbb1a50ca3a";
+      const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=malangjiwan";
+  
+      const iconMapping = {
+          "01d": "wi-day-sunny",
+          "01n": "wi-night-clear",
+          "02d": "wi-day-cloudy",
+          "02n": "wi-night-alt-cloudy",
+          "03d": "wi-cloud",
+          "03n": "wi-cloud",
+          "04d": "wi-cloudy",
+          "04n": "wi-cloudy",
+          "09d": "wi-showers",
+          "09n": "wi-showers",
+          "10d": "wi-day-rain",
+          "10n": "wi-night-alt-rain",
+          "11d": "wi-thunderstorm",
+          "11n": "wi-thunderstorm",
+          "13d": "wi-snow",
+          "13n": "wi-snow",
+          "50d": "wi-fog",
+          "50n": "wi-fog"
+      };
+  
+      const descriptionMapping = {
+          "clear sky": "Langit Cerah",
+          "few clouds": "Sedikit Berawan",
+          "scattered clouds": "Berawan Tersebar",
+          "broken clouds": "Berawan Sebagian",
+          "shower rain": "Hujan Gerimis",
+          "rain": "Hujan",
+          "thunderstorm": "Badai Petir",
+          "snow": "Salju",
+          "mist": "Kabut"
+      };
+  
+      function capitalizeWords(str) {
+          return str.replace(/\b\w/g, char => char.toUpperCase());
+      }
+  
+      async function checkWeather() {
+          const response = await fetch(apiUrl + `&appid=${apiKey}`);
+          const data = await response.json();
+  
+          console.log(data);
+  
+          const iconClass = iconMapping[data.weather[0].icon];
+          document.getElementById("weatherIcon").innerHTML = `<i class="wi ${iconClass}"></i>`;
+          document.getElementById("temperature").innerHTML = `${data.main.temp}°C`;
+  
+          const description = descriptionMapping[data.weather[0].description.toLowerCase()] || data.weather[0].description;
+          document.getElementById("description").innerHTML = capitalizeWords(description);
+  
+          const dayName = new Date(data.dt * 1000).toLocaleDateString('id-ID', { weekday: 'long' });
+          document.getElementById("day").innerHTML = dayName;
+  
+          document.getElementById("humidity").innerHTML = `Kelembapan: ${data.main.humidity}%`;
+          document.getElementById("wind").innerHTML = `Angin: ${data.wind.speed} km/h`;
+          document.getElementById("city").innerHTML = data.name;
+          
+        }
+  
+        checkWeather();
+    </script>
 
 </body>
 
