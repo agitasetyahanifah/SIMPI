@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" type="image/png" sizes="16x16" href="../images/logo.png">
   <title>
-    SIMPI | Alat Pancing
+    SIMPI | List of Fishing Equipment
   </title>
   <!-- Fonts and icons -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -71,11 +71,11 @@
 
     <div class="container-fluid py-2">
       <div class="mt-3 mb-2">
-        <a href="{{ route('member.landingpage.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Kembali</a>
+        <a href="{{ route('member.landingpage.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Back</a>
       </div>
       <div class="mt-3 mb-4 d-flex justify-content-between align-items-center">
-        <h2 class="font-weight-bolder mt-4 mb-0 mx-auto"><b>Daftar Alat Pancing yang Disewakan</b></h2>
-        <a href="{{ route('member.riwayat-sewa') }}" class="btn btn-primary mt-4 mb-0 ms-2">Riwayat Sewa</a>
+        <h2 class="font-weight-bolder mt-4 mb-0 mx-auto"><b>List of Fishing Equipment</b></h2>
+        <a href="{{ route('member.riwayat-sewa') }}" class="btn btn-primary mt-4 mb-0 ms-2">Rental History</a>
       </div>
      
       @if(session('success'))
@@ -106,10 +106,10 @@
               @endif
               <div class="card-body2">
                   <h5 class="card-title2">{{ $alat->nama_alat }}</h5>
-                  <p class="card-text2" style="color: orangered;">Rp {{ number_format($alat->harga, 0, ',', '.') }}/hari</p>
+                  <p class="card-text2" style="color: orangered;">Rp {{ number_format($alat->harga, 0, ',', '.') }}/day</p>
                   <div class="text-center">
-                    <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#detailModal{{ $alat->id }}">Detail</button>
-                    <button class="btn {{ $alat->status == 'not available' ? 'btn-secondary' : 'btn-warning' }} mt-2" data-bs-toggle="modal" data-bs-target="#sewaModal{{ $alat->id }}" {{ $alat->status == 'not available' ? 'disabled' : '' }}>Sewa</button>
+                    <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#detailModal{{ $alat->id }}">Details</button>
+                    <button class="btn {{ $alat->status == 'not available' ? 'btn-secondary' : 'btn-warning' }} mt-2" data-bs-toggle="modal" data-bs-target="#sewaModal{{ $alat->id }}" {{ $alat->status == 'not available' ? 'disabled' : '' }}>Rent</button>
                   </div>
               </div>
             </div>
@@ -119,7 +119,7 @@
       </div>
       {{-- Cek ada data atau kosong --}}
       @if($alatPancing->isEmpty())
-        <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+        <h6 class="text-muted text-center">No data has been added yet</h6>
       @endif
     </div>
     <!-- Pagination -->
@@ -153,7 +153,7 @@
         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="detailModalLabel{{ $alat->id }}">Detail Alat Pancing</h5>
+                    <h5 class="modal-title" id="detailModalLabel{{ $alat->id }}">Fishing Equipment Details</h5>
                     <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -169,15 +169,15 @@
                         </div>
                         <div class="col-md-6">
                             <h5>{{ $alat->nama_alat }}</h5>
-                            <p>Harga: {{ number_format($alat->harga, 0, ',', '.') }} /hari</p>
-                            <p>Jumlah Tersedia: {{ $alat->jumlah }}</p>
+                            <p>Price: {{ number_format($alat->harga, 0, ',', '.') }} /day</p>
+                            <p>Available Quantity: {{ $alat->jumlah }}</p>
                             <p>Status: <span class="badge {{ $alat->status == 'available' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $alat->status }}</span></p>
-                            <p>Spesifikasi: </p><p style="text-align: justify;">{!! nl2br(e($alat->spesifikasi)) !!}</p>
+                            <p>Specifications: </p><p style="text-align: justify;">{!! nl2br(e($alat->spesifikasi)) !!}</p>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -190,7 +190,7 @@
       <div class="modal-dialog">
           <div class="modal-content">
               <div class="modal-header">
-                  <h5 class="modal-title" id="sewaModalLabel{{ $alat->id }}">Sewa Alat Pancing</h5>
+                  <h5 class="modal-title" id="sewaModalLabel{{ $alat->id }}">Rent Fishing Equipment</h5>
                   <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -200,22 +200,22 @@
                       @csrf
                       <input type="hidden" name="alat_id" value="{{ $alat->id }}">
                       <div class="mb-3">
-                        <label for="nama_pelanggan_{{ $alat->id }}" class="form-label">Nama Pelanggan</label>
+                        <label for="nama_pelanggan_{{ $alat->id }}" class="form-label">Customer Name</label>
                         <input type="text" class="form-control" id="nama_pelanggan_{{ $alat->id }}" name="nama_pelanggan" value="{{ auth()->user()->nama }}" disabled>
                       </div>
                       <div class="row mb-3">
                         <div class="col">
-                            <label for="tgl-pinjam_{{ $alat->id }}" class="form-label">Tanggal Pinjam</label>
+                            <label for="tgl-pinjam_{{ $alat->id }}" class="form-label">Date of Borrow</label>
                             <input type="date" class="form-control" id="tgl-pinjam_{{ $alat->id }}" name="tgl_pinjam" value="{{ date('Y-m-d') }}" min="{{ date('Y-m-d') }}" onchange="updateBiayaSewa()" required>
                         </div>
                         <div class="col">
-                            <label for="tgl-kembali_{{ $alat->id }}" class="form-label">Tanggal Kembali</label>
+                            <label for="tgl-kembali_{{ $alat->id }}" class="form-label">Date of Return</label>
                             <input type="date" class="form-control" id="tgl-kembali_{{ $alat->id }}" name="tgl_kembali" value="{{ date('Y-m-d') }}" min="{{ date('Y-m-d') }}" onchange="updateBiayaSewa()" required>
                         </div>
                       </div>
                       <div class="row mb-3">
                           <div class="col">
-                              <label for="harga-sewa_{{ $alat->id }}" class="form-label">Harga Sewa Per Hari</label>
+                              <label for="harga-sewa_{{ $alat->id }}" class="form-label">Rental Price Per Day</label>
                               <?php
                                 $harga = $alat->harga;
                                 $harga_formatted = "Rp " . number_format($harga, 0, ",", ".") . ",-";
@@ -223,18 +223,18 @@
                               <input type="text" class="form-control" id="harga-sewa_{{ $alat->id }}" value="{{ $harga_formatted }}" disabled>
                           </div>
                           <div class="col">
-                              <label for="jumlah_{{ $alat->id }}" class="form-label">Jumlah Sewa</label>
+                              <label for="jumlah_{{ $alat->id }}" class="form-label">Amount</label>
                               <input type="number" class="form-control" id="jumlah_{{ $alat->id }}" name="jumlah" onchange="updateBiayaSewa()" required>
                           </div>
                       </div>
                       <div class="mb-3">
-                        <label for="biaya-sewa_{{ $alat->id }}" class="form-label">Total Biaya Sewa</label>
+                        <label for="biaya-sewa_{{ $alat->id }}" class="form-label">Total Rental Costs</label>
                         <input type="text" class="form-control" id="biaya-sewa_{{ $alat->id }}" name="biaya-sewa" readonly>
                       </div>
                   </div>
                   <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                      <button type="submit" class="btn btn-warning">Sewa</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <button type="submit" class="btn btn-warning">Rent</button>
                   </div>
                   </form>
               </div>

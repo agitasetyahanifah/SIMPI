@@ -1,7 +1,7 @@
 
 @extends('Admin.Layouts.main')
 
-@section('title', 'Manajemen Member')
+@section('title', 'Member Management')
 
 @section('content')
 
@@ -26,12 +26,12 @@
       <div class="col-12">
         <div class="card mb-0">
           <div class="card-header pb-0">
-            <h4 class="font-weight-bolder mb-0">Manajemen Member</h4>
+            <h4 class="font-weight-bolder mb-0">Member Management</h4>
             {{-- Button Tambah Member --}}
             <form action="/admin/members" method="post">
               @csrf
               <div class="col-12 text-end">
-                  <button class="btn btn-outline-primary mb-1" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
+                  <button class="btn btn-outline-primary mb-1" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Add</button>
               </div>
           </div>
           {{-- Modal Tambah Member --}}
@@ -39,7 +39,7 @@
             <div class="modal-dialog modal-dialog-centered modal-m" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Tambah Member</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Add Member</h5>
                         <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
@@ -48,11 +48,11 @@
                         @csrf
                         <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                             <div class="form-group">
-                                <label for="nama" class="col-form-label">Nama</label>
+                                <label for="nama" class="col-form-label">Name</label>
                                 <input type="text" class="form-control" id="nama" name="nama" required>
                             </div>
                             <div class="form-group">
-                                <label for="telepon" class="col-form-label">Telepon</label>
+                                <label for="telepon" class="col-form-label">Phone Number</label>
                                 <input type="text" class="form-control" id="telepon" name="telepon" maxlength="13" required oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                             </div>
                             <div class="form-group">
@@ -66,14 +66,14 @@
                             <div class="form-group">
                                 <label for="status" class="col-form-label">Status</label>
                                 <select class="form-select" id="status" name="status" required>
-                                    <option value="aktif">Aktif</option>
-                                    <option value="tidak aktif">Tidak Aktif</option>
+                                    <option value="aktif">Active</option>
+                                    <option value="tidak aktif">Not Active</option>
                                 </select>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Tambah</button>
+                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Add</button>
                         </div>
                     </form>
                 </div>
@@ -85,11 +85,11 @@
                 <thead>
                   <tr>
                     <th class="text-center">No</th>
-                    <th>Nama</th>
-                    <th>Telepon</th>
+                    <th>Name</th>
+                    <th>Phone Number</th>
                     <th>Email</th>
                     <th>Status</th>
-                    <th>Aksi</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -104,7 +104,11 @@
                       <td>{{ $member->telepon }}</td>
                       <td>{{ $member->email }}</td>
                       <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm {{ $member->status == 'aktif' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $member->status }}</span>
+                        @if($member->status == 'aktif')
+                            <span class="badge badge-sm bg-gradient-success">Active</span>
+                        @elseif($member->status == 'tidak aktif')
+                            <span class="badge badge-sm bg-gradient-secondary">Not Active</span>
+                        @endif
                       </td>
                       <td class="align-middle text-center">
                           <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailModal{{ $member->id }}"><i class="fas fa-eye"></i></button>
@@ -121,18 +125,18 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Apakah Anda yakin ingin menghapus data ini?
+                            Are you sure want to delete this data?
                         </div>
                         <div class="modal-footer">
                           <form id="deleteForm" action="/admin/members/{id}" method="post">
                             @csrf
                             @method('DELETE')
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-danger" id="confirmDelete">Hapus</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
                         </form>                        
                         </div>                                    
                     </div>
@@ -144,7 +148,7 @@
                   <div class="modal-dialog modal-dialog-centered modal-m" role="document">
                       <div class="modal-content">
                           <div class="modal-header">
-                              <h5 class="modal-title" id="editModalLabel{{ $member->id }}">Edit Data Member</h5>
+                              <h5 class="modal-title" id="editModalLabel{{ $member->id }}">Edit Member Data</h5>
                               <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">×</span>
                               </button>
@@ -154,11 +158,11 @@
                               @method('PUT')
                               <div class="modal-body">
                                   <div class="form-group">
-                                      <label for="nama{{ $member->id }}" class="col-form-label">Nama</label>
+                                      <label for="nama{{ $member->id }}" class="col-form-label">Name</label>
                                       <input type="text" class="form-control" id="nama{{ $member->id }}" name="nama" value="{{ $member->nama }}" required>
                                   </div>
                                   <div class="form-group">
-                                    <label for="telepon{{ $member->id }}" class="col-form-label">Telepon</label>
+                                    <label for="telepon{{ $member->id }}" class="col-form-label">Phone Number</label>
                                     <input type="text" class="form-control" id="telepon{{ $member->id }}" name="telepon" value="{{ $member->telepon }}" maxlength="13" required oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                                   </div>                                                               
                                   <div class="form-group">
@@ -172,14 +176,14 @@
                                   <div class="form-group">
                                       <label for="status{{ $member->id }}" class="col-form-label">Status</label>
                                       <select class="form-select" id="status{{ $member->id }}" name="status" required>
-                                          <option value="aktif" {{ $member->status == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                                          <option value="tidak aktif" {{ $member->status == 'tidak aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                                          <option value="aktif" {{ $member->status == 'aktif' ? 'selected' : '' }}>Active</option>
+                                          <option value="tidak aktif" {{ $member->status == 'tidak aktif' ? 'selected' : '' }}>Not Active</option>
                                       </select>
                                   </div>
                               </div>
                               <div class="modal-footer">
-                                  <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
-                                  <button type="submit" class="btn btn-primary">Simpan</button>
+                                  <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-primary">Save</button>
                               </div>
                           </form>
                       </div>
@@ -192,7 +196,7 @@
                   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                       <div class="modal-content">
                           <div class="modal-header">
-                              <h5 class="modal-title" id="detailModalLabel{{ $member->id }}">Detail Member</h5>
+                              <h5 class="modal-title" id="detailModalLabel{{ $member->id }}">Member Details</h5>
                               <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">×</span>
                               </button>
@@ -202,11 +206,11 @@
                                 <div class="col">
                                     <table class="table">
                                         <tr>
-                                            <th>Nama</th>
+                                            <th>Name</th>
                                             <td><b>{{ $member->nama }}</b></td>
                                         </tr>
                                         <tr>
-                                            <th>Telepon</th>
+                                            <th>Phone Number</th>
                                             <td>{{ $member->telepon }}</td>
                                         </tr>
                                         <tr>
@@ -215,7 +219,13 @@
                                         </tr>
                                         <tr>
                                             <th>Status</th>
-                                            <td>{{ $member->status }}</td>
+                                            <td>
+                                                @if($member->status == 'aktif')
+                                                    <a>Active</a>
+                                                @elseif($member->status == 'tidak aktif')
+                                                    <a>Not Active</a>
+                                                @endif
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th>Created At</th>
@@ -230,7 +240,7 @@
                               </div>
                           </div>
                           <div class="modal-footer">
-                              <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
+                              <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
                           </div>
                       </div>
                   </div>
@@ -241,7 +251,7 @@
           
           {{-- Cek ada data atau kosong --}}
           @if($members->isEmpty())
-            <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+            <h6 class="text-muted text-center">No data has been added yet</h6>
           @endif
         
           <!-- Pagination -->

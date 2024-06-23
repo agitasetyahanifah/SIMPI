@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/logo.png') }}">
   <title>
-    SIMPI | Riwayat Sewa Spot Pemancingan
+    SIMPI | Fishing Spot Reservation History
   </title>
   <!-- Fonts and icons -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -34,10 +34,10 @@
 
     <div class="container-fluid py-2">
       <div class="mt-3 mb-2">
-        <a href="{{ route('member.spots.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Kembali</a>
+        <a href="{{ route('member.spots.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Back</a>
       </div>
       <div class="mt-3 mb-4 d-flex justify-content-between align-items-center flex-wrap">
-        <h2 class="font-weight-bolder mt-4 mb-3 text-center flex-grow-1">Riwayat Sewa Spot Pemancingan</h2>
+        <h2 class="font-weight-bolder mt-4 mb-3 text-center flex-grow-1">Fishing Spot Reservation History</h2>
       </div>   
       @if(session('success'))
           <div class="alert alert-success">
@@ -57,35 +57,35 @@
 
       <div class="card-body">
         @if($riwayatSewa->isEmpty())
-            <h6 class="text-muted text-center">Belum ada data riwayat sewa spot pemancingan</h6>
+            <h6 class="text-muted text-center">No data has been added yet</h6>
         @else
             @foreach($riwayatSewa as $index => $sewa)
                 <div class="card card-frame mb-4">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <h5 class="card-title"><strong>Kode Booking:</strong> {{ $sewa->kode_booking }}</h5>
+                                <h5 class="card-title"><strong>Booking Code:</strong> {{ $sewa->kode_booking }}</h5>
                                 <div class="row mb-2">
-                                    <div class="col-md-2"><strong>Tanggal Sewa</strong></div>
+                                    <div class="col-md-2"><strong>Booking Date</strong></div>
                                     <div class="col-md-10">{{ $sewa->tanggal_sewa }}</div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-md-2"><strong>Nomor Spot</strong></div>
+                                    <div class="col-md-2"><strong>Spot Number</strong></div>
                                     <div class="col-md-10">{{ $sewa->spot ? $sewa->spot->nomor_spot : 'N/A' }}</div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-md-2"><strong>Sesi</strong></div>
+                                    <div class="col-md-2"><strong>Session</strong></div>
                                     <div class="col-md-10">{{ $sewa->sesi }}</div>
                                 </div>
                                 <div class="row mb-2">
-                                    <div class="col-md-2"><strong>Status</strong></div>
+                                    <div class="col-md-2"><strong>Payment Status</strong></div>
                                     <div class="col-md-10">
                                         @if($sewa->status === 'dibatalkan')
-                                            <span class="text-danger">Dibatalkan</span>
+                                            <span class="text-danger">Canceled</span>
                                         @elseif($sewa->status === 'sudah dibayar')
-                                            <span class="text-success">Sudah Dibayar</span>
+                                            <span class="text-success">Already Paid</span>
                                         @elseif($sewa->status === 'menunggu pembayaran')
-                                            <span class="text-warning">Menunggu Pembayaran</span>
+                                            <span class="text-warning">Waiting for Payment</span>
                                         @else
                                             {{ $sewa->status }}
                                         @endif
@@ -93,19 +93,19 @@
                                 </div>
                                 @if($sewa->status === 'menunggu pembayaran')
                                 <div class="row mb-2">
-                                    <div class="col-md-2"><strong>Waktu Tersisa Pembayaran</strong></div>
+                                    <div class="col-md-2"><strong>Remaining Payment Time</strong></div>
                                     <div class="col-md-10 text-danger" id="countdown-{{ $sewa->id }}"></div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12 text-end">
-                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal{{ $sewa->id }}">Batalkan Sewa</button>
-                                        <a class="btn btn-primary mx-2" data-bs-toggle="modal" data-bs-target="#detailModal{{ $sewa->id }}">Detail</a>
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal{{ $sewa->id }}">Cancel Booking</button>
+                                        <a class="btn btn-primary mx-2" data-bs-toggle="modal" data-bs-target="#detailModal{{ $sewa->id }}">Details</a>
                                     </div>
                                 </div>
                                 @else
                                 <div class="row">
                                     <div class="col-md-12 text-end">
-                                        <a class="btn btn-primary mx-2" data-bs-toggle="modal" data-bs-target="#detailModal{{ $sewa->id }}">Detail</a>
+                                        <a class="btn btn-primary mx-2" data-bs-toggle="modal" data-bs-target="#detailModal{{ $sewa->id }}">Details</a>
                                     </div>
                                 </div>
                                 @endif
@@ -115,19 +115,19 @@
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Konfirmasi Pembatalan Sewa</h5>
+                                                <h5 class="modal-title" id="exampleModalLabel">Confirmation of Booking Cancellation</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                Apakah Anda yakin ingin membatalkan sewa ini?
+                                                Are you sure want to cancel this fishing spot?
                                             </div>
                                             <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                                                 <form id="cancelForm{{ $sewa->id }}" action="{{ route('member.spots.cancel', $sewa->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger">Ya, Batalkan Sewa</button>
+                                                    <button type="submit" class="btn btn-danger">Yes, Cancel Booking</button>
                                                 </form>
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                             </div>
                                         </div>
                                     </div>
@@ -138,7 +138,7 @@
                                     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="detailModalLabel{{ $sewa->id }}">Detail Sewa Spot Pemancingan</h5>
+                                                <h5 class="modal-title" id="detailModalLabel{{ $sewa->id }}">Fishing Spot Reservation Details</h5>
                                                 <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">×</span>
                                                 </button>
@@ -146,37 +146,37 @@
                                             <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <p class="me-3" style="font-size: 18pt"><b>Kode Booking: {{ $sewa->kode_booking }}</b></p>
+                                                        <p class="me-3" style="font-size: 18pt"><b>Booking code: {{ $sewa->kode_booking }}</b></p>
                                                         <table class="table">
                                                             <tr>
-                                                                <th style="width: 35%">Nama Pelanggan</th>
+                                                                <th style="width: 35%">Customer Name</th>
                                                                 <td>{{ $sewa->member->nama }}</td>
                                                             </tr>
                                                             <tr>
-                                                                <th>Tanggal Sewa</th>
+                                                                <th>Booking Date</th>
                                                                 <td>{{ $sewa->tanggal_sewa }}</td>
                                                             </tr>
                                                             <tr>
-                                                                <th>Nomor Spot</th>
+                                                                <th>Spot Number</th>
                                                                 <td>{{ $sewa->spot ? $sewa->spot->nomor_spot : 'N/A' }}</td>
                                                             </tr>
                                                             <tr>
-                                                                <th>Sesi</th>
+                                                                <th>Session</th>
                                                                 <td>{{ $sewa->sesi }}</td>
                                                             </tr>
                                                             <tr>
-                                                                <th>Biaya Sewa</th>
+                                                                <th>Reservation Fee</th>
                                                                 <td>Rp {{ number_format($sewa->biaya_sewa, 0, ',', '.') }} ,-</td>
                                                             </tr>
                                                             <tr>
-                                                                <th>Status Pembayaran</th>
+                                                                <th>Payment Status</th>
                                                                 <td>
                                                                     @if($sewa->status === 'dibatalkan')
-                                                                        <span class="text-danger">Dibatalkan</span>
+                                                                        <span class="text-danger">Canceled</span>
                                                                     @elseif($sewa->status === 'sudah dibayar')
-                                                                        <span class="text-success">Sudah Dibayar</span>
+                                                                        <span class="text-success">Already Paid</span>
                                                                     @elseif($sewa->status === 'menunggu pembayaran')
-                                                                        <span class="text-warning">Menunggu Pembayaran</span>
+                                                                        <span class="text-warning">Waiting for Payment</span>
                                                                     @else
                                                                         {{ $sewa->status }}
                                                                     @endif
@@ -184,7 +184,7 @@
                                                             </tr>
                                                         </table>
                                                         <div class="mt-3">
-                                                            <p><strong>Note: </strong>Silahkan melakukan pembayaran secara langsung kepada admin di lokasi pemancingan.</p>
+                                                            <p><strong>Note: </strong>Please make payment directly to the admin at the fishing location.</p>
                                                             {{-- <p>Untuk informasi lebih lanjut atau pertanyaan, bisa menghubungi admin melalui kontak berikut:</p>
                                                             <table class="table table-borderless">
                                                                 <tr>
@@ -201,7 +201,7 @@
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
+                                                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
                                             </div>
                                         </div>
                                     </div>
@@ -263,14 +263,14 @@
         
                     if (distance < 0) {
                         clearInterval(countdownInterval{{ $sewa->id }});
-                        countdownElement{{ $sewa->id }}.innerHTML = "Waktu Pembayaran Telah Habis";
+                        countdownElement{{ $sewa->id }}.innerHTML = "Payment Time Has Expired";
                         cancelOrderAutomatically({{ $sewa->id }});
                     } else {
                         var hours = Math.floor((distance % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
                         var minutes = Math.floor((distance % (60 * 60 * 1000)) / (60 * 1000));
                         var seconds = Math.floor((distance % (60 * 1000)) / 1000);
         
-                        countdownElement{{ $sewa->id }}.innerHTML = hours + " jam " + minutes + " menit " + seconds + " detik ";
+                        countdownElement{{ $sewa->id }}.innerHTML = hours + " hours " + minutes + " minutes " + seconds + " seconds ";
                     }
                 }, 1000);
         

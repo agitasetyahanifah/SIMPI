@@ -1,6 +1,6 @@
 @extends('Admin.Layouts.main')
 
-@section('title', 'Sewa Alat Pancing')
+@section('title', 'Fishing Equipment Rental')
 
 @section('content')
 
@@ -25,7 +25,7 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header pb-0">
-            <h4 class="font-weight-bolder mb-0">Manajemen Sewa Alat Pancing</h4>
+            <h4 class="font-weight-bolder mb-0">Fishing Equipment Rental Management</h4>
           </div>
           <div class="card-body ">
             <div class="table-responsive p-0">
@@ -33,11 +33,11 @@
                 <thead>
                   <tr>
                     <th class="text-center">No</th>
-                    <th>Kode Sewa</th>
-                    <th>Nama Pelanggan</th>
-                    <th>Status Pembayaran</th>
-                    <th>Status Pengembalian</th>
-                    <th>Aksi</th>
+                    <th>Rental Code</th>
+                    <th>Customer Name</th>
+                    <th>Payment Status</th>
+                    <th>Return Status</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -50,26 +50,22 @@
                         <td>{{ $alat->kode_sewa}}</td>
                         <td>{{ $alat->member->nama }}</td>
                         <td class="align-middle text-center text-sm">
-                            <span class="badge badge-sm
                             @if($alat->status == 'sudah dibayar')
-                                bg-gradient-success
+                                <span class="badge badge-sm bg-gradient-success">Already Paid</span>
                             @elseif($alat->status == 'menunggu pembayaran')
-                                bg-gradient-secondary
+                                <span class="badge badge-sm bg-gradient-secondary">Waiting for Payment</span>
                             @elseif($alat->status == 'dibatalkan')
-                                bg-gradient-danger
+                                <span class="badge badge-sm bg-gradient-danger">Canceled</span>
                             @endif
-                        ">{{ $alat->status }}</span>
                         </td>
                         <td class="align-middle text-center text-sm">
-                            <span class="badge badge-sm
                             @if($alat->status_pengembalian == 'sudah kembali')
-                                bg-gradient-success
+                                <span class="badge badge-sm bg-gradient-success">Already Return</span>
                             @elseif($alat->status_pengembalian == 'proses')
-                                bg-gradient-warning
+                                <span class="badge badge-sm bg-gradient-warning">Process</span>
                             @elseif($alat->status_pengembalian == 'terlambat kembali')
-                                bg-gradient-danger
+                                <span class="badge badge-sm bg-gradient-danger">Late Return</span>
                             @endif
-                        ">{{ $alat->status_pengembalian }}</span>
                         </td>
                         <td class="text-align-end">
                             <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailModal{{ $alat->id }}"><i class="fas fa-eye"></i></a>
@@ -84,7 +80,7 @@
             
             {{-- Cek ada data atau kosong --}}
             @if($sewaAlat->isEmpty())
-                <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+                <h6 class="text-muted text-center">No data has been added yet</h6>
             @endif 
 
             <!-- Modal Detail Sewa alat -->
@@ -93,7 +89,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="detailModalLabel{{ $alat->id }}">Detail Sewa Alat Pancing</h5>
+                            <h5 class="modal-title" id="detailModalLabel{{ $alat->id }}">Fishing Equipment Rental Details</h5>
                             <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
@@ -101,48 +97,48 @@
                         <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                             <div class="row">
                                 <div class="col">
-                                    <p class="me-3" style="font-size: 18pt"><b>Kode Sewa: {{ $alat->kode_sewa }}</b></p>
+                                    <p class="me-3" style="font-size: 18pt"><b>Rental Code: {{ $alat->kode_sewa }}</b></p>
                                     <table class="table">
                                         <tr>
-                                            <th style="width: 35%">Nama Pelanggan</th>
+                                            <th style="width: 35%">Customer Name</th>
                                             <td>{{ $alat->member->nama }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Nama Alat</th>
+                                            <th>Fishing Equipment Name</th>
                                             <td>{{ $alat->alatPancing->nama_alat }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Jumlah</th>
+                                            <th>Amount</th>
                                             <td>{{ $alat->jumlah }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Tanggal Pinjam</th>
+                                            <th>Date of Borrow</th>
                                             <td>{{ $alat->tgl_pinjam }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Tanggal Kembali</th>
+                                            <th>Date of Return</th>
                                             <td>{{ $alat->tgl_kembali }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Biaya Sewa</th>
+                                            <th>Rental Costs</th>
                                             <td>{{ number_format($alat->biaya_sewa, 0, ',', '.') }} ,-</td>
                                         </tr>
                                         <tr>
-                                            <th>Status Pembayaran</th>
+                                            <th>Payment Status</th>
                                             <td>
                                                 @if($alat->status === 'dibatalkan')
-                                                    <span class="text-danger">Dibatalkan</span>
+                                                    <span class="text-danger">Canceled</span>
                                                 @elseif($alat->status === 'sudah dibayar')
-                                                    <span class="text-success">Sudah Dibayar</span>
+                                                    <span class="text-success">Already Paid</span>
                                                 @elseif($alat->status === 'menunggu pembayaran')
-                                                    <span class="text-warning">Menunggu Pembayaran</span>
+                                                    <span class="text-warning">Waiting for Payment</span>
                                                 @else
                                                     {{ $alat->status }}
                                                 @endif
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Status Pengembalian</th>
+                                            <th>Return Status</th>
                                             <td>
                                                 @if($alat->status === 'sudah dibayar')
                                                     @if($alat->status_pengembalian === null)
@@ -153,8 +149,8 @@
                                                     @endif
 
                                                     @php
-                                                        $today = Carbon\Carbon::now();
-                                                        $tglKembali = Carbon\Carbon::parse($alat->tgl_kembali);
+                                                        $today = Carbon\Carbon::now()->startOfDay();
+                                                        $tglKembali = Carbon\Carbon::parse($alat->tgl_kembali)->startOfDay();
                                                         // Tentukan status pengembalian apakah terlambat atau tidak
                                                         if ($today->greaterThan($tglKembali) && $alat->status_pengembalian !== 'sudah kembali') {
                                                             $alat->status_pengembalian = 'terlambat kembali';
@@ -163,11 +159,11 @@
                                                     @endphp
 
                                                     @if($alat->status_pengembalian === 'proses')
-                                                        <span class="text-warning">Proses</span>
+                                                        <span class="text-warning">Process</span>
                                                     @elseif($alat->status_pengembalian === 'sudah kembali')
-                                                        <span class="text-success">Sudah Kembali</span>
+                                                        <span class="text-success">Already Return</span>
                                                     @elseif($alat->status_pengembalian === 'terlambat kembali')
-                                                        <span class="text-danger">Terlambat Kembali</span>
+                                                        <span class="text-danger">Late Return</span>
                                                     @endif
                                                 @else
                                                     {{ $alat->status_pengembalian }}
@@ -193,7 +189,7 @@
                                             // echo "Fine: Rp " . number_format($denda, 0, ',', '.') . " ,-<br>";
                                         @endphp
                                         <tr>
-                                            <th>Denda Terlambat</th>
+                                            <th>Late Fines</th>
                                             <td>
                                                 @if($denda > 0)
                                                     <span class="text-danger">Rp {{ number_format($denda, 0, ',', '.') }} ,-</span>
@@ -210,17 +206,17 @@
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="sudah dibayar" id="konfirmasiPembayaran{{ $alat->id }}" name="status" required>
                                                 <label class="form-check-label" for="konfirmasiPembayaran{{ $alat->id }}">
-                                                    Konfirmasi Pembayaran
+                                                    Payment Confirmation
                                                 </label>
                                             </div>
                                             <button type="button" class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#konfirmasiModal{{ $alat->id }}">
-                                                Konfirmasi
+                                                Confirm
                                             </button>                                                                                    
                                         </form>
                                     @elseif($alat->status === 'sudah dibayar')
-                                        <p style="color: green"><i class="fas fa-check-circle" style="font-size: 18px"></i> Pembayaran sudah dikonfirmasi</p>
+                                        <p style="color: green"><i class="fas fa-check-circle" style="font-size: 18px"></i> Payment has been confirmed</p>
                                     @elseif($alat->status === 'dibatalkan')
-                                        <p style="color: red"><i class="fas fa-times-circle" style="font-size: 18px"></i> Pesanan dibatalkan</p>
+                                        <p style="color: red"><i class="fas fa-times-circle" style="font-size: 18px"></i> Rental cancelled</p>
                                     @endif
 
                                     @if($alat->status_pengembalian === 'proses' || $alat->status_pengembalian === 'terlambat kembali')
@@ -229,21 +225,21 @@
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="sudah kembali" id="konfirmasiPengembalian{{ $alat->id }}" name="status_pengembalian" required>
                                                 <label class="form-check-label" for="konfirmasiPengembalian{{ $alat->id }}">
-                                                    Konfirmasi Pengembalian Barang
+                                                    Return Confirmation
                                                 </label>
                                             </div>
                                             <button type="button" class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#konfirmasiPengembalianModal{{ $alat->id }}">
-                                                Konfirmasi
+                                                Confirm
                                             </button>                                                                                    
                                         </form>
                                     @elseif($alat->status_pengembalian === 'sudah kembali')
-                                        <p style="color: green"><i class="fas fa-check-circle" style="font-size: 18px"></i> Pengembalian barang sudah dikonfirmasi</p>
+                                        <p style="color: green"><i class="fas fa-check-circle" style="font-size: 18px"></i> Return of fishing equipment has been confirmed</p>
                                     @endif
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
+                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
@@ -254,17 +250,17 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="konfirmasiModalLabel{{ $alat->id }}">Konfirmasi Pembayaran</h5>
+                            <h5 class="modal-title" id="konfirmasiModalLabel{{ $alat->id }}">Payment Confirmation</h5>
                             <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            Apakah Anda yakin ingin mengonfirmasi pembayaran untuk Kode Sewa: {{ $alat->kode_sewa }}?
+                            Are you sure want to confirm payment for the Rental Code: {{ $alat->kode_sewa }}?
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Batal</button>
-                            <button type="button" class="btn btn-success" onclick="submitKonfirmasiForm({{ $alat->id }})">Ya, Konfirmasi</button>
+                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-success" onclick="submitKonfirmasiForm({{ $alat->id }})">Yes, Confirm</button>
                         </div>
                     </div>
                 </div>
@@ -277,19 +273,19 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="konfirmasiPengembalianModalLabel{{ $alat->id }}">Konfirmasi Pengembalian</h5>
+                            <h5 class="modal-title" id="konfirmasiPengembalianModalLabel{{ $alat->id }}">Return Confirmation</h5>
                             <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            Apakah Anda yakin ingin mengkonfirmasi pengembalian barang untuk Kode Sewa: {{ $alat->kode_sewa }}?
+                            Are you sure want to confirm the return of fishing equipment for Rental Code: {{ $alat->kode_sewa }}?
                         </div>
                         <div class="modal-footer">
                             <form id="konfirmasiPengembalianForm{{ $alat->id }}" action="{{ route('admin.sewaAlat.konfirmasiPengembalian', $alat->id) }}" method="POST">
                                 @csrf
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="submit" class="btn btn-success">Ya, Konfirmasi</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                <button type="submit" class="btn btn-success">Yes, Confirm</button>
                             </form>
                         </div>
                     </div>
@@ -303,7 +299,7 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="editModalLabel{{ $alat->id }}">Edit Sewa Alat Pancing</h5>
+                            <h5 class="modal-title" id="editModalLabel{{ $alat->id }}">Edit Fishing Equipment Rental</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form action="/admin/sewaAlat/{{ $alat->id }}" method="post">
@@ -311,11 +307,11 @@
                             @method('PUT')
                             <div class="modal-body">
                                 <div class="form-group">
-                                    <label for="edit_nama_pelanggan">Nama Pelanggan</label>
+                                    <label for="edit_nama_pelanggan">Customer Name</label>
                                     <input type="text" class="form-control" id="edit_nama_pelanggan" name="edit_nama_pelanggan" value="{{ $alat->member->nama }}" disabled>
                                 </div>
                                 <div class="form-group">
-                                    <label for="edit_alat">Alat yang Disewa</label>
+                                    <label for="edit_alat">Fishing Equipment Name</label>
                                     <select class="form-control" id="edit_alat" name="edit_alat">
                                         @foreach($alatPancings as $alatPancing)
                                             <option value="{{ $alatPancing->id }}" {{ $alatPancing->id == $alat->alatPancing->id ? 'selected' : '' }}>
@@ -325,23 +321,23 @@
                                     </select>
                                 </div>                                
                                 <div class="form-group">
-                                    <label for="edit_jumlah">Jumlah Barang</label>
+                                    <label for="edit_jumlah">Amount</label>
                                     <input type="number" class="form-control" id="edit_jumlah" name="edit_jumlah" value="{{ $alat->jumlah }}">
                                 </div>                           
                                 <div class="row row-cols-2">
                                     <div class="col form-group">
-                                        <label for="edit_tgl_pinjam">Tanggal Pinjam</label>
+                                        <label for="edit_tgl_pinjam">Date of Borrow</label>
                                         <input type="date" class="form-control" id="edit_tgl_pinjam" name="edit_tgl_pinjam" value="{{ date('Y-m-d', strtotime($alat->tgl_pinjam)) }}" required>
                                     </div>
                                     <div class="col form-group">
-                                        <label for="edit_tgl_kembali">Tanggal Kembali</label>
+                                        <label for="edit_tgl_kembali">Date of Return</label>
                                         <input type="date" class="form-control" id="edit_tgl_kembali" name="edit_tgl_kembali" value="{{ date('Y-m-d', strtotime($alat->tgl_kembali)) }}" required>
                                     </div>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
                             </div>
                         </form>
                     </div>
@@ -354,18 +350,18 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Apakah Anda yakin ingin menghapus data ini?
+                            Are you sure want to delete this data?                        
                         </div>
                         <div class="modal-footer">
                             <form id="deleteForm" action="/admin/sewaAlat/{id}" method="post">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="submit" class="btn btn-danger" id="confirmDelete">Hapus</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
                             </form>
                         </div>                                    
                     </div>

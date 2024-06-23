@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/logo.png') }}">
   <title>
-    SIMPI | Blog Pemancingan
+    SIMPI | Fishing Blogs
   </title>
   <!-- Fonts and icons -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -51,7 +51,7 @@
 
     <div class="container-fluid py-2">
       <div class="mt-3 mb-2">
-        <a href="{{ route('member.blog.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Kembali</a>
+        <a href="{{ route('member.blog.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Back</a>
       </div>
       <div class="row">
         <div class="col-lg-8 col-md-6 col-sm-12 mb-4">
@@ -86,7 +86,7 @@
                 <div class="col-md-8">
                   <div class="card-body">
                     <h5 class="card-title">{{ $latestBlog->judul }}</h5>
-                    <p class="card-text">{{ Str::words(strip_tags($latestBlog->body), 12, '...') }} <a href="{{ route('member.blog.detail-blog', $latestBlog->id) }}" style="color: aqua;">Selengkapnya</a></p>
+                    <p class="card-text">{{ Str::words(strip_tags($latestBlog->body), 12, '...') }} <a href="{{ route('member.blog.detail-blog', $latestBlog->id) }}" style="color: aqua;">More</a></p>
                     <p class="card-text"><small class="text-body-secondary">Last updated {{ $latestBlog->updated_at->diffForHumans() }}</small></p>
                   </div>
                 </div>

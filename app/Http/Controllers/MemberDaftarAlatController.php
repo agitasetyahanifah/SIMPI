@@ -57,7 +57,7 @@ class MemberDaftarAlatController extends Controller
         $jumlah = $validatedData['jumlah'];
 
         if ($jumlah > $alatPancing->jumlah) {
-            return redirect()->back()->with('error', 'Jumlah alat pancing yang tersedia tidak mencukupi.');
+            return redirect()->back()->with('error', 'The number of fishing equipment available is insufficient');
         }
 
         // hitung total biaya dengan rumus
@@ -83,7 +83,7 @@ class MemberDaftarAlatController extends Controller
         $alatPancing->save();
 
         // Redirect back with success message
-        return redirect()->back()->with('success', 'Sewa alat pancing berhasil!');
+        return redirect()->back()->with('success', 'Fishing equipment rental was a success');
     }
 
     /**
@@ -148,10 +148,10 @@ class MemberDaftarAlatController extends Controller
 
             $alatPancing->save();
     
-            return redirect()->back()->with('success', 'Pesanan berhasil dibatalkan.');
+            return redirect()->back()->with('success', 'Fishing equipment rental successfully cancelled.');
         }
     
-        return redirect()->back()->with('error', 'Gagal membatalkan pesanan.');
+        return redirect()->back()->with('error', 'Fishing equipment rental failed to be cancelled.');
     }
 
     public function autoCancel($id)
@@ -200,10 +200,10 @@ class MemberDaftarAlatController extends Controller
             $sewa->returned_at = now();
             $sewa->save();
     
-            return redirect()->back()->with('success', 'Status pengembalian berhasil diubah dan jumlah alat diperbarui.');
+            return redirect()->back()->with('success', 'The return status is changed successfully and the count is updated.');
         }
     
-        return redirect()->back()->with('error', 'Alat ini sudah ditandai sebagai kembali.');
+        return redirect()->back()->with('error', 'This fishing equipment has been marked as returned.');
     }
     
 }

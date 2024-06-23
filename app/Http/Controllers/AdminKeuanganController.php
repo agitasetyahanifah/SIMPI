@@ -47,7 +47,7 @@ class AdminKeuanganController extends Controller
         $keuangan->save();
     
         // Redirect atau response sesuai kebutuhan
-        return redirect()->route('admin.keuangan.index')->with('success', 'Transaksi berhasil ditambahkan!');
+        return redirect()->route('admin.keuangan.index')->with('success', 'Transaction added successfully!');
     }    
 
     public function edit($id)
@@ -76,7 +76,7 @@ class AdminKeuanganController extends Controller
         $keuangan->save();
 
         // Redirect kembali ke halaman index dengan pesan sukses
-        return redirect()->route('admin.keuangan.index')->with('success', 'Transaksi berhasil diperbarui.');
+        return redirect()->route('admin.keuangan.index')->with('success', 'Transaction updated successfully.');
     }
 
     public function destroy($id)
@@ -84,7 +84,7 @@ class AdminKeuanganController extends Controller
         $keuangan = Keuangan::findOrFail($id);
         $keuangan->delete();
 
-        return redirect()->back()->with('success', 'Transaksi berhasil dihapus.');
+        return redirect()->back()->with('success', 'Transaction successfully deleted.');
     }
 
     public function hitungSaldo()

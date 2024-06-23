@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" type="image/png" sizes="16x16" href="../images/logo.png">
   <title>
-    SIMPI | Blog Pemancingan
+    SIMPI | Fishing Blogs
   </title>
   <!-- Fonts and icons -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -71,10 +71,10 @@
 
     <div class="container-fluid py-2">
       <div class="mt-3 mb-2">
-        <a href="{{ route('member.landingpage.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Kembali</a>
+        <a href="{{ route('member.landingpage.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Back</a>
       </div>
       <div class="mt-3 mb-4">
-        <h2 class="font-weight-bolder mt-4 mb-3 text-center"><b>Blog Pemancingan</b></h2>
+        <h2 class="font-weight-bolder mt-4 mb-3 text-center"><b>Fishing Blogs</b></h2>
       </div>
       <div class="row gx-2">
         @foreach($blogs as $blog)
@@ -87,7 +87,7 @@
             @endif
             <div class="card-body">
               <h5 class="card-title">{{ $blog->judul }}</h5>
-              <p class="card-text">{{ Str::words(strip_tags($blog->body), 12, '...') }} <a href="{{ route('member.blog.detail-blog', $blog->id) }}" style="color: aqua;">Selengkapnya</a></p>
+              <p class="card-text">{{ Str::words(strip_tags($blog->body), 12, '...') }} <a href="{{ route('member.blog.detail-blog', $blog->id) }}" style="color: aqua;">More</a></p>
               <small class="text-muted mt-2">Last updated {{ $blog->updated_at->diffForHumans() }}</small>
             </div>
           </div>
@@ -96,7 +96,7 @@
       </div>
       {{-- Cek ada data atau kosong --}}
       @if($blogs->isEmpty())
-        <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+        <h6 class="text-muted text-center">No data has been added yet</h6>
       @endif
     </div>
     <!-- Pagination -->
@@ -147,7 +147,7 @@
           <img id="maximizedImage" src="" class="img-fluid" alt="Maximized Image">
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>

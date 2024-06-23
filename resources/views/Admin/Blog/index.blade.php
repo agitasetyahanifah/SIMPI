@@ -1,6 +1,6 @@
 @extends('Admin.Layouts.main')
 
-@section('title', 'Blog')
+@section('title', 'Fishing Blog')
 
 @section('content')
 
@@ -26,12 +26,12 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header pb-0">
-            <h4 class="font-weight-bolder mb-0">Kategori Blog</h4>
+            <h4 class="font-weight-bolder mb-0">Blog Category</h4>
             {{-- Button Tambah --}}
             <form action="/admin/blog/tambahKategori" method="post">
                 @csrf
                 <div class="col-12 text-end">
-                  <button class="btn btn-outline-primary mb-0" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal">Tambah</button>
+                  <button class="btn btn-outline-primary mb-0" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModal">Add</button>
                 </div>
           </div>
 
@@ -40,20 +40,20 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Tambah Kategori Blog</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Add Blog Category</h5>
                     <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label for="kategori_blog" class="col-form-label">Kategori Blog</label>
+                            <label for="kategori_blog" class="col-form-label">Blog Category</label>
                             <input type="text" class="form-control" id="kategori_blog" name="kategori_blog" required>
                         </div>
                     </div>
                     <div class="modal-footer">
-                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </div>
                 </div>
@@ -65,8 +65,8 @@
                 <table class="table table-hover">
                     <thead>
                         <th style="width: 5%;" class="text-center">No</th>
-                        <th>Kategori Blog</th>
-                        <th style="width: 10%;" class="text-center">Aksi</th>
+                        <th>Blog Category</th>
+                        <th style="width: 10%;" class="text-center">Action</th>
                     </thead>
                     <tbody>
                         @php
@@ -87,7 +87,7 @@
             
             {{-- Cek ada data atau kosong --}}
             @if($kategoriBlog->isEmpty())
-                <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+                <h6 class="text-muted text-center">No data has been added yet</h6>
             @endif 
 
             <!-- Modal Delete -->
@@ -95,18 +95,18 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Apakah Anda yakin ingin menghapus transaksi ini?
+                            Are you sure want to delete this data?
                         </div>
                         <div class="modal-footer">
                             <form id="deleteForm2" action="/admin/blog/hapusKategori/{id}" method="post">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="submit" class="btn btn-danger" id="confirmDelete">Hapus</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
                             </form>
                         </div>                                    
                     </div>
@@ -150,12 +150,12 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header pb-0">
-            <h4 class="font-weight-bolder mb-0">Blog Pemancingan</h4>
+            <h4 class="font-weight-bolder mb-0">Fishing Blog</h4>
             {{-- Button Tambah --}}
             <form action="/admin/blog" method="post" enctype="multipart/form-data">
                 @csrf
                 <div class="col-12 text-end">
-                  <button class="btn btn-outline-primary mb-0" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
+                  <button class="btn btn-outline-primary mb-0" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Add</button>
                 </div>
           </div>
           
@@ -164,14 +164,14 @@
             <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Tambah Blog Pemancingan</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Add Blog</h5>
                 <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
                 </div>
                 <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
                     <div class="form-group">
-                        <label for="judul" class="col-form-label">Judul</label>
+                        <label for="judul" class="col-form-label">Title</label>
                         <input type="text" class="form-control" id="judul" name="judul" required>
                     </div>
                     <div class="form-group">
@@ -179,7 +179,7 @@
                         <input type="text" class="form-control" id="slug" name="slug" required>
                     </div>
                     <div class="form-group">
-                        <label for="kategori_blog" class="col-form-label">Kategori</label>
+                        <label for="kategori_blog" class="col-form-label">Category</label>
                         <select class="form-select" id="kategori_blog" name="kategori_blog" required>
                             @foreach($kategoriOpt->sortBy('kategori_blog') as $kategori)
                                 <option value="{{ $kategori->id }}">{{ $kategori->kategori_blog }}</option>
@@ -197,8 +197,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Tambah</button>
+                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add</button>
                 </div>
             </form>
             </div>
@@ -211,9 +211,9 @@
                 <thead>
                   <tr>
                     <th class="text-center">No</th>
-                    <th>Judul</th>
-                    <th>Kategori</th>
-                    <th>Aksi</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -238,7 +238,7 @@
             
             {{-- Cek ada data atau kosong --}}
             @if($blogs->isEmpty())
-                <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+                <h6 class="text-muted text-center">No data has been added yet</h6>
             @endif 
 
             <!-- Modal Edit Blog -->
@@ -247,7 +247,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="editModalTitle">Edit Blog Pemancingan</h5>
+                            <h5 class="modal-title" id="editModalTitle">Edit Blog</h5>
                             <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
@@ -257,7 +257,7 @@
                                 @csrf
                                 @method('PUT')
                                 <div class="form-group">
-                                    <label for="edit_judul" class="col-form-label">Judul</label>
+                                    <label for="edit_judul" class="col-form-label">Title</label>
                                     <input type="text" class="form-control" id="edit_judul" name="judul" value="{{ $blog->judul }}" required>
                                 </div>
                                 <div class="form-group">
@@ -265,7 +265,7 @@
                                     <input type="text" class="form-control" id="edit_slug" name="slug" value="{{ $blog->slug }}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="edit_kategori_blog" class="col-form-label">Kategori</label>
+                                    <label for="edit_kategori_blog" class="col-form-label">Category</label>
                                     <select class="form-select" id="edit_kategori_blog" name="kategori_blog" required>
                                         @foreach($kategoriOpt->sortBy('kategori_blog') as $kategori)
                                             <option value="{{ $kategori->id }}" @if($kategori->id == $blog->kategori_id) selected @endif>{{ $kategori->kategori_blog }}</option>
@@ -283,8 +283,8 @@
                                 </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                         </form>
                     </div>
@@ -298,7 +298,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-xl">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel">Detail Blog Pemancingan</h5>
+                      <h5 class="modal-title" id="exampleModalLabel">Blog Details</h5>
                       <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                       </button>                    
@@ -307,7 +307,7 @@
                         <div class="container">
                             <div class="row">
                                 <h3>{{ $blog->judul }}</h3>
-                                <a style="color: black"><b>Slug:</b> {{ $blog->slug }}    |<b>   Kategori:</b> {{ $blog->kategoriBlog->kategori_blog }}</a>
+                                <a style="color: black"><b>Slug:</b> {{ $blog->slug }}    |<b>   Category:</b> {{ $blog->kategoriBlog->kategori_blog }}</a>
                                 @if($blog->image && file_exists(public_path('images/'.$blog->image)))
                                     <img src="{{ asset('images/'.$blog->image) }}" class="img-fluid mt-2" alt="{{ $blog->judul }}" style="max-height: 450px">
                                 @else
@@ -320,7 +320,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                   </div>
                 </div>
@@ -332,18 +332,18 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Apakah Anda yakin ingin menghapus transaksi ini?
+                            Are you sure want to delete this data?
                         </div>
                         <div class="modal-footer">
                             <form id="deleteForm" action="/admin/keuangan/{id}" method="post">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="submit" class="btn btn-danger" id="confirmDelete">Hapus</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
                             </form>
                         </div>                                    
                     </div>

@@ -1,6 +1,6 @@
 @extends('Admin.Layouts.main')
 
-@section('title', 'Keuangan')
+@section('title', 'Financial Management')
 
 @section('content')
 
@@ -42,17 +42,17 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header pb-0">
-                    <h4 class="font-weight-bolder mb-0">Manajemen Keuangan</h4>
+                    <h4 class="font-weight-bolder mb-0">Financial Management</h4>
                     <div class="nav-wrapper position-relative end-0 mt-3 mb-3">
                         <ul class="nav nav-pills nav-fill p-1 mb-3" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link mb-0 px-0 py-1 active" data-bs-toggle="tab" href="#transaksi-tabs-simple" role="tab" aria-controls="transaksi" aria-selected="true">
-                                    Transaksi
+                                    Transaction
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link mb-0 px-0 py-1" data-bs-toggle="tab" href="#mutasi-tabs-simple" role="tab" aria-controls="mutasi" aria-selected="false">
-                                    Mutasi Transaksi
+                                    Transaction Mutations
                                 </a>
                             </li>
                         </ul>
@@ -64,7 +64,7 @@
                                 <form action="/admin/keuangan/store" method="post">
                                     @csrf
                                     <div class="col-12 text-end">
-                                        <button class="btn btn-outline-primary mb-0" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
+                                        <button class="btn btn-outline-primary mb-0" type="button" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Add</button>
                                     </div>
 
                                     <!-- Modal Tambah Transaksi -->
@@ -72,35 +72,35 @@
                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="exampleModalLabel">Tambah Transaksi</h5>
+                                                    <h5 class="modal-title" id="exampleModalLabel">Add Transaction</h5>
                                                     <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                                         <span aria-hidden="true">×</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="form-group">
-                                                        <label for="tanggal_transaksi" class="col-form-label">Tanggal Transaksi</label>
+                                                        <label for="tanggal_transaksi" class="col-form-label">Transaction Date</label>
                                                         <input type="date" class="form-control" id="tanggal_transaksi" name="tanggal_transaksi" value="{{ date('Y-m-d') }}" required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="jumlah" class="col-form-label">Jumlah</label>
+                                                        <label for="jumlah" class="col-form-label">Amount</label>
                                                         <input type="number" class="form-control" id="jumlah" name="jumlah" required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="jenis_transaksi" class="col-form-label">Jenis Transaksi</label>
+                                                        <label for="jenis_transaksi" class="col-form-label">Transaction Type</label>
                                                         <select class="form-select" id="jenis_transaksi" name="jenis_transaksi" required>
-                                                            <option value="pemasukan">Pemasukan</option>
-                                                            <option value="pengeluaran">Pengeluaran</option>
+                                                            <option value="pemasukan">Income</option>
+                                                            <option value="pengeluaran">Expenditure</option>
                                                         </select>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="keterangan" class="col-form-label">Keterangan</label>
+                                                        <label for="keterangan" class="col-form-label">Description</label>
                                                         <textarea class="form-control" id="keterangan" name="keterangan" rows="3"></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
-                                                    <button type="submit" class="btn btn-primary">Tambah</button>
+                                                    <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Add</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -112,11 +112,11 @@
                                             <thead>
                                                 <tr>
                                                     <th class="text-center">No</th>
-                                                    <th>Tanggal Transaksi</th>
-                                                    <th>Jumlah</th>
-                                                    <th>Jenis Transaksi</th>
-                                                    <th>Keterangan</th>
-                                                    <th>Aksi</th>
+                                                    <th>Transaction Date</th>
+                                                    <th>Amount</th>
+                                                    <th>Transaction Type</th>
+                                                    <th>Description</th>
+                                                    <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -142,7 +142,7 @@
 
                                     {{-- Cek ada data atau kosong --}}
                                     @if($keuangans->isEmpty())
-                                        <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+                                        <h6 class="text-muted text-center">No data has been added yet</h6>
                                     @endif
 
                                     <!-- Modal Edit Transaksi -->
@@ -151,7 +151,7 @@
                                             <div class="modal-dialog modal-dialog-centered">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="editModalLabel{{ $keuangan->id }}">Edit Transaksi</h5>
+                                                        <h5 class="modal-title" id="editModalLabel{{ $keuangan->id }}">Edit Transaction</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <form action="/admin/keuangan/update/{{ $keuangan->id }}" method="post">
@@ -159,28 +159,28 @@
                                                         @method('PUT')
                                                         <div class="modal-body">
                                                             <div class="form-group">
-                                                                <label for="edit_tanggal_transaksi">Tanggal Transaksi</label>
+                                                                <label for="edit_tanggal_transaksi">Transaction Date</label>
                                                                 <input type="date" class="form-control" id="edit_tanggal_transaksi" name="edit_tanggal_transaksi" value="{{ $keuangan->tanggal_transaksi }}" required>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="edit_jumlah">Jumlah</label>
+                                                                <label for="edit_jumlah">Amount</label>
                                                                 <input type="number" class="form-control" id="edit_jumlah" name="edit_jumlah" value="{{ $keuangan->jumlah }}" required>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="edit_jenis_transaksi">Jenis Transaksi</label>
+                                                                <label for="edit_jenis_transaksi">Transaction Type</label>
                                                                 <select class="form-select" id="edit_jenis_transaksi" name="edit_jenis_transaksi" required>
-                                                                    <option value="pemasukan" {{ $keuangan->jenis_transaksi == 'pemasukan' ? 'selected' : '' }}>Pemasukan</option>
-                                                                    <option value="pengeluaran" {{ $keuangan->jenis_transaksi == 'pengeluaran' ? 'selected' : '' }}>Pengeluaran</option>
+                                                                    <option value="pemasukan" {{ $keuangan->jenis_transaksi == 'pemasukan' ? 'selected' : '' }}>Income</option>
+                                                                    <option value="pengeluaran" {{ $keuangan->jenis_transaksi == 'pengeluaran' ? 'selected' : '' }}>Expenditure</option>
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label for="edit_keterangan">Keterangan</label>
+                                                                <label for="edit_keterangan">Description</label>
                                                                 <textarea class="form-control" id="edit_keterangan" name="edit_keterangan" rows="3">{{ $keuangan->keterangan }}</textarea>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                            <button type="submit" class="btn btn-primary">Save</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -193,18 +193,18 @@
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                                                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    Apakah Anda yakin ingin menghapus transaksi ini?
+                                                    Are you sure want to delete this transaction?
                                                 </div>
                                                 <div class="modal-footer">
                                                     <form id="deleteForm" action="/admin/keuangan/{id}" method="post">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                                        <button type="submit" class="btn btn-danger" id="confirmDelete">Hapus</button>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -264,7 +264,7 @@
 
                                 {{-- Cek ada data atau kosong --}}
                                 @if($mutasiTransaksi->isEmpty())
-                                    <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+                                    <h6 class="text-muted text-center">No data has been added yet</h6>
                                 @endif
 
                                 <!-- Pagination -->

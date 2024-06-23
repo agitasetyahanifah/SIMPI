@@ -55,7 +55,7 @@ class AdminAlatPancingController extends Controller
         ]);
 
         // Redirect kembali ke halaman dengan pesan sukses
-        return redirect()->back()->with('success', 'Alat pancing berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Fishing equipment added successfully.');
     }
 
     /**
@@ -114,7 +114,7 @@ class AdminAlatPancingController extends Controller
         $alatPancing->save();
 
         // Redirect dengan pesan sukses
-        return redirect()->back()->with('success', 'Data alat pancing berhasil diperbarui');
+        return redirect()->back()->with('success', 'Fishing equipment data updated successfully');
     }
 
     /**
@@ -128,6 +128,6 @@ class AdminAlatPancingController extends Controller
         $alatPancing->delete();
             
         // Redirect kembali ke halaman daftar alat pancing dengan pesan sukses
-        return redirect()->back()->with('success', 'Alat pancing berhasil dihapus.');
+        return redirect()->back()->with('success', 'Fishing equipment data has been successfully deleted.');
     }
 }

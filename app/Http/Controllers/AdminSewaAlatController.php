@@ -67,7 +67,7 @@ class AdminSewaAlatController extends Controller
         $sewaAlat->save();
     
         // Redirect atau kirim respons sesuai kebutuhan
-        return redirect()->back()->with('success', 'Data sewa alat pancing berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Fishing equipment rental data has been successfully added.');
     }
     
     private function hitungBiayaSewa($tgl_pinjam, $tgl_kembali, $nama_alat)
@@ -153,7 +153,7 @@ class AdminSewaAlatController extends Controller
         $sewaAlat->save();
         $alatPancing->save();
     
-        return redirect()->back()->with('success', 'Data sewa alat pancing berhasil diperbarui.');
+        return redirect()->back()->with('success', 'Fishing equipment rental data has been successfully updated.');
     }    
 
     /**
@@ -162,13 +162,18 @@ class AdminSewaAlatController extends Controller
     public function destroy(string $id)
     {
         $sewaAlat = SewaAlat::findOrFail($id);
-            
+    
+        // Hapus transaksi keuangan terkait sewa alat ini
+        Keuangan::where('keterangan', 'like', '%Equipment Rental Payment by ' . $sewaAlat->member->nama . '%')
+            ->orWhere('keterangan', 'like', '%Fines for Late Return of Equipment by ' . $sewaAlat->member->nama . '%')
+            ->delete();
+    
         // Hapus alat pancing dari database
         $sewaAlat->delete();
-            
+    
         // Redirect kembali ke halaman sewa pemancingan dengan pesan sukses
-        return redirect()->back()->with('success', 'Data penyewaan alat pancing berhasil dihapus.');
-    }
+        return redirect()->back()->with('success', 'Fishing equipment rental data and associated financial records have been successfully deleted.');
+    }    
 
     public function konfirmasiPembayaran($id, Request $request)
     {
@@ -176,7 +181,7 @@ class AdminSewaAlatController extends Controller
     
         // Periksa apakah status sudah 'sudah dibayar'
         if ($alat->status === 'sudah dibayar') {
-            return redirect()->back()->with('error', 'Pembayaran sudah dikonfirmasi sebelumnya.');
+            return redirect()->back()->with('error', 'Payment has been confirmed beforehand.');
         }
     
         // Perbarui status pembayaran
@@ -191,10 +196,10 @@ class AdminSewaAlatController extends Controller
         $keuangan->waktu_transaksi = Carbon::now()->toTimeString();
         $keuangan->jumlah = $alat->biaya_sewa;
         $keuangan->jenis_transaksi = 'pemasukan';
-        $keuangan->keterangan = 'Pembayaran Sewa Alat oleh ' . $alat->member->nama;
+        $keuangan->keterangan = 'Equipment Rental Payment by ' . $alat->member->nama;
         $keuangan->save();
     
-        return redirect()->back()->with('success', 'Pembayaran berhasil dikonfirmasi.');
+        return redirect()->back()->with('success', 'Payment confirmed successfully.');
     }
 
     public function konfirmasiPengembalian($id, Request $request)
@@ -228,11 +233,11 @@ class AdminSewaAlatController extends Controller
             $keuanganDenda->waktu_transaksi = Carbon::now()->toTimeString();
             $keuanganDenda->jumlah = $denda;
             $keuanganDenda->jenis_transaksi = 'pemasukan';
-            $keuanganDenda->keterangan = 'Denda Keterlambatan Pengembalian Alat oleh ' . $sewaAlat->member->nama;
+            $keuanganDenda->keterangan = 'Fines for Late Return of Equipment by ' . $sewaAlat->member->nama;
             $keuanganDenda->save();
         }
     
-        return redirect()->back()->with('success', 'Status pengembalian telah diperbarui.');
+        return redirect()->back()->with('success', 'The return status has been updated.');
     }    
     
 }

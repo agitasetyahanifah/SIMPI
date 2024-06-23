@@ -1,6 +1,6 @@
 @extends('Admin.Layouts.main')
 
-@section('title', 'Galeri Pemancingan')
+@section('title', 'Dashboard')
 
 @section('content')
 
@@ -21,42 +21,6 @@
 @endif
 
 <div class="container-fluid py-4">
-    {{-- Update Ketersediaan Spot Pemancingan --}}
-    {{-- <div class="row row-cols-md-2">
-        <div class="col">
-            <div class="card">
-                <div class="row p-3">
-                    <div class="col">
-                        <h5 class="font-weight-bolder">Ketersediaan Spot Pemancingan</h5>
-                        <h5 class="mb-3">{{ $terakhirDiperbaruiKetersediaan }}</h5>
-                        <small class="text-muted">Terakhir diperbarui pada: {{ $waktuTerbaru }}</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="row p-3">
-                    <div class="col">
-                        <h5 class="font-weight-bolder">Update Jumlah Spot Pemancingan</h5>
-                        <form action="{{ route('admin.dashboard.updateSpotPemancingan') }}" method="post">
-                            @csrf
-                            <div class="input-group">
-                                <input type="number" class="form-control" name="updateSpotPemancingan" placeholder="Update Jumlah Spot Pemancingan" aria-label="UpdateSpotPemancingan" aria-describedby="button-addon2" required>
-                                <button class="btn btn-outline-primary mb-0" type="submit" id="button-addon2">Update</button>
-                            </div>
-                        </form>
-                        <small class="text-muted">
-                            Terakhir diperbarui: 
-                            @if($spotPemancingan)
-                                {{ $spotPemancingan->updated_at }}
-                            @endif
-                        </small>                        
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 
     <div class="card p-3">
         <div class="row">
@@ -65,7 +29,7 @@
             </div>
             <div class="col-md-9 d-flex align-items-center">
                 <h2>
-                    Selamat Datang, <a style="color: #FF9940">{{ Auth::user()->nama }}</a> ! 
+                    Welcome, <a style="color: #FF9940">{{ Auth::user()->nama }}</a> ! 
                 </h2>
             </div>
         </div>
@@ -80,7 +44,7 @@
                         <div class="col-lg-12">
                             <div class="d-flex flex-column h-100">
                               {{-- Button Tambah Gambar --}}
-                              <h5 class="font-weight-bolder">Galeri Pemancingan</h5>
+                              <h5 class="font-weight-bolder">Fishing Gallery</h5>
                                 <form action="/admin/dashboard/uploadGambar" method="POST" enctype="multipart/form-data">
                                   @csrf
                                   <div class="col-12 text-end mb-3">
@@ -91,7 +55,7 @@
                                   <div class="modal-dialog modal-dialog-centered" role="document">
                                     <div class="modal-content">
                                       <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Upload Gambar</h5>
+                                        <h5 class="modal-title" id="exampleModalLabel">Upload Image</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                                           <span aria-hidden="true">×</span>
                                         </button>
@@ -104,7 +68,7 @@
                                         </form>
                                       </div>
                                       <div class="modal-footer">
-                                        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
+                                        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
                                         <button type="submit" class="btn btn-primary">Upload</button>
                                       </div>
                                     </div>
@@ -112,7 +76,7 @@
                                 </div>
                                 </form>                              
                                 @if($images->isEmpty())
-                                    <h6 class="text-muted text-center">Belum ada gambar yang ditambahkan</h6>
+                                    <h6 class="text-muted text-center">No images have been added yet</h6>
                                 @endif                              
                             </div>
                         </div>
@@ -159,19 +123,19 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                                        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        Apakah Anda yakin ingin menghapus gambar ini?
+                                        Are you sure want to delete this image?
                                     </div>
                                     <div class="modal-footer">
                                         <form id="deleteForm" action="/admin/dashboard/{id}" method="post">
                                             @csrf
                                             @method('DELETE')
                                             <input type="hidden" name="image_id" id="deleteImageId">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                            <button type="submit" class="btn btn-danger" id="confirmDelete">Hapus</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
                                         </form>
                                     </div>                                    
                                 </div>

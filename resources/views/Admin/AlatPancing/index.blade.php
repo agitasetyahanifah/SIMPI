@@ -1,6 +1,6 @@
 @extends('Admin.Layouts.main')
 
-@section('title', 'Daftar Alat Pancing')
+@section('title', 'List of Fishing Equipment')
 
 @section('content')
 
@@ -25,12 +25,12 @@
       <div class="col-12">
         <div class="card mb-0">
           <div class="card-header pb-0">
-            <h4 class="font-weight-bolder mb-0">Daftar Alat Pancing</h4>
+            <h4 class="font-weight-bolder mb-0">List of Fishing Equipment</h4>
             {{-- Button Tambah Alat Pancing --}}
             <form action="/admin/alatPancing" method="post" enctype="multipart/form-data">
               @csrf
               <div class="col-12 text-end">
-                  <button class="btn btn-outline-primary mb-1" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Tambah</button>
+                  <button class="btn btn-outline-primary mb-1" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Add</button>
               </div>
           </div>
           {{-- Modal Tambah Alat Pancing --}}
@@ -38,7 +38,7 @@
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Tambah Alat Pancing</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Add Fishing Equipment</h5>
                         <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
@@ -47,20 +47,20 @@
                         @csrf
                         <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                             <div class="form-group">
-                                <label for="foto" class="col-form-label">Foto</label>
+                                <label for="foto" class="col-form-label">Image</label>
                                 <input type="file" class="form-control" id="foto" name="foto" required accept="image/*">
                             </div>
                             <div class="form-group">
-                                <label for="nama_alat" class="col-form-label">Nama Alat</label>
+                                <label for="nama_alat" class="col-form-label">Fishing Equipment Name</label>
                                 <input type="text" class="form-control" id="nama_alat" name="nama_alat" required>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-6">
-                                    <label for="harga" class="col-form-label">Harga Sewa Per Hari</label>
+                                    <label for="harga" class="col-form-label">Rental Price Per Day</label>
                                     <input type="number" class="form-control" id="harga" name="harga" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="jumlah" class="col-form-label">Jumlah Barang</label>
+                                    <label for="jumlah" class="col-form-label">Amount</label>
                                     <input type="number" class="form-control" id="jumlah" name="jumlah" required>
                                 </div>
                             </div>                                                       
@@ -72,13 +72,13 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="spesifikasi" class="col-form-label">Spesifikasi</label>
+                                <label for="spesifikasi" class="col-form-label">Specification</label>
                                 <textarea class="form-control" id="spesifikasi" name="spesifikasi" rows="5"></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
-                            <button type="submit" class="btn btn-primary">Tambah</button>
+                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Add</button>
                         </div>
                     </form>
                 </div>
@@ -90,10 +90,10 @@
                 <thead>
                   <tr>
                     <th class="text-center">No</th>
-                    <th>Alat Pancing</th>
-                    <th class="text-center">Jumlah</th>
+                    <th>Fishing Equipment</th>
+                    <th class="text-center">Amount</th>
                     <th class="text-center">Status</th>
-                    <th class="text-center">Aksi</th>
+                    <th class="text-center">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -117,7 +117,7 @@
                           </div>
                           <div class="d-flex flex-column justify-content-center">
                             <h6 class="mb-0 text-sm">{{ $alat->nama_alat }}</h6>
-                            <p class="text-xl text-secondary mb-0">{{ number_format($alat->harga, 0, ',', '.') }} /hari</p>
+                            <p class="text-xl text-secondary mb-0">{{ number_format($alat->harga, 0, ',', '.') }} /day</p>
                           </div>
                         </div>
                       </td>
@@ -142,18 +142,18 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Apakah Anda yakin ingin menghapus transaksi ini?
+                            Are you sure want to delete this data?
                         </div>
                         <div class="modal-footer">
                           <form id="deleteForm" action="/admin/alatPancing/{alatPancing}" method="post">
                             @csrf
                             @method('DELETE')
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-danger" id="confirmDelete">Hapus</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
                         </form>                        
                         </div>                                    
                     </div>
@@ -165,7 +165,7 @@
                   <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                       <div class="modal-content">
                           <div class="modal-header">
-                              <h5 class="modal-title" id="editModalLabel{{ $alat->id }}">Edit Alat Pancing</h5>
+                              <h5 class="modal-title" id="editModalLabel{{ $alat->id }}">Edit Fishing Equipment</h5>
                               <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">×</span>
                               </button>
@@ -175,20 +175,20 @@
                               @method('PUT')
                               <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                                   <div class="form-group">
-                                      <label for="foto{{ $alat->id }}" class="col-form-label">Foto</label>
+                                      <label for="foto{{ $alat->id }}" class="col-form-label">Image</label>
                                       <input type="file" class="form-control" id="foto{{ $alat->id }}" name="foto" accept="image/*">
                                   </div>
                                   <div class="form-group">
-                                      <label for="nama_alat{{ $alat->id }}" class="col-form-label">Nama Alat</label>
+                                      <label for="nama_alat{{ $alat->id }}" class="col-form-label">Fishing Equipment Name</label>
                                       <input type="text" class="form-control" id="nama_alat{{ $alat->id }}" name="nama_alat" value="{{ $alat->nama_alat }}" required>
                                   </div>
                                   <div class="row mb-3">
                                     <div class="col-md-6">
-                                        <label for="harga{{ $alat->id }}" class="col-form-label">Harga Sewa Per Hari</label>
+                                        <label for="harga{{ $alat->id }}" class="col-form-label">Rental Price Per Day</label>
                                         <input type="number" class="form-control" id="harga{{ $alat->id }}" name="harga" value="{{ $alat->harga }}" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="jumlah{{ $alat->id }}" class="col-form-label">Jumlah Barang</label>
+                                        <label for="jumlah{{ $alat->id }}" class="col-form-label">Amount</label>
                                         <input type="number" class="form-control" id="jumlah{{ $alat->id }}" name="jumlah" value="{{ $alat->jumlah }}" required>
                                     </div>
                                   </div> 
@@ -200,13 +200,13 @@
                                       </select>
                                   </div>
                                   <div class="form-group">
-                                      <label for="spesifikasi{{ $alat->id }}" class="col-form-label">Spesifikasi</label>
+                                      <label for="spesifikasi{{ $alat->id }}" class="col-form-label">Specification</label>
                                       <textarea class="form-control" id="spesifikasi{{ $alat->id }}" name="spesifikasi" rows="5">{{ $alat->spesifikasi }}</textarea>
                                   </div>
                               </div>
                               <div class="modal-footer">
-                                  <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
-                                  <button type="submit" class="btn btn-primary">Simpan</button>
+                                  <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-primary">Save</button>
                               </div>
                           </form>
                       </div>
@@ -219,7 +219,7 @@
                   <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
                       <div class="modal-content">
                           <div class="modal-header">
-                              <h5 class="modal-title" id="detailModalLabel{{ $alat->id }}">Detail Alat Pancing</h5>
+                              <h5 class="modal-title" id="detailModalLabel{{ $alat->id }}">Fishing Equipment Details</h5>
                               <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                   <span aria-hidden="true">×</span>
                               </button>
@@ -235,15 +235,15 @@
                                   </div>
                                   <div class="col-md-6">
                                       <h5>{{ $alat->nama_alat }}</h5>
-                                      <p>Harga: {{ number_format($alat->harga, 0, ',', '.') }} /hari</p>
-                                      <p>Jumlah: {{ $alat->jumlah }}</p>
+                                      <p>Price: {{ number_format($alat->harga, 0, ',', '.') }} /day</p>
+                                      <p>Amount: {{ $alat->jumlah }}</p>
                                       <p>Status: <span class="badge {{ $alat->status == 'available' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $alat->status }}</span></p>
-                                      <p>Spesifikasi: </p><p>{!! nl2br(e($alat->spesifikasi)) !!}</p>
+                                      <p>Specification: </p><p>{!! nl2br(e($alat->spesifikasi)) !!}</p>
                                   </div>
                               </div>
                           </div>
                           <div class="modal-footer">
-                              <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
+                              <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
                           </div>
                       </div>
                   </div>
@@ -254,7 +254,7 @@
           
           {{-- Cek ada data atau kosong --}}
           @if($alatPancing->isEmpty())
-            <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+            <h6 class="text-muted text-center">No data has been added yet</h6>
           @endif
         
           <!-- Pagination -->

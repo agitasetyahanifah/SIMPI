@@ -55,7 +55,7 @@ class AdminBlogController extends Controller
         $blog->body = $validated['body'];
         $blog->save();
 
-        return redirect()->back()->with('success', 'Blog berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Blog added successfully.');
     }
 
     public function storeKategori(Request $request)
@@ -68,7 +68,7 @@ class AdminBlogController extends Controller
         $kategoriBlog->kategori_blog = $validated['kategori_blog'];
         $kategoriBlog->save();
 
-        return redirect()->back()->with('success', 'Kategori blog berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Blog category added successfully.');
     }
 
     /**
@@ -118,7 +118,7 @@ class AdminBlogController extends Controller
         $blog->body = $validated['body'];
         $blog->save();
 
-        return redirect()->back()->with('success', 'Blog berhasil diperbarui.');
+        return redirect()->back()->with('success', 'Blog updated successfully.');
     }
     /**
      * Remove the specified resource from storage.
@@ -131,7 +131,7 @@ class AdminBlogController extends Controller
         $blogs->delete();
 
         // Redirect kembali ke halaman ddaftar blog dengan pesan sukses
-        return redirect()->back()->with('success', 'Blog berhasil dihapus.');
+        return redirect()->back()->with('success', 'Blog successfully deleted.');
     }
 
     public function deleteKategori(String $id)
@@ -145,7 +145,7 @@ class AdminBlogController extends Controller
         $kategoriBlog->delete();
     
         // Redirect kembali ke halaman daftar kategori blog dengan pesan sukses
-        return redirect()->back()->with('success', 'Kategori blog dan blog terkait berhasil dihapus.');
+        return redirect()->back()->with('success', 'The blog category and related blogs have been successfully deleted.');
     }    
 
     public function checkSlug(Request $request)

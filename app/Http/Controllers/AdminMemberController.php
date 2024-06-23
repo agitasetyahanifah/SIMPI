@@ -51,7 +51,7 @@ class AdminMemberController extends Controller
         $member->save();
 
         // Redirect back with a success message
-        return redirect()->back()->with('success', 'Data member berhasil ditambahkan');
+        return redirect()->back()->with('success', 'Member data added successfully');
     }
 
     /**
@@ -103,7 +103,7 @@ class AdminMemberController extends Controller
         $member->save();
 
         // Redirect back with a success message
-        return redirect()->back()->with('success', 'Data member berhasil diperbarui');
+        return redirect()->back()->with('success', 'Member data has been updated successfully');
     }
 
     /**
@@ -117,6 +117,6 @@ class AdminMemberController extends Controller
         $members->delete();
             
         // Redirect kembali ke halaman manajemen member dengan pesan sukses
-        return redirect()->back()->with('success', 'Data member berhasil dihapus.');
+        return redirect()->back()->with('success', 'Member data has been successfully deleted.');
     }
 }

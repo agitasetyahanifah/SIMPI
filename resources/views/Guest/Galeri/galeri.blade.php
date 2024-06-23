@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" type="image/png" sizes="16x16" href="../images/logo.png">
   <title>
-    SIMPI | Galeri Pemancingan
+    SIMPI | Fishing Gallery
   </title>
   <!-- Fonts and icons -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -71,10 +71,10 @@
 
     <div class="container-fluid py-2">
       <div class="mt-3 mb-2">
-        <a href="{{ route('guest.landingpage.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Kembali</a>
+        <a href="{{ route('guest.landingpage.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Back</a>
       </div>
       <div class="mt-3 mb-4">
-        <h2 class="font-weight-bolder mt-4 mb-3 text-center"><b>Galeri Pemancingan</b></h2>
+        <h2 class="font-weight-bolder mt-4 mb-3 text-center"><b>Fishing Gallery</b></h2>
       </div>
       <div class="row mb-4 gx-2">
         @foreach($images as $image)
@@ -114,7 +114,7 @@
       </div>
       {{-- Cek ada data atau kosong --}}
       @if($images->isEmpty())
-        <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+        <h6 class="text-muted text-center">No data has been added yet</h6>
       @endif
     </div>
     <!-- Pagination -->

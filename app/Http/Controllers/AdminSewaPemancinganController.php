@@ -30,25 +30,6 @@ class AdminSewaPemancinganController extends Controller
       
         return view('admin.sewapemancingan.index', compact('sewaPemancingan', 'lastItem', 'spots', 'jsonSpots'));
     }
-
-    public function search(Request $request)
-    {
-        $keyword = $request->input('keyword');
-        
-        // Query untuk mencari data berdasarkan keyword
-        $sewaPemancingan = Sewaspot::where('kode_booking', 'like', "%$keyword%")
-            ->whereHas('member', function ($query) use ($keyword) {
-                $query->where('nama', 'like', "%$keyword%")
-                    ->where('role', 'member');
-            })
-            ->orWhereHas('member', function ($query) use ($keyword) {
-                $query->where('role', 'member');
-            })
-            ->get();
-            
-        // Kirim data pencarian ke view
-        return view('admin.sewapemancingan.index', compact('sewaPemancingan'));
-    }
     
     /**
      * Show the form for creating a new resource.
@@ -93,7 +74,7 @@ class AdminSewaPemancinganController extends Controller
                                   ->exists();
     
         if ($existingOrder) {
-            return redirect()->back()->with('error', 'Spot ini sudah dipesan pada tanggal dan sesi yang sama. Silakan pilih spot lain.');
+            return redirect()->back()->with('error', 'This spot is booked for the same date and session. Please choose another spot!');
         }
     
         // Validasi apakah nomor spot tersebut sudah dipesan pada tanggal dan sesi yang sama
@@ -104,7 +85,7 @@ class AdminSewaPemancinganController extends Controller
                                       ->exists();
     
         if ($existingSpotOrder) {
-            return redirect()->back()->with('error', 'Nomor spot ini sudah dipesan pada tanggal dan sesi yang sama. Silakan pilih spot lain.');
+            return redirect()->back()->with('error', 'This spot is booked for the same date and session. Please choose another spot!');
         }
     
         // Proses update jika validasi berhasil
@@ -119,9 +100,9 @@ class AdminSewaPemancinganController extends Controller
             $pemancingan->status = 'menunggu pembayaran';
             $pemancingan->save();
     
-            $message = 'Sewa spot pemancingan berhasil diupdate dengan perubahan.';
+            $message = 'Fishing spot reservation successfully updated with changes.';
         } else {
-            $message = 'Tidak ada perubahan pada sewa spot pemancingan.';
+            $message = 'There are no changes to fishing spot reservations.';
         }
     
         return redirect()->back()->with('success', $message);
@@ -133,13 +114,17 @@ class AdminSewaPemancinganController extends Controller
     public function destroy(string $id)
     {
         $sewaPemancingan = SewaSpot::findOrFail($id);
-            
-        // Hapus alat pancing dari database
+    
+        // Hapus transaksi keuangan terkait sewa spot ini
+        Keuangan::where('keterangan', 'like', '%Spot Booking Payment by ' . $sewaPemancingan->member->nama . '%')
+            ->delete();
+    
+        // Hapus sewa spot dari database
         $sewaPemancingan->delete();
-            
+    
         // Redirect kembali ke halaman sewa pemancingan dengan pesan sukses
-        return redirect()->back()->with('success', 'Data penyewaan pemancingan berhasil dihapus.');
-    }
+        return redirect()->back()->with('success', 'Fishing spot reservation data and associated financial records have been successfully deleted.');
+    }    
 
     public function konfirmasiPembayaran($id, Request $request)
     {
@@ -147,7 +132,7 @@ class AdminSewaPemancinganController extends Controller
 
         // Periksa apakah status sudah 'sudah dibayar'
         if ($pemancingan->status === 'sudah dibayar') {
-            return redirect()->back()->with('error', 'Pembayaran sudah dikonfirmasi sebelumnya.');
+            return redirect()->back()->with('error', 'Payment has been confirmed beforehand.');
         }
 
         // Perbarui status pembayaran
@@ -162,10 +147,10 @@ class AdminSewaPemancinganController extends Controller
         $keuangan->waktu_transaksi = Carbon::now()->toTimeString();
         $keuangan->jumlah = $pemancingan->biaya_sewa;
         $keuangan->jenis_transaksi = 'pemasukan';
-        $keuangan->keterangan = 'Pembayaran Sewa Spot oleh ' . $pemancingan->member->nama;
+        $keuangan->keterangan = 'Spot Booking Payment by ' . $pemancingan->member->nama;
         $keuangan->save();
 
-        return redirect()->back()->with('success', 'Pembayaran berhasil dikonfirmasi.');
+        return redirect()->back()->with('success', 'Payment confirmed successfully.');
     }
 
     public function getAvailableSpotsJson(Request $request)

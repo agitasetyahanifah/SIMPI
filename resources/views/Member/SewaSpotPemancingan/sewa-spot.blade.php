@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/logo.png') }}">
   <title>
-    SIMPI | Sewa Spot Pemancingan
+    SIMPI | Fishing Spot
   </title>
   <!-- Fonts and icons -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -122,11 +122,11 @@
 
     <div class="container-fluid py-2">
       <div class="mt-3 mb-2">
-        <a href="{{ route('member.landingpage.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Kembali</a>
+        <a href="{{ route('member.landingpage.index') }}"><i class="fa fa-arrow-left mt-3 mb-3 mx-2" style="font-size: 12pt;"></i>Back</a>
       </div>
       <div class="mt-3 mb-4 d-flex justify-content-between align-items-center">
-        <h2 class="font-weight-bolder mt-4 mb-3 mx-auto">Sewa Spot Pemancingan</h2>
-        <a href="{{ route('member.spots.riwayat-sewa') }}" class="btn btn-primary mb-3 mb-sm-0">Riwayat Sewa</a>
+        <h2 class="font-weight-bolder mt-4 mb-3 mx-auto">Fishing Spot</h2>
+        <a href="{{ route('member.spots.riwayat-sewa') }}" class="btn btn-primary mb-3 mb-sm-0">Reservation History</a>
       </div>      
       @if(session('success'))
           <div class="alert alert-success">
@@ -145,7 +145,7 @@
       @endif
       <div class="card-body p-6 mb-4">
           <div class="kolam">
-            <h1 style="color: white;">Kolam</h1>
+            <h1 style="color: white;">Pool</h1>
             <div class="spot-container">
 
             <!-- Bagian atas (1-15) dari kiri ke kanan -->
@@ -223,7 +223,7 @@
       <div class="modal-dialog">
           <div class="modal-content">
               <div class="modal-header">
-                  <h5 class="modal-title" id="spotModalLabel">Sewa Spot Pemancingan</h5>
+                  <h5 class="modal-title" id="spotModalLabel">Fishing Spot Reservation</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
@@ -236,15 +236,15 @@
                       </div>
 
                       <div class="form-group">
-                        <label for="nama_pelanggan" class="col-form-label">Nama Pelanggan</label>
+                        <label for="nama_pelanggan" class="col-form-label">Customer Name</label>
                         <input type="text" class="form-control" id="nama_pelanggan" name="nama_pelanggan" value="{{ auth()->user()->nama }}" disabled>
                       </div>                
                       <div class="form-group">
-                        <label for="tanggal_sewa" class="col-form-label">Tanggal Sewa</label>
+                        <label for="tanggal_sewa" class="col-form-label">Booking Date</label>
                         <input type="date" class="form-control" id="tanggal_sewa" name="tanggal_sewa" value="{{ date('Y-m-d') }}" min="{{ date('Y-m-d') }}" required>
                       </div>
                       <div class="mb-3">
-                          <label for="sesi" class="form-label">Pilih Sesi:</label>
+                          <label for="sesi" class="form-label">Select Session:</label>
                           <div id="sesiButtons">
                               <button type="button" class="btn btn-outline-primary sesi-button"
                                   data-sesi="08.00-12.00">08.00-12.00</button>
@@ -255,12 +255,12 @@
                           <input type="hidden" id="sesi" name="sesi" required>
                       </div>
                       <div class="mb-3">
-                        <a><strong>Note: </strong>Biaya Sewa Spot Pemancingan Setiap Sesi Rp. 10.000,-</a>
+                        <a><strong>Note: </strong>Fishing Spot Rental Fee for Each Session Rp. 10,000,-</a>
                       </div>
 
                       <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                          <button type="submit" class="btn btn-primary">Sewa</button>
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                          <button type="submit" class="btn btn-primary">Rent</button>
                       </div>
                   </form>
               </div>

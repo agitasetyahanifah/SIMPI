@@ -21,10 +21,10 @@ class AdminDashboardController extends Controller
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048',
         ], [
-            'image.required' => 'Gambar harus dipilih.',
-            'image.image' => 'File harus berupa gambar.',
-            'image.mimes' => 'Format gambar harus jpeg, png, jpg, atau gif.',
-            'image.max' => 'Ukuran gambar tidak boleh lebih dari 5 MB.',
+            'image.required' => 'Image must be selected.',
+            'image.image' => 'The file must be an image.',
+            'image.mimes' => 'Image format must be jpeg, png, jpg, or gif.',
+            'image.max' => 'Image size should not exceed 5 MB.',
         ]);
 
         // Check if the file is an image
@@ -37,9 +37,9 @@ class AdminDashboardController extends Controller
             $image->filename = $imageName;
             $image->save();
 
-            return redirect()->back()->with('success', 'Gambar berhasil ditambahkan!');
+            return redirect()->back()->with('success', 'Image added successfully!');
         } else {
-            return redirect()->back()->withErrors(['image' => 'File yang diunggah bukanlah gambar yang valid.']);
+            return redirect()->back()->withErrors(['image' => 'The uploaded file is not a valid image.']);
         }
     }
 
@@ -55,14 +55,14 @@ class AdminDashboardController extends Controller
 
         if (!$image) {
             // Jika gambar tidak ditemukan, kembalikan respons dengan status 404
-            return response()->json(['error' => 'Gambar tidak ditemukan.'], 404);
+            return response()->json(['error' => 'Image not found.'], 404);
         }
 
         // Hapus entri gambar dari database
         $image->delete();
 
         // Berikan respons dalam bentuk alert
-        return redirect()->back()->with('success', 'Gambar berhasil dihapus.');
+        return redirect()->back()->with('success', 'Image deleted successfully.');
     }
     
 }

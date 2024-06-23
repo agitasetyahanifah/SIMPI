@@ -35,7 +35,7 @@ class MemberSewaSpotController extends Controller
 
         // Jika spot sudah dipesan, kembalikan dengan pesan error
         if ($spotBooked) {
-            return back()->withErrors(['sesi' => 'Sesi ini sudah tidak tersedia. Silakan pilih sesi lain.']);
+            return back()->withErrors(['sesi' => 'This session is no longer available. Please select another session.']);
         }
 
         $biaya_sewa = 10000;
@@ -55,7 +55,7 @@ class MemberSewaSpotController extends Controller
             $sewaSpot->update(['timeout' => $timeout]);
         });
 
-        return redirect()->route('member.spots.index')->with('success', 'Spot berhasil dibooking!');
+        return redirect()->route('member.spots.index')->with('success', 'Spot successfully booked!');
     }
 
     public function cancelOrder(SewaSpot $sewaSpot)
@@ -66,10 +66,10 @@ class MemberSewaSpotController extends Controller
             $sewaSpot->status = 'dibatalkan';
             $sewaSpot->save();
     
-            return redirect()->back()->with('success', 'Pesanan berhasil dibatalkan.');
+            return redirect()->back()->with('success', 'Fishing Spot Booking has been successfully cancelled.');
         }
     
-        return redirect()->back()->with('error', 'Gagal membatalkan pesanan.');
+        return redirect()->back()->with('error', 'Fishing Spot Booking failed to be cancelled.');
     }    
 
     public function resetSpot()

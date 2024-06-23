@@ -234,7 +234,7 @@
       {{-- Card Body --}}
       <div class="card-body">
         {{-- Start Galeri Pemancingan --}}
-        <h3 class="text-center mt-4 mb-3">Galeri Pemancingan</h3>
+        <h3 class="text-center mt-4 mb-3">Fishing Gallery</h3>
         <div class="row mb-4 gx-2">
           @foreach($images as $image)
           <div class="col-lg-4 col-md-4 col-sm-12 col-4 g-2">
@@ -273,12 +273,12 @@
         </div>
         {{-- Cek ada data atau kosong --}}
         @if($images->isEmpty())
-          <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+          <h6 class="text-muted text-center">No data has been added yet</h6>
         @endif
         {{-- Button Lainnya --}}
         <div class="row mt-3">
           <div class="text-center">
-            <a href="{{ route('guest.galeri.index') }}" class="btn btn-primary btn-sm rounded-pill">Lainnya <i class="ms-2 fas fa-chevron-right" style="font-size: 10pt"></i></a>
+            <a href="{{ route('guest.galeri.index') }}" class="btn btn-primary btn-sm rounded-pill">More <i class="ms-2 fas fa-chevron-right" style="font-size: 10pt"></i></a>
           </div>
         </div>
         {{-- End Galeri Pemancingan --}}
@@ -289,7 +289,7 @@
         @endphp
         {{-- Konten Blog --}}
         <div class="row">
-          <h3 class="text-center mt-4 mb-4">Blog Pemancingan</h3>
+          <h3 class="text-center mt-4 mb-4">Fishing Blogs</h3>
           <div class="col-12 d-flex flex-wrap mb-2">
             <div class="row g-2">
               @foreach($blogs as $blog)
@@ -302,7 +302,7 @@
                     @endif
                     <div class="card-body">
                       <h5 class="card-title">{{ $blog->judul }}</h5>
-                      <p class="card-text">{{ Str::words(strip_tags($blog->body), 12, '...') }} <a href="{{ route('guest.blog.detail-blog', $blog->id) }}" style="color: aqua;">Selengkapnya</a></p>
+                      <p class="card-text">{{ Str::words(strip_tags($blog->body), 12, '...') }} <a href="{{ route('guest.blog.detail-blog', $blog->id) }}" style="color: aqua;">More</a></p>
                       <small class="text-muted mt-2">Last updated {{ $blog->updated_at->diffForHumans() }}</small>
                     </div>
                   </div>
@@ -313,18 +313,18 @@
         </div>
         {{-- Cek ada data atau kosong --}}
         @if($blogs->isEmpty())
-          <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+          <h6 class="text-muted text-center">No data has been added yet</h6>
         @endif
         {{-- Button Lainnya --}}
         <div class="row mt-3">
           <div class="text-center">
-            <a href="{{ route('guest.blog.index') }}" class="btn btn-primary btn-sm rounded-pill">Lainnya <i class="ms-2 fas fa-chevron-right" style="font-size: 10pt"></i></a>
+            <a href="{{ route('guest.blog.index') }}" class="btn btn-primary btn-sm rounded-pill">More <i class="ms-2 fas fa-chevron-right" style="font-size: 10pt"></i></a>
           </div>
         </div> 
         {{-- End Blog Pemancingan --}}
 
         {{-- Start Daftar Alat Pancing --}}
-        <h3 class="text-center mt-4 mb-3">Daftar Alat Pancing yang Disewakan</h3>
+        <h3 class="text-center mt-4 mb-3">List of Fishing Equipment</h3>
         {{-- Daftar Alat Pancing --}}
         <div class="row gx-2 mb-4">
           @foreach($alatPancing as $alat)
@@ -338,9 +338,9 @@
                 @endif
                 <div class="card-body2">
                     <h5 class="card-title2">{{ $alat->nama_alat }}</h5>
-                    <p class="card-text2" style="color: orangered;">Rp {{ number_format($alat->harga, 0, ',', '.') }}/hari</p>
+                    <p class="card-text2" style="color: orangered;">Rp {{ number_format($alat->harga, 0, ',', '.') }}/day</p>
                     <div class="text-center">
-                      <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#detailModal{{ $alat->id }}">Detail</button>
+                      <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#detailModal{{ $alat->id }}">Details</button>
                     </div>
                 </div>
               </div>
@@ -350,12 +350,12 @@
         </div>
         {{-- Cek ada data atau kosong --}}
         @if($alatPancing->isEmpty())
-          <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+          <h6 class="text-muted text-center">No data has been added yet</h6>
         @endif
         {{-- Button Lainnya --}}
         <div class="row mt-3">
           <div class="text-center">
-            <a href="{{ route('guest.daftar-alat.index') }}" class="btn btn-primary btn-sm rounded-pill">Lainnya <i class="ms-2 fas fa-chevron-right" style="font-size: 10pt"></i></a>
+            <a href="{{ route('guest.daftar-alat.index') }}" class="btn btn-primary btn-sm rounded-pill">More <i class="ms-2 fas fa-chevron-right" style="font-size: 10pt"></i></a>
           </div>
         </div>   
         <!-- Modal Detail Alat Pancing -->
@@ -364,7 +364,7 @@
             <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="detailModalLabel{{ $alat->id }}">Detail Alat Pancing</h5>
+                        <h5 class="modal-title" id="detailModalLabel{{ $alat->id }}">Fishing Equipment Details</h5>
                         <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
@@ -380,15 +380,15 @@
                             </div>
                             <div class="col-md-6">
                                 <h5>{{ $alat->nama_alat }}</h5>
-                                <p>Harga: {{ number_format($alat->harga, 0, ',', '.') }} /hari</p>
-                                <p>Jumlah: {{ $alat->jumlah }}</p>
+                                <p>Price: {{ number_format($alat->harga, 0, ',', '.') }} /day</p>
+                                <p>Available Quantity: {{ $alat->jumlah }}</p>
                                 <p>Status: <span class="badge {{ $alat->status == 'available' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $alat->status }}</span></p>
-                                <p>Spesifikasi: </p><p style="text-align: justify;">{!! nl2br(e($alat->spesifikasi)) !!}</p>
+                                <p>Specifications: </p><p style="text-align: justify;">{!! nl2br(e($alat->spesifikasi)) !!}</p>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -405,7 +405,7 @@
               <div class="row">
      
                 <!-- Lokasi -->
-                  <h5 class="card-title mb-3"><b>Lokasi Pemancingan</b></h5>
+                  <h5 class="card-title mb-3"><b>Location</b></h5>
                   <div class="card-img">
                     <div id="map-container" style="height: 300px;">
                       <iframe 
@@ -421,7 +421,7 @@
                   </div>
 
                 <!-- Sosial Media -->
-                <h5 class="card-title mt-4  "><b>Sosial Media</b></h5>
+                <h5 class="card-title mt-4  "><b>Social Media</b></h5>
                 <ul class="list-unstyled d-flex flex-wrap">
                   <li class="me-2 mb-2">
                     <a href="#" class="btn btn-outline-primary btn-sm d-flex align-items-center">
@@ -508,7 +508,7 @@
           data: {
               labels: [], // Labels akan diisi dengan jam/jam tertentu dari data OpenWeatherMap
               datasets: [{
-                  label: 'Suhu (°C)',
+                  label: 'Temperature (°C)',
                   data: [], // Data akan diisi dengan suhu pada jam tertentu dari data OpenWeatherMap
                   backgroundColor: 'rgba(255, 204, 0, 0.2)',
                   borderColor: 'rgba(255, 204, 0, 1)',
@@ -581,16 +581,28 @@
           "50n": "wi-fog"
       };
   
+      // const descriptionMapping = {
+      //     "clear sky": "Langit Cerah",
+      //     "few clouds": "Sedikit Berawan",
+      //     "scattered clouds": "Berawan Tersebar",
+      //     "broken clouds": "Berawan Sebagian",
+      //     "shower rain": "Hujan Gerimis",
+      //     "rain": "Hujan",
+      //     "thunderstorm": "Badai Petir",
+      //     "snow": "Salju",
+      //     "mist": "Kabut"
+      // };
+
       const descriptionMapping = {
-          "clear sky": "Langit Cerah",
-          "few clouds": "Sedikit Berawan",
-          "scattered clouds": "Berawan Tersebar",
-          "broken clouds": "Berawan Sebagian",
-          "shower rain": "Hujan Gerimis",
-          "rain": "Hujan",
-          "thunderstorm": "Badai Petir",
-          "snow": "Salju",
-          "mist": "Kabut"
+          "clear sky": "Clear Sky",
+          "few clouds": "Few Clouds",
+          "scattered clouds": "Scattered Clouds",
+          "broken clouds": "Broken Clouds",
+          "shower rain": "Shower Rain",
+          "rain": "Rain",
+          "thunderstorm": "Thunderstorm",
+          "snow": "Snow",
+          "mist": "Mist"
       };
   
       function capitalizeWords(str) {
@@ -610,11 +622,12 @@
           const description = descriptionMapping[data.weather[0].description.toLowerCase()] || data.weather[0].description;
           document.getElementById("description").innerHTML = capitalizeWords(description);
   
-          const dayName = new Date(data.dt * 1000).toLocaleDateString('id-ID', { weekday: 'long' });
+          // const dayName = new Date(data.dt * 1000).toLocaleDateString('id-ID', { weekday: 'long' });
+          const dayName = new Date(data.dt * 1000).toLocaleDateString('en-US', { weekday: 'long' });
           document.getElementById("day").innerHTML = dayName;
   
-          document.getElementById("humidity").innerHTML = `Kelembapan: ${data.main.humidity}%`;
-          document.getElementById("wind").innerHTML = `Angin: ${data.wind.speed} km/h`;
+          document.getElementById("humidity").innerHTML = `Humidity: ${data.main.humidity}%`;
+          document.getElementById("wind").innerHTML = `Wind: ${data.wind.speed} km/h`;
           document.getElementById("city").innerHTML = data.name;
           
         }

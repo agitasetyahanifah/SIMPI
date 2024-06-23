@@ -21,7 +21,6 @@ use App\Http\Controllers\MemberDaftarAlatController;
 use App\Http\Controllers\MemberLandingPageController;
 use App\Http\Controllers\AdminPengelolaanIkanController;
 use App\Http\Controllers\AdminSewaPemancinganController;
-use App\Http\Controllers\MemberSewaPemancinganController;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,7 +101,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('/admin/members', AdminMemberController::class);
     // Rute Booking Tempat Pemancingan
     Route::resource('/admin/sewaPemancingan', AdminSewaPemancinganController::class);
-    Route::get('/admin/sewaPemancingan/search', [AdminSewaPemancinganController::class, 'search'])->name('admin.sewaPemancingan.search');
     Route::get('/admin/sewapemancingan/getAvailableSpots', [AdminSewaPemancinganController::class, 'getAvailableSpotsJson'])->name('admin.sewapemancingan.getAvailableSpotsJson');
     Route::post('/admin/sewaPemancingan/konfirmasi-pembayaran/{id}', [AdminSewaPemancinganController::class, 'konfirmasiPembayaran'])->name('admin.sewaPemancingan.konfirmasiPembayaran');
 });

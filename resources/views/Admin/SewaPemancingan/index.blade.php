@@ -1,6 +1,6 @@
 @extends('Admin.Layouts.main')
 
-@section('title', 'Sewa Pemancingan')
+@section('title', 'Fishing Spot Reservations')
 
 @section('content')
 
@@ -21,29 +21,7 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header pb-0">
-            <h4 class="font-weight-bolder mb-0">Manajemen Penyewaan Spot Pemancingan</h4>
-                
-            <!-- Form Search -->
-            {{-- <form action="{{ route('admin.sewaPemancingan.search') }}" method="GET">
-                @if (request('kode_booking'))
-                    <input type="hidden" class="form-control" name="kode_booking" placeholder="Kode Booking" value="{{ request('kode_booking') }}">
-                @endif
-                @if (request('nama_pelanggan'))
-                    <input type="hidden" class="form-control" name="nama_pelanggan" placeholder="Nama Pelanggan" value="{{ request('nama_pelanggan') }}">
-                @endif
-                <div class="input-group mt-3">
-                    <input type="text" class="form-control" id="searchInput" name="search" placeholder="Cari berdasarkan nama pelanggan/kode booking" aria-label="Cari berdasarkan nama pelanggan/kode booking" aria-describedby="button-addon2">
-                    <button class="btn btn-outline-primary mb-0" type="submit" id="button-addon2">Cari</button>                    
-                </div>
-            </form> --}}
-            <!-- End Form Search -->
-
-            {{-- <form action="{{ route('admin.sewaPemancingan.search') }}" method="GET">
-                <div class="input-group mt-3">
-                    <input type="text" class="form-control" id="searchInput" name="keyword" placeholder="Cari berdasarkan nama pelanggan/kode booking" aria-label="Cari berdasarkan nama pelanggan/kode booking" aria-describedby="button-addon2">
-                    <button class="btn btn-outline-primary mb-0" type="submit" id="button-addon2">Cari</button>                    
-                </div>
-            </form> --}}
+            <h4 class="font-weight-bolder mb-0">Fishing Spot Reservation Management</h4>
           </div>
           <div class="card-body ">
             <div class="table-responsive p-0">
@@ -51,11 +29,11 @@
                 <thead>
                   <tr>
                     <th class="text-center">No</th>
-                    <th>Kode</th>
-                    <th>Nama Pelanggan</th>
-                    <th>Tanggal Sewa</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
+                    <th>Booking Code</th>
+                    <th>Customer Name</th>
+                    <th>Booking Date</th>
+                    <th class="text-center">Status</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -69,15 +47,13 @@
                         <td>{{ $pemancingan->member->nama }}</td>
                         <td>{{ $pemancingan->tanggal_sewa }}</td>
                         <td class="align-middle text-center text-sm">
-                            <span class="badge badge-sm
                             @if($pemancingan->status == 'sudah dibayar')
-                                bg-gradient-success
+                                <span class="badge badge-sm bg-gradient-success">Already Paid</span>
                             @elseif($pemancingan->status == 'menunggu pembayaran')
-                                bg-gradient-secondary
+                                <span class="badge badge-sm bg-gradient-secondary">Waiting for Payment</span>
                             @elseif($pemancingan->status == 'dibatalkan')
-                                bg-gradient-danger
-                            @endif
-                        ">{{ $pemancingan->status }}</span>
+                                <span class="badge badge-sm bg-gradient-danger">Canceled</span>
+                            @endif                    
                         </td>
                         <td class="text-align-end">
                             <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detailModal{{ $pemancingan->id }}" data-id="{{ $pemancingan->id }}"><i class="fas fa-eye"></i></a>
@@ -92,7 +68,7 @@
             
             {{-- Cek ada data atau kosong --}}
             @if($sewaPemancingan->isEmpty())
-                <h6 class="text-muted text-center">Belum ada data yang ditambahkan</h6>
+                <h6 class="text-muted text-center">No data has been added yet</h6>
             @endif 
 
             <!-- Modal Detail Sewa Pemancingan -->
@@ -101,7 +77,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="detailModalLabel{{ $pemancingan->id }}">Detail Spot Pemancingan</h5>
+                            <h5 class="modal-title" id="detailModalLabel{{ $pemancingan->id }}">Fishing Spot Reservation Details</h5>
                             <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
@@ -109,37 +85,37 @@
                         <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                             <div class="row">
                                 <div class="col">
-                                    <p class="me-3" style="font-size: 18pt"><b>Kode Booking: {{ $pemancingan->kode_booking }}</b></p>
+                                    <p class="me-3" style="font-size: 18pt"><b>Booking Code: {{ $pemancingan->kode_booking }}</b></p>
                                     <table class="table">
                                         <tr>
-                                            <th style="width: 35%">Nama Pelanggan</th>
+                                            <th style="width: 35%">Customer Name</th>
                                             <td>{{ $pemancingan->member->nama }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Tanggal Sewa</th>
+                                            <th>Booking Date</th>
                                             <td>{{ $pemancingan->tanggal_sewa }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Nomor Spot</th>
+                                            <th>Spot Number</th>
                                             <td>{{ $pemancingan->spot->nomor_spot }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Sesi</th>
+                                            <th>Session</th>
                                             <td>{{ $pemancingan->sesi }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Biaya Sewa</th>
+                                            <th>Reservation Fee</th>
                                             <td>Rp {{ number_format($pemancingan->biaya_sewa, 0, ',', '.') }}</td>
                                         </tr>
                                         <tr>
-                                            <th>Status Pembayaran</th>
+                                            <th>Payment Status</th>
                                             <td>
                                                 @if($pemancingan->status === 'dibatalkan')
-                                                    <span class="text-danger">Dibatalkan</span>
+                                                    <span class="text-danger">Canceled</span>
                                                 @elseif($pemancingan->status === 'sudah dibayar')
-                                                    <span class="text-success">Sudah Dibayar</span>
+                                                    <span class="text-success">Already Paid</span>
                                                 @elseif($pemancingan->status === 'menunggu pembayaran')
-                                                    <span class="text-warning">Menunggu Pembayaran</span>
+                                                    <span class="text-warning">Waiting for Payment</span>
                                                 @else
                                                     {{ $pemancingan->status }}
                                                 @endif
@@ -152,24 +128,24 @@
                                             <div class="form-check">
                                                 <input class="form-check-input" type="checkbox" value="sudah dibayar" id="konfirmasiPembayaran{{ $pemancingan->id }}" name="status" required>
                                                 <label class="form-check-label" for="konfirmasiPembayaran{{ $pemancingan->id }}">
-                                                    Konfirmasi Pembayaran
+                                                    Payment Confirmation
                                                 </label>
                                             </div>
                                             {{-- <button type="button" class="btn btn-success mt-3" onclick="showKonfirmasiModal({{ $pemancingan->id }})">Konfirmasi</button> --}}
                                             <button type="button" class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#konfirmasiModal{{ $pemancingan->id }}">
-                                                Konfirmasi
+                                                Confirm
                                             </button>                                                                                    
                                         </form>
                                         @elseif($pemancingan->status === 'dibatalkan')
-                                            <p style="color: red"><i class="fas fa-times-circle" style="font-size: 18px"></i> Pembayaran dibatalkan</p>
+                                            <p style="color: red"><i class="fas fa-times-circle" style="font-size: 18px"></i> Payment Cancelled</p>
                                         @elseif($pemancingan->status === 'sudah dibayar')
-                                            <p style="color: green"><i class="fas fa-check-circle" style="font-size: 18px"></i> Pembayaran sudah dikonfirmasi</p>
+                                            <p style="color: green"><i class="fas fa-check-circle" style="font-size: 18px"></i> Payment has been confirmed</p>
                                         @endif                                
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Tutup</button>
+                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
@@ -179,17 +155,17 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="konfirmasiModalLabel{{ $pemancingan->id }}">Konfirmasi Pembayaran</h5>
+                            <h5 class="modal-title" id="konfirmasiModalLabel{{ $pemancingan->id }}">Payment Confirmation</h5>
                             <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            Apakah Anda yakin ingin mengonfirmasi pembayaran untuk Kode Booking: {{ $pemancingan->kode_booking }}?
+                            Are you sure want to confirm payment for the Booking Code: {{ $pemancingan->kode_booking }}?
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Batal</button>
-                            <button type="button" class="btn btn-success" onclick="submitKonfirmasiForm({{ $pemancingan->id }})">Konfirmasi</button>
+                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-success" onclick="submitKonfirmasiForm({{ $pemancingan->id }})">Confirm</button>
                         </div>
                     </div>
                 </div>
@@ -202,31 +178,31 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="editModalLabel{{ $pemancingan->id }}">Edit Sewa Spot Pemancingan</h5>
+                            <h5 class="modal-title" id="editModalLabel{{ $pemancingan->id }}">Edit Fishing Spot Reservations</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form action="/admin/sewaPemancingan/{{ $pemancingan->id }}" method="post">
                             @csrf
                             @method('PUT')
                             <div class="modal-body">
-                                <p class="me-3" style="font-size: 18pt"><b>Kode Booking: {{ $pemancingan->kode_booking }}</b></p>
+                                <p class="me-3" style="font-size: 18pt"><b>Booking Code Booking: {{ $pemancingan->kode_booking }}</b></p>
                                 <div class="form-group mb-3">
-                                    <label for="edit_nama_pelanggan">Nama Pelanggan</label>
+                                    <label for="edit_nama_pelanggan">Customer Name</label>
                                     <input type="text" class="form-control" id="edit_nama_pelanggan" name="edit_nama_pelanggan" value="{{ $pemancingan->member->nama }}" disabled>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label for="edit_tanggal_sewa">Tanggal Sewa</label>
+                                    <label for="edit_tanggal_sewa">Booking Date</label>
                                     <input type="date" class="form-control" id="edit_tanggal_sewa_{{ $pemancingan->id }}" name="edit_tanggal_sewa" value="{{ $pemancingan->tanggal_sewa }}" min="{{ date('Y-m-d') }}" required>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label for="edit_sesi">Sesi</label>
+                                    <label for="edit_sesi">Session</label>
                                     <select class="form-control" id="edit_sesi_{{ $pemancingan->id }}" name="edit_sesi" required>
                                         <option value="08.00-12.00" {{ $pemancingan->sesi == '08.00-12.00' ? 'selected' : '' }}>08.00-12.00</option>
                                         <option value="13.00-17.00" {{ $pemancingan->sesi == '13.00-17.00' ? 'selected' : '' }}>13.00-17.00</option>
                                     </select>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label for="edit_nomor_spot">Nomor Spot</label>
+                                    <label for="edit_nomor_spot">Spot Number</label>
                                     <select class="form-control" id="edit_nomor_spot_{{ $pemancingan->id }}" name="edit_nomor_spot" required>
                                         @foreach($spots as $spot)
                                             @php
@@ -242,8 +218,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="submit" class="btn btn-primary">Simpan</button>
+                                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save</button>
                             </div>
                         </form>
                     </div>
@@ -256,18 +232,18 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+                            <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Apakah Anda yakin ingin menghapus data ini?
+                            Are you sure want to delete this data?
                         </div>
                         <div class="modal-footer">
                             <form id="deleteForm" action="/admin/sewaPemancingan/{id}" method="post">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                <button type="submit" class="btn btn-danger" id="confirmDelete">Hapus</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger" id="confirmDelete">Delete</button>
                             </form>
                         </div>                                    
                     </div>
