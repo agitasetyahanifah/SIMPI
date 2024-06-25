@@ -238,7 +238,7 @@
                                 <tr>
                                     <td class="text-center">{{ $currentNumber++ }}</td>
                                     <td>{{ $ikan_masuk->tanggal }}</td>
-                                    <td>{{ $ikan_masuk->jenisIkan->jenis_ikan }}</td>
+                                    <td>{{ $ikan_masuk->jenisIkan ? $ikan_masuk->jenisIkan->jenis_ikan : '-' }}</td>
                                     <td>{{ number_format($ikan_masuk->jumlah, 0, ',', '.') }}</td>
                                     <td class="keterangan-column">{{ $ikan_masuk->catatan }}</td>
                                     <td class="text-align-end">
@@ -276,6 +276,7 @@
                                             <div class="form-group">
                                                 <label for="edit_jenis_ikan">Types of Fish</label>
                                                 <select class="form-select" id="edit_jenis_ikan" name="edit_jenis_ikan" required>
+                                                    <option value="" @if(!$ikan_masuk->jenisIkan) selected @endif>- Pilih Jenis Ikan -</option>
                                                     @foreach($jenisIkanOpt->sortBy('jenis_ikan') as $jenis)
                                                         <option value="{{ $jenis->id }}" @if($jenis->id == $ikan_masuk->jenis_ikan_id) selected @endif>{{ $jenis->jenis_ikan }}</option>
                                                     @endforeach
@@ -431,7 +432,7 @@
                               <tr>
                                   <td class="text-center">{{ $currentNumber++ }}</td>
                                   <td>{{ $ikan_keluar->tanggal }}</td>
-                                  <td>{{ $ikan_keluar->jenisIkan->jenis_ikan }}</td>
+                                  <td>{{ $ikan_keluar->jenisIkan ? $ikan_keluar->jenisIkan->jenis_ikan : '-' }}</td>
                                   <td>{{ $ikan_keluar->kondisi_ikan }}</td>
                                   <td>{{ number_format($ikan_keluar->jumlah, 0, ',', '.') }}</td>
                                   <td class="keterangan-column">{{ $ikan_keluar->catatan }}</td>
@@ -470,6 +471,7 @@
                                             <div class="form-group">
                                                 <label for="edit_jenis_ikan">Types of Fish</label>
                                                 <select class="form-select" id="edit_jenis_ikan" name="edit_jenis_ikan" required>
+                                                    <option value="" @if(!$ikan_keluar->jenisIkan) selected @endif>- Pilih Jenis Ikan -</option>
                                                     @foreach($jenisIkanOpt->sortBy('jenis_ikan') as $jenis)
                                                         <option value="{{ $jenis->id }}" @if($jenis->id == $ikan_keluar->jenis_ikan_id) selected @endif>{{ $jenis->jenis_ikan }}</option>
                                                     @endforeach

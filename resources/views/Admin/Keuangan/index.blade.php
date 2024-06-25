@@ -128,7 +128,13 @@
                                                         <td class="text-center">{{ $currentNumber++ }}</td>
                                                         <td>{{ $keuangan->tanggal_transaksi }}</td>
                                                         <td>Rp {{ number_format($keuangan->jumlah, 0, ',', '.') }},-</td>
-                                                        <td>{{ $keuangan->jenis_transaksi }}</td>
+                                                        <td class="text-center">
+                                                            @if($keuangan->jenis_transaksi === 'pemasukan')
+                                                                <span class="badge badge-sm text-success">Income</span>
+                                                            @elseif($keuangan->jenis_transaksi === 'pengeluaran')
+                                                                <span class="badge badge-sm text-danger">Expenditure</span>
+                                                            @endif  
+                                                        </td>
                                                         <td class="keterangan-column">{{ $keuangan->keterangan }}</td>
                                                         <td class="text-align-end">
                                                             <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ $keuangan->id }}"><i class="fas fa-edit"></i></a>

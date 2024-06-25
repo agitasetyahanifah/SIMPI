@@ -19,7 +19,10 @@ return new class extends Migration
             $table->integer('jumlah');
             $table->enum('status', ['available', 'not available'])->default('available');
             $table->text('spesifikasi');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

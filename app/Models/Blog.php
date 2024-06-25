@@ -18,4 +18,10 @@ class Blog extends Model
     {
         return $this->belongsTo(KategoriBlog::class, 'kategori_id');
     }
+
+    // Relasi antara Blog dan User
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Models\Blog;
 use App\Models\KategoriBlog;
@@ -51,6 +52,7 @@ class AdminBlogController extends Controller
         $blog->judul = $validated['judul'];
         $blog->slug = Str::slug($validated['judul']);
         $blog->kategori_id = $validated['kategori_blog'];
+        $blog->user_id = Auth::id();
         $blog->image = $imageFileName;
         $blog->body = $validated['body'];
         $blog->save();
@@ -66,6 +68,7 @@ class AdminBlogController extends Controller
 
         $kategoriBlog = new KategoriBlog();
         $kategoriBlog->kategori_blog = $validated['kategori_blog'];
+        $kategoriBlog->user_id = Auth::id();
         $kategoriBlog->save();
 
         return redirect()->back()->with('success', 'Blog category added successfully.');
@@ -113,8 +116,9 @@ class AdminBlogController extends Controller
         }
 
         $blog->judul = $validated['judul'];
-        $blog->slug = Str::slug($validated['judul']); // Use Str::slug directly without \
+        $blog->slug = Str::slug($validated['judul']);
         $blog->kategori_id = $validated['kategori_blog'];
+        $blog->user_id = Auth::id();
         $blog->body = $validated['body'];
         $blog->save();
 

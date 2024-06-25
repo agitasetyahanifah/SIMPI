@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\KategoriBlog;
+use App\Models\User;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\KategoriBlog>
@@ -22,6 +23,7 @@ class KategoriBlogFactory extends Factory
     {
         return [
             'kategori_blog' => $this->faker->randomElement(['Pemancingan', 'Tips & Trik', 'Jenis-Jenis Ikan', 'Alat Pancing']),
+            'user_id' => User::inRandomOrder()->first()->id,
         ];
     }
 }

@@ -68,6 +68,14 @@
                 <div class="mt-3" style="text-align: justify;">
                   {!! $blog->body !!}
                 </div>
+                <div class="mt-3">
+                  @if ($blog->user) <!-- Periksa apakah user tidak null -->
+                      <a><b>By:</b> <a style="color: orange">{{ $blog->user->nama }}</a></a>
+                  @else
+                      <p style="color: orange">by: Unknown User</p> <!-- Tampilkan pesan alternatif jika user null -->
+                      <a><b>By:</b><a>Unknown User</a></a>
+                  @endif
+                </div>
               </div>
             </div>
         </div>          

@@ -6,6 +6,7 @@ use App\Models\SewaPemancingan;
 use App\Models\Galeri;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminDashboardController extends Controller
 {
@@ -35,6 +36,7 @@ class AdminDashboardController extends Controller
 
             $image = new Galeri();
             $image->filename = $imageName;
+            $image->user_id = Auth::id();
             $image->save();
 
             return redirect()->back()->with('success', 'Image added successfully!');

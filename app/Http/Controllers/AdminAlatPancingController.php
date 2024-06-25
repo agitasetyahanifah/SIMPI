@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AlatPancing;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminAlatPancingController extends Controller
 {
@@ -52,6 +53,7 @@ class AdminAlatPancingController extends Controller
             'jumlah' => $request->jumlah,
             'status' => $request->status,
             'spesifikasi' => $request->spesifikasi,
+            'user_id' => Auth::id(),
         ]);
 
         // Redirect kembali ke halaman dengan pesan sukses
@@ -94,6 +96,7 @@ class AdminAlatPancingController extends Controller
         $alatPancing->jumlah = $request->jumlah;
         $alatPancing->status = $request->status;
         $alatPancing->spesifikasi = $request->spesifikasi;
+        $alatPancing->user_id = Auth::id();
 
         // Cek apakah ada file foto yang dikirim
         if ($request->hasFile('foto')) {

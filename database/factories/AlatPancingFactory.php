@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\AlatPancing;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,13 +18,17 @@ class AlatPancingFactory extends Factory
      */
     public function definition(): array
     {
+        // Mengambil user dengan role admin
+        $admin = User::where('role', 'admin')->inRandomOrder()->first();
+
         return [
             'foto' => '../images/ex-alat.png',
-            'nama_alat' => $this->faker->word, // Generate random word
-            'harga' => $this->faker->numberBetween(10000, 100000), // Generate random price
-            'jumlah' => $this->faker->numberBetween(1, 50), // Generate random quantity
-            'status' => $this->faker->randomElement(['available', 'not available']), // Generate random status
-            'spesifikasi' => $this->faker->paragraph(), // Generate random specification
+            'nama_alat' => $this->faker->word,
+            'harga' => $this->faker->numberBetween(10000, 100000),
+            'jumlah' => $this->faker->numberBetween(1, 50),
+            'status' => $this->faker->randomElement(['available', 'not available']),
+            'spesifikasi' => $this->faker->paragraph(4),
+            'user_id' => $admin->id,
         ];
     }
 }

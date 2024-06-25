@@ -307,15 +307,25 @@
                         <div class="container">
                             <div class="row">
                                 <h3>{{ $blog->judul }}</h3>
-                                <a style="color: black"><b>Slug:</b> {{ $blog->slug }}    |<b>   Category:</b> {{ $blog->kategoriBlog->kategori_blog }}</a>
+                                <div class="row">
+                                    <a><b>Category:</b> {{ $blog->kategoriBlog->kategori_blog }}</a>  
+                                </div>
                                 @if($blog->image && file_exists(public_path('images/'.$blog->image)))
                                     <img src="{{ asset('images/'.$blog->image) }}" class="img-fluid mt-2" alt="{{ $blog->judul }}" style="max-height: 450px">
                                 @else
-                                    {{-- <img src="{{ asset('../images/ex-blog.png') }}" class="img-fluid mt-2" alt="Fishing Image" style="max-height: 450px"> --}}
+                                    <img src="{{ asset('../images/ex-blog.png') }}" class="img-fluid mt-2" alt="Fishing Image" style="max-height: 450px">
                                 @endif
                                 <div class="mt-4" style="text-align: justify;">
                                     {!! $blog->body !!}
                                 </div>
+                                <div class="mt-3">
+                                    @if ($blog->user) <!-- Periksa apakah user tidak null -->
+                                        <a><b>By:</b> <a style="color: orange">{{ $blog->user->nama }}</a></a>
+                                    @else
+                                        <p style="color: orange">by: Unknown User</p> <!-- Tampilkan pesan alternatif jika user null -->
+                                        <a><b>By:</b><a>Unknown User</a></a>
+                                    @endif
+                                </div>                                
                             </div>
                         </div>
                     </div>

@@ -14,13 +14,15 @@ return new class extends Migration
         Schema::create('ikan_masuk', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal');
-            $table->unsignedBigInteger('jenis_ikan_id'); // Kolom foreign key
+            $table->unsignedBigInteger('jenis_ikan_id');
+            $table->unsignedBigInteger('user_id');
             $table->integer('jumlah');
             $table->text('catatan')->nullable();
             $table->timestamps();
         
             // Definisi foreign key constraint
             $table->foreign('jenis_ikan_id')->references('id')->on('jenis_ikan');
+            $table->foreign('user_id')->references('id')->on('users');
         });
         
     }

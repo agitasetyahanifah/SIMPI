@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Schema;
 use App\Models\IkanMasuk;
 use App\Models\IkanKeluar;
 use App\Models\JenisIkan;
@@ -52,6 +54,7 @@ class AdminPengelolaanIkanController extends Controller
         $ikanMasuk->jenis_ikan_id = $validatedData['jenis_ikan'];
         $ikanMasuk->jumlah = $validatedData['jumlah'];
         $ikanMasuk->catatan = $validatedData['catatan'];
+        $ikanMasuk->user_id = Auth::id();
         $ikanMasuk->save();
     
         // Redirect atau berikan respons sesuai kebutuhan Anda
@@ -76,6 +79,7 @@ class AdminPengelolaanIkanController extends Controller
         $ikanKeluar->jumlah = $validatedData['jumlah'];
         $ikanKeluar->kondisi_ikan = $validatedData['kondisi_ikan'];
         $ikanKeluar->catatan = $validatedData['catatan'];
+        $ikanKeluar->user_id = Auth::id();
         $ikanKeluar->save();
     
         // Redirect atau berikan respons sesuai kebutuhan Anda
@@ -92,6 +96,7 @@ class AdminPengelolaanIkanController extends Controller
         // Simpan data ke database
         $jenisIkan = new JenisIkan();
         $jenisIkan->jenis_ikan = $validatedData['jenis_ikan'];
+        $jenisIkan->user_id = Auth::id();
         $jenisIkan->save();
     
         // Redirect atau berikan respons sesuai kebutuhan Anda
@@ -135,6 +140,7 @@ class AdminPengelolaanIkanController extends Controller
         $ikanMasuk->jenis_ikan_id = $validatedData['edit_jenis_ikan'];
         $ikanMasuk->jumlah = $validatedData['edit_jumlah'];
         $ikanMasuk->catatan = $validatedData['edit_catatan'];
+        $ikanMasuk->user_id = Auth::id();
         $ikanMasuk->save();
     
         // Redirect atau berikan respons sesuai kebutuhan Anda
@@ -161,6 +167,7 @@ class AdminPengelolaanIkanController extends Controller
         $ikanKeluar->jumlah = $validatedData['edit_jumlah'];
         $ikanKeluar->catatan = $validatedData['edit_catatan'];
         $ikanKeluar->kondisi_ikan = $validatedData['edit_kondisi_ikan'];
+        $ikanKeluar->user_id = Auth::id();
         $ikanKeluar->save();
     
         // Redirect atau berikan respons sesuai kebutuhan Anda
@@ -196,13 +203,20 @@ class AdminPengelolaanIkanController extends Controller
 
     public function deleteJenisIkan($id)
     {
+        // Nonaktifkan foreign key constraint sementara
+        Schema::disableForeignKeyConstraints();
+    
         // Cari data ikan masuk berdasarkan ID
         $jenisIkan = JenisIkan::findOrFail($id);
     
         // Hapus data ikan masuk
         $jenisIkan->delete();
     
+        // Aktifkan kembali foreign key constraint
+        Schema::enableForeignKeyConstraints();
+    
         // Redirect atau berikan respons sesuai kebutuhan Anda
         return redirect()->route('admin.pengelolaanIkan.index')->with('success', 'Fish type data has been successfully deleted.');
     }
+    
 }
