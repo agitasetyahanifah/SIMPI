@@ -18,12 +18,20 @@ class AdminSewaAlatController extends Controller
      */
     public function index()
     {
+        // Mengambil data sewa alat pancing dengan relasi 'member' dan 'alatPancing', 
+        // diurutkan berdasarkan tanggal pinjam dan tanggal update secara menurun, dengan paginasi 25 item per halaman
         $sewaAlat = SewaAlat::with(['member', 'alatPancing'])->orderBy('tgl_pinjam', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
+        // Mendapatkan item terakhir dari koleksi data yang dipaginasi
         $lastItem = $sewaAlat->lastItem();
+        // Mengambil semua data pengguna dengan role 'member'
         $member = User::where('role', 'member')->get();
+        // Mengambil semua data pengguna dengan role 'member' dan diurutkan berdasarkan nama secara ascending
         $members = User::where('role', 'member')->orderBy('nama', 'asc')->get();        
+        // Mengambil semua data alat pancing
         $alatPancing = AlatPancing::all();
+        // Mengambil semua data alat pancing dengan status 'available'
         $alatPancings = AlatPancing::where('status', 'available')->get();
+        // Mengembalikan view 'admin.sewaalat.index' dengan data 'sewaAlat', 'lastItem', 'member', 'members', 'alatPancing', dan 'alatPancings'
         return view('admin.sewaalat.index', compact('sewaAlat', 'lastItem', 'member', 'members', 'alatPancing', 'alatPancings'));
     }
 

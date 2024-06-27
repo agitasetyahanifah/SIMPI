@@ -13,8 +13,11 @@ class AdminAlatPancingController extends Controller
      */
     public function index()
     {
+        // Mengambil data alat pancing, diurutkan berdasarkan tanggal pembuatan secara menurun, dengan paginasi 25 item per halaman
         $alatPancing = AlatPancing::orderBy('created_at', 'desc')->paginate(25);
+        // Mendapatkan item terakhir dari koleksi data yang dipaginasi
         $lastItem = $alatPancing->lastItem();
+        // Mengembalikan view 'admin.alatpancing.index' dengan data 'alatPancing' dan 'lastItem'
         return view('admin.alatpancing.index', compact('alatPancing', 'lastItem'));
     }
 

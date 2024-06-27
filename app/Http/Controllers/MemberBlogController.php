@@ -13,8 +13,11 @@ class MemberBlogController extends Controller
      */
     public function index()
     {
+        // Mengambil data blog, diurutkan berdasarkan tanggal pembuatan terbaru, dengan paginasi 12 item per halaman
         $blogs = Blog::latest()->paginate(12);
+        // Mendapatkan item terakhir dari koleksi data yang dipaginasi
         $lastItem = $blogs->lastItem();
+        // Mengembalikan view 'member.blog.blog' dengan data 'blogs' dan 'lastItem'
         return view('member.blog.blog', compact('blogs','lastItem'));
     }
 

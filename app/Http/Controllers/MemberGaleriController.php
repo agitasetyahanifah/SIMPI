@@ -12,8 +12,11 @@ class MemberGaleriController extends Controller
      */
     public function index()
     {
+        // Mengambil data gambar dari tabel Galeri, diurutkan berdasarkan tanggal pembuatan terbaru, dengan paginasi 24 item per halaman
         $images = Galeri::orderBy('created_at', 'desc')->paginate(24);
+        // Mendapatkan item terakhir dari koleksi data yang dipaginasi
         $lastItem = $images->lastItem();
+        // Mengembalikan view 'member.galeri.galeri' dengan data 'images' dan 'lastItem'
         return view('member.galeri.galeri', compact('images', 'lastItem'));
     }
 

@@ -10,9 +10,13 @@ class AdminKeuanganController extends Controller
 {
     public function index()
     {
+        // Mengambil data transaksi keuangan, diurutkan berdasarkan tanggal transaksi dan tanggal update secara menurun, dengan paginasi 25 item per halaman
         $mutasiTransaksi = Keuangan::orderBy('tanggal_transaksi', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
+        // Mengambil data keuangan dengan urutan dan paginasi yang sama
         $keuangans = Keuangan::orderBy('tanggal_transaksi', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
+        // Mendapatkan item terakhir dari koleksi data yang dipaginasi
         $lastItem = $keuangans->lastItem();
+        // Mengembalikan view 'admin.keuangan.index' dengan data 'keuangans', 'lastItem', dan 'mutasiTransaksi'
         return view('admin.keuangan.index', compact('keuangans', 'lastItem', 'mutasiTransaksi'));
     }
 
@@ -81,9 +85,12 @@ class AdminKeuanganController extends Controller
 
     public function destroy($id)
     {
+        // Mencari data keuangan berdasarkan ID, jika tidak ditemukan akan menampilkan error 404
         $keuangan = Keuangan::findOrFail($id);
+        // Menghapus data keuangan yang ditemukan
         $keuangan->delete();
 
+        // Redirect kembali dengan pesan sukses
         return redirect()->back()->with('success', 'Transaction successfully deleted.');
     }
 

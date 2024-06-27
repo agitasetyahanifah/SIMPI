@@ -14,8 +14,11 @@ class MemberSewaSpotController extends Controller
 {
     public function index()
     {
+        // Mengambil semua data spot
         $spots = Spot::all();
+        // Mengambil data sewa spot yang tanggal sewanya lebih besar atau sama dengan hari ini, dan mengelompokkannya berdasarkan spot_id
         $sewaSpots = SewaSpot::where('tanggal_sewa', '>=', Carbon::today())->get()->groupBy('spot_id');
+        // Mengembalikan view 'member.sewaspotpemancingan.sewa-spot' dengan data 'spots' dan 'sewaSpots'
         return view('member.sewaspotpemancingan.sewa-spot', compact('spots', 'sewaSpots'));
     }
 

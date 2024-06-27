@@ -16,11 +16,16 @@ class AdminBlogController extends Controller
      */
     public function index()
     {
+        // Mengambil data blog, diurutkan berdasarkan tanggal pembuatan terbaru, dengan paginasi 25 item per halaman
         $blogs = Blog::latest()->paginate(25);
+         // Mendapatkan item terakhir dari koleksi data blog yang dipaginasi
         $lastItem = $blogs->lastItem();
+        // Mengambil data kategori blog, diurutkan berdasarkan tanggal pembuatan terbaru, dengan paginasi 5 item per halaman
         $kategoriBlog = KategoriBlog::orderByDesc('created_at')->paginate(5);
         $lastItem2 = $kategoriBlog->lastItem();
+        // Mengambil semua data kategori blog
         $kategoriOpt = KategoriBlog::all();
+        // Mengembalikan view 'admin.blog.index' dengan data 'blogs', 'lastItem', 'lastItem2', 'kategoriBlog', dan 'kategoriOpt'
         return view('admin.blog.index', compact('blogs','lastItem','lastItem2','kategoriBlog','kategoriOpt'));
     }
 
@@ -37,6 +42,7 @@ class AdminBlogController extends Controller
      */
     public function store(Request $request)
     {
+        // Validasi input form untuk judul, kategori blog yang ada, gambar, dan isi blog
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
             'kategori_blog' => 'required|exists:kategori_blog,id',
@@ -48,6 +54,7 @@ class AdminBlogController extends Controller
         $imageFileName = $request->file('image')->getClientOriginalName();
         $request->file('image')->move(public_path('images'), $imageFileName);
 
+        // Simpan data blog baru ke dalam database
         $blog = new Blog();
         $blog->judul = $validated['judul'];
         $blog->slug = Str::slug($validated['judul']);
@@ -57,20 +64,24 @@ class AdminBlogController extends Controller
         $blog->body = $validated['body'];
         $blog->save();
 
+        // Redirect kembali ke halaman sebelumnya dengan pesan sukses
         return redirect()->back()->with('success', 'Blog added successfully.');
     }
 
     public function storeKategori(Request $request)
     {
+        // Validasi input form untuk kategori blog yang diperlukan
         $validated = $request->validate([
             'kategori_blog' => 'required',
         ]);
 
+        // Simpan kategori blog baru ke dalam database
         $kategoriBlog = new KategoriBlog();
         $kategoriBlog->kategori_blog = $validated['kategori_blog'];
         $kategoriBlog->user_id = Auth::id();
         $kategoriBlog->save();
 
+        // Redirect kembali ke halaman sebelumnya dengan pesan sukses
         return redirect()->back()->with('success', 'Blog category added successfully.');
     }
 
@@ -95,12 +106,14 @@ class AdminBlogController extends Controller
      */
     public function update(Request $request, Blog $blog)
     {
+        // Validasi input form untuk judul, kategori blog yang ada, dan isi blog
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
             'kategori_blog' => 'required|exists:kategori_blog,id',
             'body' => 'required|string',
         ]);
 
+        // Jika ada file gambar yang diunggah
         if ($request->hasFile('image')) {
             // hapus foto lama
             if($blog->image){
@@ -112,9 +125,11 @@ class AdminBlogController extends Controller
             $nameImage = time() . '_' . $image->getClientOriginalName();
             $image->move(public_path('images/'), $nameImage);
 
+            // Update nama file gambar di data blog
             $blog->image = $nameImage;
         }
 
+        // Update data blog dengan nilai dari form
         $blog->judul = $validated['judul'];
         $blog->slug = Str::slug($validated['judul']);
         $blog->kategori_id = $validated['kategori_blog'];
@@ -122,6 +137,7 @@ class AdminBlogController extends Controller
         $blog->body = $validated['body'];
         $blog->save();
 
+        // Redirect kembali ke halaman sebelumnya dengan pesan sukses
         return redirect()->back()->with('success', 'Blog updated successfully.');
     }
     /**

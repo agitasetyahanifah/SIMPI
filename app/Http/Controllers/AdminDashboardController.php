@@ -12,13 +12,16 @@ class AdminDashboardController extends Controller
 {
     public function index()
     {
+        // Mengambil data gambar dari model Galeri, diurutkan berdasarkan tanggal pembuatan secara menurun, dan dibatasi 12 per halaman
         $images = Galeri::orderBy('created_at', 'desc')->paginate(12);
 
+        // Mengembalikan view 'admin.dashboard.index' dengan data 'images'
         return view('admin.dashboard.index', compact(['images']));
     }
 
     public function uploadGambar(Request $request)
     {
+        // Validasi input 'image' harus berupa gambar dengan format jpeg, png, jpg, atau gif, dan ukuran maksimal 5 MB
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:5048',
         ], [
@@ -28,19 +31,24 @@ class AdminDashboardController extends Controller
             'image.max' => 'Image size should not exceed 5 MB.',
         ]);
 
-        // Check if the file is an image
+        // Jika file gambar valid
         if ($request->file('image')->isValid()) {
+            // Generate nama file unik dengan timestamp dan ekstensi asli
             $imageName = time().'.'.$request->image->extension();  
     
+            // Pindahkan file gambar ke direktori 'public/images'
             $request->image->move(public_path('images'), $imageName);
 
+            // Simpan informasi gambar ke database
             $image = new Galeri();
             $image->filename = $imageName;
             $image->user_id = Auth::id();
             $image->save();
 
+            // Redirect kembali dengan pesan sukses
             return redirect()->back()->with('success', 'Image added successfully!');
         } else {
+            // Redirect kembali dengan pesan error jika file tidak valid
             return redirect()->back()->withErrors(['image' => 'The uploaded file is not a valid image.']);
         }
     }

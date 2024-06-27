@@ -15,8 +15,11 @@ class MemberDaftarAlatController extends Controller
      */
     public function index()
     {
+        // Mengambil data alat pancing, diurutkan berdasarkan tanggal pembuatan terbaru, dengan paginasi 18 item per halaman
         $alatPancing = AlatPancing::orderBy('created_at', 'desc')->paginate(18);
+        // Mendapatkan item terakhir dari koleksi data yang dipaginasi
         $lastItem = $alatPancing->lastItem();
+        // Mengembalikan view 'member.daftaralat.daftar-alat' dengan data 'alatPancing' dan 'lastItem'
         return view('member.daftaralat.daftar-alat', compact('alatPancing','lastItem'));    
     }
 

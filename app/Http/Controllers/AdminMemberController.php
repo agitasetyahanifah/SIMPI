@@ -12,8 +12,11 @@ class AdminMemberController extends Controller
      */
     public function index()
     {
+        // Mengambil data pengguna dengan peran 'member', diurutkan berdasarkan tanggal pembuatan terbaru, dengan paginasi 25 item per halaman
         $members = User::where('role', 'member')->latest()->paginate(25);
+        // Mendapatkan item terakhir dari koleksi data yang dipaginasi
         $lastItem = $members->lastItem();
+        // Mengembalikan view 'admin.manajemenmember.index' dengan data 'members' dan 'lastItem'
         return view('admin.manajemenmember.index', compact('members','lastItem'));
     }
 
@@ -75,7 +78,7 @@ class AdminMemberController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validasi input
+        // Validasi input form untuk nama, telepon, email, password opsional, dan status
         $request->validate([
             'nama' => 'required|string|max:255',
             'telepon' => 'required|string|max:15',
@@ -84,25 +87,26 @@ class AdminMemberController extends Controller
             'status' => 'required|string|in:aktif,tidak aktif',
         ]);
 
-        // Find the member by ID
+        // Temukan data member berdasarkan ID
         $member = User::findOrFail($id);
 
-        // Update member data
+        // Update data member dengan nilai dari form
         $member->nama = $request->input('nama');
         $member->telepon = $request->input('telepon');
         $member->email = $request->input('email');
 
-        // Update password only if provided
+        // Update password jika ada input password baru
         if ($request->filled('password')) {
             $member->password = bcrypt($request->input('password'));
         }
 
+        // Update status member
         $member->status = $request->input('status');
 
-        // Save the changes
+        // Simpan perubahan data member
         $member->save();
 
-        // Redirect back with a success message
+        // Redirect kembali ke halaman sebelumnya dengan pesan sukses
         return redirect()->back()->with('success', 'Member data has been updated successfully');
     }
 

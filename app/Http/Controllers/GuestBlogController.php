@@ -13,8 +13,11 @@ class GuestBlogController extends Controller
      */
     public function index()
     {
+        // Mengambil data blog terbaru dari tabel Blog, diurutkan berdasarkan tanggal pembuatan terbaru, dengan paginasi 12 item per halaman
         $blogs = Blog::latest()->paginate(12);
+        // Mendapatkan item terakhir dari koleksi data yang dipaginasi
         $lastItem = $blogs->lastItem();
+        // Mengembalikan view 'guest.blog.blog' dengan data 'blogs' dan 'lastItem'
         return view('guest.blog.blog', compact('blogs','lastItem'));
     }
 

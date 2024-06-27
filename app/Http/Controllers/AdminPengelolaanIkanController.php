@@ -16,14 +16,20 @@ class AdminPengelolaanIkanController extends Controller
      */
     public function index()
     {
+        // Mengambil data ikan masuk, diurutkan berdasarkan tanggal dan tanggal update secara menurun, dengan paginasi 25 item per halaman
         $ikanMasuk = IkanMasuk::orderBy('tanggal', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
+        // Mendapatkan item terakhir dari koleksi data ikan masuk yang dipaginasi
         $lastItem1 = $ikanMasuk->lastItem();
+        // Mengambil data ikan keluar, diurutkan berdasarkan tanggal dan tanggal update secara menurun, dengan paginasi 25 item per halaman
         $ikanKeluar = IkanKeluar::orderBy('tanggal', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
         $lastItem2 = $ikanKeluar->lastItem();
+        // Mengambil data jenis ikan, diurutkan berdasarkan tanggal pembuatan secara menurun, dengan paginasi 5 item per halaman
         $jenisIkan = JenisIkan::orderByDesc('created_at')->paginate(5);
         $lastItem3 = $jenisIkan->lastItem();
+        // Mengambil semua data jenis ikan
         $jenisIkanOpt = JenisIkan::all();
 
+        // Mengembalikan view 'admin.pengelolaanIkan.index' dengan data 'ikanMasuk', 'ikanKeluar', 'lastItem1', 'lastItem2', 'jenisIkan', 'lastItem3', dan 'jenisIkanOpt'
         return view('admin.pengelolaanIkan.index', compact('ikanMasuk', 'ikanKeluar', 'lastItem1', 'lastItem2','jenisIkan', 'lastItem3','jenisIkanOpt'));
     }
 

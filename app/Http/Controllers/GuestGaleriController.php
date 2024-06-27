@@ -12,8 +12,11 @@ class GuestGaleriController extends Controller
      */
     public function index()
     {
+        // Mengambil data gambar dari Galeri, diurutkan berdasarkan tanggal pembuatan terbaru, dengan paginasi 24 item per halaman
         $images = Galeri::orderBy('created_at', 'desc')->paginate(24);
+        // Mendapatkan item terakhir dari koleksi data yang dipaginasi
         $lastItem = $images->lastItem();
+        // Mengembalikan view 'guest.galeri.galeri' dengan data 'images' dan 'lastItem'
         return view('guest.galeri.galeri', compact('images', 'lastItem'));
     }
 

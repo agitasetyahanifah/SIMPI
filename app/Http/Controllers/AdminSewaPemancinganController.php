@@ -20,14 +20,20 @@ class AdminSewaPemancinganController extends Controller
      */
     public function index(Request $request)
     {
+        // Mengambil data sewa spot pemancingan dengan relasi 'member' dan 'spot', 
+        // diurutkan berdasarkan tanggal sewa dan tanggal update secara menurun, dengan paginasi 25 item per halaman
         $sewaPemancingan = SewaSpot::with(['member', 'spot'])
                             ->orderBy('tanggal_sewa', 'desc')
                             ->orderBy('updated_at', 'desc')
                             ->paginate(25);
+        // Mendapatkan item terakhir dari koleksi data yang dipaginasi
         $lastItem = $sewaPemancingan->lastItem();
+        // Mengambil semua data spot
         $spots = Spot::all();
+        // Mengubah data spot menjadi format JSON
         $jsonSpots = $spots->toJson();
-      
+
+        // Mengembalikan view 'admin.sewapemancingan.index' dengan data 'sewaPemancingan', 'lastItem', 'spots', dan 'jsonSpots'    
         return view('admin.sewapemancingan.index', compact('sewaPemancingan', 'lastItem', 'spots', 'jsonSpots'));
     }
     

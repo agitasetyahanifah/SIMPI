@@ -14,10 +14,14 @@ class GuestLandingPageController extends Controller
 {
     public function index()
     {
+        // Mengambil 3 gambar terbaru dari Galeri, diurutkan berdasarkan tanggal pembuatan terbaru
         $images = Galeri::orderBy('created_at', 'desc')->paginate(3);
+        // Mengambil 3 blog terbaru dari Blog, diurutkan berdasarkan tanggal pembuatan terbaru
         $blogs = Blog::latest()->paginate(3);
+        // Mengambil 6 alat pancing terbaru dari AlatPancing, diurutkan berdasarkan tanggal pembuatan terbaru
         $alatPancing = AlatPancing::orderBy('created_at', 'desc')->paginate(6);
 
+        // Mengembalikan view 'guest.landingpage.index' dengan data 'images', 'blogs', dan 'alatPancing'
         return view('guest.landingpage.index', compact(['images', 'blogs', 'alatPancing']));
     }
 }
