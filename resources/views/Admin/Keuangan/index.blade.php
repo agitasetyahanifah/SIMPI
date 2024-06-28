@@ -43,6 +43,37 @@
             <div class="card">
                 <div class="card-header pb-0">
                     <h4 class="font-weight-bolder mb-0">Financial Management</h4>
+                    {{-- Filter untuk menampilkan rekap bulanan --}}
+                    <form action="{{ route('admin.keuangan.index') }}" method="GET" class="mt-3 mb-3">
+                        <div class="row g-1">
+                            <div class="col-md-5">
+                                <select name="month" class="form-select me-2">
+                                    <option value="">Select Month</option>
+                                    @for ($m = 1; $m <= 12; $m++)
+                                        <option value="{{ $m }}" {{ request('month') == $m ? 'selected' : '' }}>
+                                            {{ date('F', mktime(0, 0, 0, $m, 1)) }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
+                            <div class="col-md-5">
+                                <select name="year" class="form-select me-2">
+                                    <option value="">Select Year</option>
+                                    @for ($y = date('Y'); $y >= 2000; $y--)
+                                        <option value="{{ $y }}" {{ request('year') == $y ? 'selected' : '' }}>
+                                            {{ $y }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
+                            <div class="col-md text-center">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-filter me-2"></i>Filter
+                                </button>
+                            </div>
+                        </div>
+                    </form>                    
+
                     <div class="nav-wrapper position-relative end-0 mt-3 mb-3">
                         <ul class="nav nav-pills nav-fill p-1 mb-3" role="tablist">
                             <li class="nav-item">

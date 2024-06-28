@@ -142,10 +142,11 @@ class MemberSewaSpotController extends Controller
         $user = Auth::user();
         $riwayatSewa = SewaSpot::where('user_id', $user->id)
                                 ->orderBy('created_at', 'desc') // Mengurutkan berdasarkan tanggal sewa descending
-                                ->get();
+                                ->paginate(15);
+        $lastItem = $riwayatSewa->lastItem();
     
         // Kembalikan ke view dengan data riwayat sewa
-        return view('member.sewaspotpemancingan.riwayat-sewa', compact('riwayatSewa'));
+        return view('member.sewaspotpemancingan.riwayat-sewa', compact('riwayatSewa', 'lastItem'));
     }    
 
     public function autoCancel($id)

@@ -99,6 +99,7 @@
                                 <div class="row">
                                     <div class="col-md-12 text-end">
                                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal{{ $sewa->id }}">Cancel Booking</button>
+                                        <a class="btn btn-warning mx-2" data-bs-toggle="modal" data-bs-target="#paymentInstructionsModal{{ $sewa->id }}">Payment Instructions</a>
                                         <a class="btn btn-primary mx-2" data-bs-toggle="modal" data-bs-target="#detailModal{{ $sewa->id }}">Details</a>
                                     </div>
                                 </div>
@@ -133,6 +134,34 @@
                                     </div>
                                 </div>
 
+                                <!-- Modal Petunjuk Pembayaran -->
+                                <div class="modal fade" id="paymentInstructionsModal{{ $sewa->id }}" tabindex="-1" aria-labelledby="paymentInstructionsModalLabel{{ $sewa->id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="paymentInstructionsModalLabel{{ $sewa->id }}">Payment Instructions</h5>
+                                                <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>                                            
+                                            </div>
+                                            <div class="modal-body">
+                                                <ul>
+                                                    <li>Ensure the payment time has not timed out.</li>
+                                                    <li>Go to the fishing spot and meet the admin.</li>
+                                                    <li>Show your <b>booking code</b>.</li>
+                                                    <li>Pay <b>cash</b> to the admin.</li>
+                                                    <li>Admin confirms the payment.</li>
+                                                    <li>Ensure the payment status has changed to <b>"Already Paid"</b>.</li>
+                                                    <li>Done.</li>
+                                                </ul>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!-- Modal Detail Sewa -->
                                 <div class="modal fade" id="detailModal{{ $sewa->id }}" tabindex="-1" aria-labelledby="detailModalLabel{{ $sewa->id }}" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -146,7 +175,7 @@
                                             <div class="modal-body" style="max-height: calc(100vh - 200px); overflow-y: auto;">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <p class="me-3" style="font-size: 18pt"><b>Booking code: {{ $sewa->kode_booking }}</b></p>
+                                                        <p class="me-3" style="font-size: 18pt"><b>Booking Code: {{ $sewa->kode_booking }}</b></p>
                                                         <table class="table">
                                                             <tr>
                                                                 <th style="width: 35%">Customer Name</th>
@@ -214,10 +243,33 @@
             @endforeach
         @endif
       </div>
-    
+    </div>
     </div>
 
-    </div>
+    <!-- Pagination -->
+    <nav class="p-3" aria-label="Pagination">
+        <ul class="pagination justify-content-center">
+          <li class="page-item {{ $riwayatSewa->onFirstPage() ? 'disabled' : '' }}">
+                <a class="page-link" href="{{ $riwayatSewa->previousPageUrl() ?? '#' }}" tabindex="-1">
+                    <i class="fa fa-angle-left"></i>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+            <!-- Tampilkan nomor halaman -->
+            @for ($i = 1; $i <= $riwayatSewa->lastPage(); $i++)
+                <li class="page-item {{ $riwayatSewa->currentPage() == $i ? 'active' : '' }}">
+                    <a class="page-link" href="{{ $riwayatSewa->url($i) }}">{{ $i }}</a>
+                </li>
+            @endfor
+            <li class="page-item {{ $riwayatSewa->hasMorePages() ? '' : 'disabled' }}">
+                <a class="page-link" href="{{ $riwayatSewa->nextPageUrl() ?? '#' }}">
+                    <i class="fa fa-angle-right"></i>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        </ul>
+      </nav>
+      <!-- End Pagination -->
 
     <footer class="footer pl-0 pb-3">
       <div class="container-fluid">

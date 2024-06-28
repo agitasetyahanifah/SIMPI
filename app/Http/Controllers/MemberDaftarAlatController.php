@@ -127,10 +127,11 @@ class MemberDaftarAlatController extends Controller
         $user = Auth::user();
         $riwayatSewaAlat = SewaAlat::where('user_id', $user->id)
                                 ->orderBy('created_at', 'desc')
-                                ->get();
+                                ->paginate(15);
+        $lastItem = $riwayatSewaAlat->lastItem();
     
         // Kembalikan ke view dengan data riwayat sewa
-        return view('member.daftaralat.riwayat-sewa-alat', compact('riwayatSewaAlat'));
+        return view('member.daftaralat.riwayat-sewa-alat', compact('riwayatSewaAlat', 'lastItem'));
     }
 
     public function cancelOrder(Sewaalat $sewaAlat)

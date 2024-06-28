@@ -8,18 +8,33 @@ use Illuminate\Support\Str;
 
 class AdminKeuanganController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Mengambil data transaksi keuangan, diurutkan berdasarkan tanggal transaksi dan tanggal update secara menurun, dengan paginasi 25 item per halaman
-        $mutasiTransaksi = Keuangan::orderBy('tanggal_transaksi', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
-        // Mengambil data keuangan dengan urutan dan paginasi yang sama
-        $keuangans = Keuangan::orderBy('tanggal_transaksi', 'desc')->orderBy('updated_at', 'desc')->paginate(25);
-        // Mendapatkan item terakhir dari koleksi data yang dipaginasi
+        // Mengambil nilai bulan dan tahun dari request
+        $month = $request->input('month');
+        $year = $request->input('year');
+    
+        // Membuat query dasar
+        $query = Keuangan::orderBy('tanggal_transaksi', 'desc')->orderBy('updated_at', 'desc');
+    
+        // Menambahkan kondisi filter jika bulan dan tahun dipilih
+        if ($month) {
+            $query->whereMonth('tanggal_transaksi', $month);
+        }
+    
+        if ($year) {
+            $query->whereYear('tanggal_transaksi', $year);
+        }
+    
+        // Mengambil data transaksi keuangan dengan paginasi 25 item per halaman
+        $mutasiTransaksi = $query->paginate(25);
+        $keuangans = $query->paginate(25);
         $lastItem = $keuangans->lastItem();
+    
         // Mengembalikan view 'admin.keuangan.index' dengan data 'keuangans', 'lastItem', dan 'mutasiTransaksi'
         return view('admin.keuangan.index', compact('keuangans', 'lastItem', 'mutasiTransaksi'));
     }
-
+    
     public function store(Request $request)
     {
         // Validasi data

@@ -95,6 +95,7 @@
                                 <div class="row">
                                     <div class="col-md-12 text-end">
                                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal{{ $sewaAlat->id }}">Cancel Rental</button>
+                                        <a class="btn btn-warning mx-2" data-bs-toggle="modal" data-bs-target="#paymentInstructionsModal{{ $sewaAlat->id }}">Payment Instructions</a>
                                         <a class="btn btn-primary mx-2" data-bs-toggle="modal" data-bs-target="#detailModal{{ $sewaAlat->id }}">Details</a>
                                     </div>
                                 </div>
@@ -154,6 +155,34 @@
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger">Yes, Cancel Rental</button>
                                                 </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal Petunjuk Pembayaran -->
+                                <div class="modal fade" id="paymentInstructionsModal{{ $sewaAlat->id }}" tabindex="-1" aria-labelledby="paymentInstructionsModalLabel{{ $sewaAlat->id }}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="paymentInstructionsModalLabel{{ $sewaAlat->id }}">Payment Instructions</h5>
+                                                <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>                                            
+                                            </div>
+                                            <div class="modal-body">
+                                                <ul>
+                                                    <li>Ensure the payment time has not timed out.</li>
+                                                    <li>Go to the fishing spot and meet the admin.</li>
+                                                    <li>Show your <b>rental code</b>.</li>
+                                                    <li>Pay <b>cash</b> to the admin.</li>
+                                                    <li>Admin confirms the payment.</li>
+                                                    <li>Ensure the payment status has changed to <b>"Already Paid"</b>.</li>
+                                                    <li>Done.</li>
+                                                </ul>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                             </div>
                                         </div>
                                     </div>
@@ -260,10 +289,33 @@
             @endforeach
         @endif
       </div>
-    
+    </div>
     </div>
 
-    </div>
+    <!-- Pagination -->
+    <nav class="p-3" aria-label="Pagination">
+        <ul class="pagination justify-content-center">
+          <li class="page-item {{ $riwayatSewaAlat->onFirstPage() ? 'disabled' : '' }}">
+                <a class="page-link" href="{{ $riwayatSewaAlat->previousPageUrl() ?? '#' }}" tabindex="-1">
+                    <i class="fa fa-angle-left"></i>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+            <!-- Tampilkan nomor halaman -->
+            @for ($i = 1; $i <= $riwayatSewaAlat->lastPage(); $i++)
+                <li class="page-item {{ $riwayatSewaAlat->currentPage() == $i ? 'active' : '' }}">
+                    <a class="page-link" href="{{ $riwayatSewaAlat->url($i) }}">{{ $i }}</a>
+                </li>
+            @endfor
+            <li class="page-item {{ $riwayatSewaAlat->hasMorePages() ? '' : 'disabled' }}">
+                <a class="page-link" href="{{ $riwayatSewaAlat->nextPageUrl() ?? '#' }}">
+                    <i class="fa fa-angle-right"></i>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        </ul>
+      </nav>
+      <!-- End Pagination -->
 
     <footer class="footer pl-0 pb-3">
       <div class="container-fluid">
