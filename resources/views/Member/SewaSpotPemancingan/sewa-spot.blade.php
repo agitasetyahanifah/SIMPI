@@ -260,7 +260,7 @@
 
                       <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                          <button type="submit" class="btn btn-primary">Rent</button>
+                          <button type="submit" class="btn btn-primary">Book</button>
                       </div>
                   </form>
               </div>
