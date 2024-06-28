@@ -41,6 +41,11 @@ class AuthController extends Controller
         // Lakukan proses login
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
+
+            if ($user->status !== 'aktif') {
+                Auth::logout();
+                return back()->withErrors(['email' => 'Your account is inactive. Please contact admin.']);
+            }
     
             if ($user->role === 'admin') {
                 return redirect()->route('admin.dashboard.index');
@@ -87,6 +92,8 @@ class AuthController extends Controller
             'telepon' => $validatedData['telepon'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
+            'status' => 'aktif',
+            'role' => 'member',
         ]);
 
         return redirect()->route('login')->with('success', 'Registration successful! Please login to continue.');
