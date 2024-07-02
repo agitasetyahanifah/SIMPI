@@ -29,7 +29,7 @@ class IkanKeluarFactory extends Factory
             'tanggal' => $this->faker->dateTimeBetween('2024-01-01', '2024-06-30')->format('Y-m-d'),
             'jenis_ikan_id' => JenisIkan::inRandomOrder()->first()->id,
             'jumlah' => $this->faker->numberBetween(1, 100),
-            'kondisi_ikan' => $this->faker->randomElement(['Baik', 'Sakit', 'Mati']),
+            'kondisi_ikan' => $this->faker->randomElement(['baik', 'sakit', 'mati']),
             'catatan' => $this->faker->sentence,
             'user_id' => $admin->id,
         ];

@@ -111,7 +111,7 @@
                                             <!-- Tombol close modal -->
                                             <button type="button" class="btn-close btn-close-white position-absolute top-2 end-1" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <div class="modal-body">
+                                        <div class="modal-body d-flex align-items-center justify-content-center">
                                             <img id="maximizedImage" src="#" class="img-fluid" alt="Gambar Diperbesar" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                                         </div>
                                     </div>

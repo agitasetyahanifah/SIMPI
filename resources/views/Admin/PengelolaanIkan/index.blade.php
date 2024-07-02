@@ -433,8 +433,16 @@
                                   <td class="text-center">{{ $currentNumber++ }}</td>
                                   <td>{{ $ikan_keluar->tanggal }}</td>
                                   <td>{{ $ikan_keluar->jenisIkan ? $ikan_keluar->jenisIkan->jenis_ikan : '-' }}</td>
-                                  <td>{{ $ikan_keluar->kondisi_ikan }}</td>
                                   <td>{{ number_format($ikan_keluar->jumlah, 0, ',', '.') }}</td>
+                                  <td>
+                                    @if($ikan_keluar->kondisi_ikan === 'baik')
+                                        <span class="text-success">Good</span>
+                                    @elseif($ikan_keluar->kondisi_ikan === 'sakit')
+                                        <span class="text-danger">Sick</span>
+                                    @elseif($ikan_keluar->kondisi_ikan === 'mati')
+                                        <span class="text-danger">Dead</span>
+                                    @endif  
+                                  </td>
                                   <td class="keterangan-column">{{ $ikan_keluar->catatan }}</td>
                                   <td class="text-align-end">
                                       <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal2{{ $ikan_keluar->id }}"><i class="fas fa-edit"></i></a>
@@ -483,12 +491,12 @@
                                             </div>
                                             <div class="form-group">
                                               <label for="edit_kondisi_ikan">Fish Condition</label>
-                                              <select class="form-select" id="edit_kondisi_ikan" name="edit_kondisi_ikan" required>
-                                                  <option value="Baik" {{ $ikan_keluar->kondisi_ikan == 'Baik' ? 'selected' : '' }}>Good</option>
-                                                  <option value="Sakit" {{ $ikan_keluar->kondisi_ikan == 'Sakit' ? 'selected' : '' }}>Sick</option>
-                                                  <option value="Mati" {{ $ikan_keluar->kondisi_ikan == 'Mati' ? 'selected' : '' }}>Dead</option>
-                                              </select>
-                                          </div>                                           
+                                              <select class="form-select" id="edit_kondisi_ikan{{ $ikan_keluar->id }}" name="edit_kondisi_ikan" required>
+                                                <option value="Baik" {{ $ikan_keluar->kondisi_ikan == 'baik' ? 'selected' : '' }}>Good</option>
+                                                <option value="Sakit" {{ $ikan_keluar->kondisi_ikan == 'sakit' ? 'selected' : '' }}>Sick</option>
+                                                <option value="Mati" {{ $ikan_keluar->kondisi_ikan == 'mati' ? 'selected' : '' }}>Dead</option>
+                                            </select>
+                                            </div>                                           
                                             <div class="form-group">
                                                 <label for="edit_catatan">Notes</label>
                                                 <textarea class="form-control" id="edit_catatan" name="edit_catatan" rows="3">{{ $ikan_keluar->catatan }}</textarea>

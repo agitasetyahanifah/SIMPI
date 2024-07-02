@@ -260,7 +260,7 @@
                                                             <p><strong>Note: </strong>
                                                                 Please make payment directly to the admin at the fishing location.<br> 
                                                             </p>
-                                                            <a style="color: coral">Late Returns will be subject to a fee <b>Rp 5.000 /day</b></a>
+                                                            <a style="color: coral">Late Returns will be subject to a fee <b>Rp 5.000,- /day</b></a>
                                                             {{-- <p>Untuk informasi lebih lanjut atau pertanyaan, bisa menghubungi admin melalui kontak berikut:</p>
                                                             <table class="table table-borderless">
                                                                 <tr>

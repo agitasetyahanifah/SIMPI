@@ -16,7 +16,7 @@ return new class extends Migration
             $table->date('tanggal');
             $table->unsignedBigInteger('jenis_ikan_id');
             $table->integer('jumlah');
-            $table->string('kondisi_ikan');
+            $table->enum('kondisi_ikan', ['baik', 'sakit', 'mati']);
             $table->text('catatan')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->timestamps();

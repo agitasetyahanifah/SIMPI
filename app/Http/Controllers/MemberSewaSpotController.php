@@ -61,45 +61,19 @@ class MemberSewaSpotController extends Controller
         return redirect()->route('member.spots.index')->with('success', 'Spot successfully booked!');
     }
 
-    // public function cancelOrder(SewaSpot $sewaSpot)
-    // {
-    //     // Pastikan pesanan belum dibayar dan belum melewati timeout
-    //     if ($sewaSpot->status === 'menunggu pembayaran' && Carbon::now()->lt($sewaSpot->timeout)) {
-    //         // Ubah status pesanan menjadi "dibatalkan"
-    //         $sewaSpot->status = 'dibatalkan';
-    //         $sewaSpot->save();
-    
-    //         return redirect()->back()->with('success', 'Fishing Spot Booking has been successfully cancelled.');
-    //     }
-    
-    //     return redirect()->back()->with('error', 'Fishing Spot Booking failed to be cancelled.');
-    // }  
-    
-    public function cancelOrder($id)
+    public function cancelOrder(SewaSpot $sewaSpot)
     {
-        $sewa = SewaSpot::findOrFail($id);
-
-        if ($sewa->status === 'menunggu pembayaran') {
-            // Update ketersediaan spot
-            $spot = Spot::find($sewa->spot_id);
-            if ($spot) {
-                // Hapus record sewa spot sesuai dengan spot_id, tanggal_sewa, dan sesi
-                $spot->sewaSpots()
-                    ->where('tanggal_sewa', $sewa->tanggal_sewa)
-                    ->where('sesi', $sewa->sesi)
-                    ->delete();
-            }
-    
-            // Update status sewa spot
-            $sewa->status = 'dibatalkan';
-            $sewa->save();
+        // Pastikan pesanan belum dibayar dan belum melewati timeout
+        if ($sewaSpot->status === 'menunggu pembayaran' && Carbon::now()->lt($sewaSpot->timeout)) {
+            // Ubah status pesanan menjadi "dibatalkan"
+            $sewaSpot->status = 'dibatalkan';
+            $sewaSpot->save();
     
             return redirect()->back()->with('success', 'Fishing Spot Booking has been successfully cancelled.');
         }
     
         return redirect()->back()->with('error', 'Fishing Spot Booking failed to be cancelled.');
     }
-    
 
     public function resetSpot()
     {
@@ -131,6 +105,7 @@ class MemberSewaSpotController extends Controller
         // Logika untuk mendapatkan sesi yang sudah dipesan
         $bookedSessions = SewaSpot::where('tanggal_sewa', $tanggalSewa)
                                 ->where('spot_id', $spotId)
+                                ->whereIn('status', ['menunggu pembayaran', 'sudah dibayar'])
                                 ->pluck('sesi');
 
         return response()->json(['sesi_terpesan' => $bookedSessions]);

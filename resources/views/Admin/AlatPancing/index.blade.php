@@ -73,7 +73,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="spesifikasi" class="col-form-label">Specification</label>
-                                <textarea class="form-control" id="spesifikasi" name="spesifikasi" rows="5"></textarea>
+                                <textarea class="form-control" id="spesifikasi" name="spesifikasi" rows="5" required></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -117,7 +117,7 @@
                           </div>
                           <div class="d-flex flex-column justify-content-center">
                             <h6 class="mb-0 text-sm">{{ $alat->nama_alat }}</h6>
-                            <p class="text-xl text-secondary mb-0">{{ number_format($alat->harga, 0, ',', '.') }} /day</p>
+                            <p class="text-xl text-secondary mb-0">Rp {{ number_format($alat->harga, 0, ',', '.') }},- /day</p>
                           </div>
                         </div>
                       </td>
@@ -235,7 +235,7 @@
                                   </div>
                                   <div class="col-md-6">
                                       <h5>{{ $alat->nama_alat }}</h5>
-                                      <p>Price: {{ number_format($alat->harga, 0, ',', '.') }} /day</p>
+                                      <p>Price: Rp {{ number_format($alat->harga, 0, ',', '.') }},- /day</p>
                                       <p>Amount: {{ $alat->jumlah }}</p>
                                       <p>Status: <span class="badge {{ $alat->status == 'available' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $alat->status }}</span></p>
                                       <p>Specification: </p><p>{!! nl2br(e($alat->spesifikasi)) !!}</p>

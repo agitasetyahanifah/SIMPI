@@ -264,8 +264,7 @@
                     aria-label="Close"></button>
                 </div>
                 <div class="modal-body d-flex align-items-center justify-content-center">
-                  <img id="maximizedImage" src="#" class="img-fluid" alt="Gambar Diperbesar"
-                    style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                  <img id="maximizedImage" src="#" class="img-fluid" alt="Gambar Diperbesar" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                 </div>
               </div>
             </div>
@@ -338,7 +337,7 @@
                 @endif
                 <div class="card-body2">
                     <h5 class="card-title2">{{ $alat->nama_alat }}</h5>
-                    <p class="card-text2" style="color: orangered;">Rp {{ number_format($alat->harga, 0, ',', '.') }}/day</p>
+                    <p class="card-text2" style="color: orangered;">Rp {{ number_format($alat->harga, 0, ',', '.') }},- /day</p>
                     <div class="text-center">
                       <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#detailModal{{ $alat->id }}">Details</button>
                     </div>
@@ -380,7 +379,7 @@
                             </div>
                             <div class="col-md-6">
                                 <h5>{{ $alat->nama_alat }}</h5>
-                                <p>Price: {{ number_format($alat->harga, 0, ',', '.') }} /day</p>
+                                <p>Price: Rp {{ number_format($alat->harga, 0, ',', '.') }},- /day</p>
                                 <p>Available Quantity: {{ $alat->jumlah }}</p>
                                 <p>Status: <span class="badge {{ $alat->status == 'available' ? 'bg-gradient-success' : 'bg-gradient-secondary' }}">{{ $alat->status }}</span></p>
                                 <p>Specifications: </p><p style="text-align: justify;">{!! nl2br(e($alat->spesifikasi)) !!}</p>
