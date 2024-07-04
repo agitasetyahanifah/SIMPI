@@ -67,7 +67,7 @@ class AdminKeuanganController extends Controller
     
         // Redirect atau response sesuai kebutuhan
         return redirect()->route('admin.keuangan.index')->with('success', 'Transaction added successfully!');
-    }    
+    }
 
     public function edit($id)
     {
@@ -120,3 +120,4 @@ class AdminKeuanganController extends Controller
     
 
 }
+

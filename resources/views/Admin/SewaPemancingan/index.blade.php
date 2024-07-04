@@ -150,6 +150,7 @@
                     </div>
                 </div>
             </div>
+            
             <!-- Modal untuk Konfirmasi Pembayaran -->
             <div class="modal fade" id="konfirmasiModal{{ $pemancingan->id }}" tabindex="-1" role="dialog" aria-labelledby="konfirmasiModalLabel{{ $pemancingan->id }}" aria-hidden="true">
                 <div class="modal-dialog" role="document">
