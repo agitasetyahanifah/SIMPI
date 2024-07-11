@@ -22,6 +22,9 @@
         <div class="card">
           <div class="card-header pb-0">
             <h4 class="font-weight-bolder mb-0">Fishing Spot Reservation Management</h4>
+            <div class="mt-3">                
+                <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+            </div>
           </div>
           <div class="card-body ">
             <div class="table-responsive p-0">
@@ -364,5 +367,25 @@
     });
 </script>
 
+{{-- Script untuk Search --}}
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        const searchValue = this.value.toLowerCase().trim();
+        const rows = document.querySelectorAll('tbody tr');
+
+        rows.forEach(row => {
+            const bookingCode = row.cells[1].textContent.toLowerCase().trim();
+            const customerName = row.cells[2].textContent.toLowerCase().trim();
+            const bookingDate = row.cells[3].textContent.toLowerCase().trim();
+            const status = row.cells[4].textContent.toLowerCase().trim();
+
+            if (bookingCode.includes(searchValue) || customerName.includes(searchValue) || bookingDate.includes(searchValue) || status.includes(searchValue)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    });
+</script>
 
 @endsection

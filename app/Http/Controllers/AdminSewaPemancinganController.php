@@ -18,23 +18,57 @@ class AdminSewaPemancinganController extends Controller
     /**
      * Display a listing of the resource.
      */
+    // public function index(Request $request)
+    // {
+    //     // Mengambil data sewa spot pemancingan dengan relasi 'member' dan 'spot', 
+    //     // diurutkan berdasarkan tanggal sewa dan tanggal update secara menurun, dengan paginasi 25 item per halaman
+    //     $sewaPemancingan = SewaSpot::with(['member', 'spot'])
+    //                         ->orderBy('tanggal_sewa', 'desc')
+    //                         ->orderBy('updated_at', 'desc')
+    //                         ->paginate(25);
+    //     // Mendapatkan item terakhir dari koleksi data yang dipaginasi
+    //     $lastItem = $sewaPemancingan->lastItem();
+    //     // Mengambil semua data spot
+    //     $spots = Spot::all();
+    //     // Mengubah data spot menjadi format JSON
+    //     $jsonSpots = $spots->toJson();
+
+    //     // Mengembalikan view 'admin.sewapemancingan.index' dengan data 'sewaPemancingan', 'lastItem', 'spots', dan 'jsonSpots'    
+    //     return view('admin.sewapemancingan.index', compact('sewaPemancingan', 'lastItem', 'spots', 'jsonSpots'));
+    // }
+
     public function index(Request $request)
     {
-        // Mengambil data sewa spot pemancingan dengan relasi 'member' dan 'spot', 
-        // diurutkan berdasarkan tanggal sewa dan tanggal update secara menurun, dengan paginasi 25 item per halaman
-        $sewaPemancingan = SewaSpot::with(['member', 'spot'])
-                            ->orderBy('tanggal_sewa', 'desc')
-                            ->orderBy('updated_at', 'desc')
-                            ->paginate(25);
-        // Mendapatkan item terakhir dari koleksi data yang dipaginasi
-        $lastItem = $sewaPemancingan->lastItem();
+        $search = $request->query('search'); // Ambil nilai pencarian dari query parameter 'search'
+
+        // Query untuk mendapatkan data SewaSpot dengan relasi member dan spot
+        $query = SewaSpot::with(['member', 'spot'])
+                        ->orderBy('tanggal_sewa', 'desc')
+                        ->orderBy('updated_at', 'desc');
+
+        // Jika ada pencarian, filter berdasarkan nama member atau nama spot atau tanggal sewa atau status
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('member', function ($query) use ($search) {
+                    $query->where('nama', 'like', '%' . $search . '%');
+                })->orWhereHas('spot', function ($query) use ($search) {
+                    $query->where('nama_spot', 'like', '%' . $search . '%');
+                })->orWhere('tanggal_sewa', 'like', '%' . $search . '%')
+                  ->orWhere('status', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Paginasi dengan 25 item per halaman
+        $sewaPemancingan = $query->paginate(25);
+        $lastItem = $sewaPemancingan->lastItem(); // Item terakhir dari data yang dipaginasi
+
         // Mengambil semua data spot
         $spots = Spot::all();
         // Mengubah data spot menjadi format JSON
         $jsonSpots = $spots->toJson();
 
-        // Mengembalikan view 'admin.sewapemancingan.index' dengan data 'sewaPemancingan', 'lastItem', 'spots', dan 'jsonSpots'    
-        return view('admin.sewapemancingan.index', compact('sewaPemancingan', 'lastItem', 'spots', 'jsonSpots'));
+        // Mengembalikan view 'admin.sewapemancingan.index' dengan data 'sewaPemancingan', 'lastItem'
+        return view('admin.sewapemancingan.index', compact('sewaPemancingan', 'lastItem', 'search', 'spots','jsonSpots'));
     }
     
     /**
