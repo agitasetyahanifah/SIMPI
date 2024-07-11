@@ -30,6 +30,22 @@
     <link href="https://cdn.jsdelivr.net/npm/nucleo/css/nucleo.css" rel="stylesheet">
   
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        .form-group {
+            position: relative;
+        }
+        .form-control {
+            padding-right: 40px;
+        }
+    </style>
     
 </head>
 
@@ -84,13 +100,23 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="password" class="form-label">Password</label>
-                                        <input type="password" class="form-control" id="password" name="password" required>
+                                        <div style="position: relative;">
+                                            <input type="password" class="form-control" id="password" name="password" required>
+                                            <span class="eye-icon" id="togglePassword">
+                                                <i class="fa fa-eye"></i>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="password_confirmation" class="form-label">Confirm Password</label>
-                                        <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+                                        <div style="position: relative;">
+                                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+                                            <span class="eye-icon" id="togglePassword1">
+                                                <i class="fa fa-eye"></i>
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -110,6 +136,24 @@
         </div>
     </div>
     
+    <script>
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordField = document.getElementById('password');
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+    
+        document.getElementById('togglePassword1').addEventListener('click', function() {
+            const passwordField = document.getElementById('password_confirmation');
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+    </script>
+
 </body>
 
 </html>

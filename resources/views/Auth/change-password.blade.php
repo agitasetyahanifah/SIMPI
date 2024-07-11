@@ -30,6 +30,22 @@
     <link href="https://cdn.jsdelivr.net/npm/nucleo/css/nucleo.css" rel="stylesheet">
   
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        .form-group {
+            position: relative;
+        }
+        .form-control {
+            padding-right: 40px;
+        }
+    </style>
     
 </head>
 
@@ -65,6 +81,7 @@
                             <div class="form-group">
                                 <label for="current_password" class="form-label">Current Password</label>
                                 <input id="current_password" type="password" class="form-control @error('current_password') is-invalid @enderror" name="current_password" required autocomplete="current-password">
+                                <i class="fa fa-eye eye-icon" id="toggleCurrentPassword" style="cursor: pointer; top: 51px; right: 15px;"></i>
                                 @error('current_password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -74,6 +91,7 @@
                             <div class="form-group">
                                 <label for="new_password" class="form-label">New Password</label>
                                 <input id="new_password" type="password" class="form-control @error('new_password') is-invalid @enderror" name="new_password" required autocomplete="new-password">
+                                <i class="fa fa-eye eye-icon" id="toggleNewPassword" style="cursor: pointer; top: 51px; right: 15px;"></i>
                                 @error('new_password')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -83,6 +101,7 @@
                             <div class="form-group">
                                 <label for="new_password_confirmation" class="form-label">Confirm Password</label>
                                 <input id="new_password_confirmation" type="password" class="form-control" name="new_password_confirmation" required autocomplete="new-password">
+                                <i class="fa fa-eye eye-icon" id="toggleConfirmPassword" style="cursor: pointer; top: 51px; right: 15px;"></i>
                             </div>    
                             <div class="row">
                                 <div class="col-6">
@@ -104,6 +123,33 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('toggleCurrentPassword').addEventListener('click', function() {
+            const passwordField = document.getElementById('current_password');
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    
+        document.getElementById('toggleNewPassword').addEventListener('click', function() {
+            const passwordField = document.getElementById('new_password');
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        document.getElementById('toggleConfirmPassword').addEventListener('click', function() {
+            const passwordField = document.getElementById('new_password_confirmation');
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    </script>
+
 </body>
 
 </html>

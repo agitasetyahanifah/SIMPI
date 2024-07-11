@@ -30,6 +30,22 @@
     <link href="https://cdn.jsdelivr.net/npm/nucleo/css/nucleo.css" rel="stylesheet">
   
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+        .form-group {
+            position: relative;
+        }
+        .form-control {
+            padding-right: 40px;
+        }
+    </style>
     
 </head>
 
@@ -69,6 +85,7 @@
                             <div class="form-group">
                                 <label for="password" class="form-label">Password</label>
                                 <input type="password" class="form-control" id="password" name="password" required>
+                                <i class="fa fa-eye eye-icon" id="togglePassword" style="cursor: pointer; top: 51px; right: 15px;"></i>
                             </div>
                             <div>
                                 <button type="submit" class="btn btn-primary w-100">Login</button>
@@ -85,6 +102,17 @@
             </div>
         </div>
     </div>
+
+<script>
+    document.getElementById('togglePassword').addEventListener('click', function() {
+        const passwordField = document.getElementById('password');
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        this.classList.toggle('fa-eye');
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
+
 </body>
 
 </html>
