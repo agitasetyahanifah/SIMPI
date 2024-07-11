@@ -1,6 +1,6 @@
 @extends('Admin.Layouts.main')
 
-@section('title', 'Fishing Blog')
+@section('title', 'Blog Management')
 
 @section('content')
 
@@ -150,7 +150,7 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header pb-0">
-            <h4 class="font-weight-bolder mb-0">Fishing Blog</h4>
+            <h4 class="font-weight-bolder mb-0">Blogs</h4>
             {{-- Button Tambah --}}
             <form action="/admin/blog" method="post" enctype="multipart/form-data">
                 @csrf

@@ -189,9 +189,25 @@
 
 <body class="g-sidenav-show  bg-gray-100">
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-  
+
     @include('Member.Layouts.navbar')
 
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    
     {{-- Content --}}
     <div class="container-fluid py-2">
 

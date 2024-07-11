@@ -117,12 +117,25 @@ class AuthController extends Controller
      */
     public function changePassword(Request $request)
     {
+        // Validasi input
         $request->validate([
+            'current_password' => 'required',
             'new_password' => 'required|string|min:8|confirmed',
+        ], [
+            'current_password.required' => 'Current password is required',
+            'new_password.required' => 'New password is required',
+            'new_password.min' => 'New password must be at least 8 characters',
+            'new_password.confirmed' => 'New password confirmation does not match',
         ]);
 
         $user = Auth::user();
 
+        // Validasi password lama
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Current password is incorrect']);
+        }
+
+        // Mengubah password
         $user->password = Hash::make($request->new_password);
         $user->save();
 
@@ -135,7 +148,8 @@ class AuthController extends Controller
         } else {
             // Default fallback, jika role tidak dikenali
             return redirect()->route('password.change')->with('success', 'Password changed successfully!');
-        }    }
+        }
+    }
 
     /**
      * Log the user out of the application.
