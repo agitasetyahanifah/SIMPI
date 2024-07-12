@@ -140,6 +140,7 @@ class AdminBlogController extends Controller
         // Redirect kembali ke halaman sebelumnya dengan pesan sukses
         return redirect()->back()->with('success', 'Blog updated successfully.');
     }
+    
     /**
      * Remove the specified resource from storage.
      */

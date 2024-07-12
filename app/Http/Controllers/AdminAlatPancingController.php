@@ -17,8 +17,8 @@ class AdminAlatPancingController extends Controller
         $alatPancing = AlatPancing::orderBy('created_at', 'desc')->paginate(25);
         // Mendapatkan item terakhir dari koleksi data yang dipaginasi
         $lastItem = $alatPancing->lastItem();
-        // Mengembalikan view 'admin.alatpancing.index' dengan data 'alatPancing' dan 'lastItem'
-        return view('admin.alatpancing.index', compact('alatPancing', 'lastItem'));
+        // Mengembalikan view 'Admin.Alatpancing.index' dengan data 'alatPancing' dan 'lastItem'
+        return view('Admin.Alatpancing.index', compact('alatPancing', 'lastItem'));
     }
 
     /**
@@ -88,41 +88,60 @@ class AdminAlatPancingController extends Controller
             'jumlah' => 'required|numeric',
             'status' => 'required|in:available,not available',
             'spesifikasi' => 'nullable|string',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10048' // Validasi untuk foto hanya jika ada file yang diupload
         ]);
-
+    
         // Cari data alat pancing berdasarkan ID
         $alatPancing = AlatPancing::findOrFail($id);
-
-        // Perbarui data alat pancing
+    
+        // Simpan data saat ini untuk membandingkan perubahan
+        $currentData = [
+            'nama_alat' => $alatPancing->nama_alat,
+            'harga' => $alatPancing->harga,
+            'jumlah' => $alatPancing->jumlah,
+            'status' => $alatPancing->status,
+            'spesifikasi' => $alatPancing->spesifikasi,
+            'foto' => $alatPancing->foto,
+        ];
+    
+        // Perbarui data alat pancing berdasarkan input
         $alatPancing->nama_alat = $request->nama_alat;
         $alatPancing->harga = $request->harga;
         $alatPancing->jumlah = $request->jumlah;
         $alatPancing->status = $request->status;
         $alatPancing->spesifikasi = $request->spesifikasi;
-        $alatPancing->user_id = Auth::id();
-
+    
         // Cek apakah ada file foto yang dikirim
         if ($request->hasFile('foto')) {
             // Hapus foto lama jika ada
             if ($alatPancing->foto) {
                 unlink(public_path('images/' . $alatPancing->foto));
             }
-
+    
             // Simpan foto baru
             $foto = $request->file('foto');
             $namaFoto = time() . '_' . $foto->getClientOriginalName();
             $foto->move(public_path('images/'), $namaFoto);
-
+    
             $alatPancing->foto = $namaFoto;
         }
-
+    
+        // Periksa apakah ada perubahan pada data
+        $isUpdated = $alatPancing->isDirty();
+    
+        // Jika tidak ada perubahan, kembalikan dengan pesan info
+        if (!$isUpdated) {
+            return redirect()->back()->with('info', 'No changes were made to the fishing equipment data.');
+        }
+    
         // Simpan perubahan data
+        $alatPancing->user_id = Auth::id();
         $alatPancing->save();
-
+    
         // Redirect dengan pesan sukses
         return redirect()->back()->with('success', 'Fishing equipment data updated successfully');
-    }
-
+    }   
+    
     /**
      * Remove the specified resource from storage.
      */
