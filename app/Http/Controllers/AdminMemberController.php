@@ -16,8 +16,8 @@ class AdminMemberController extends Controller
         $members = User::where('role', 'member')->latest()->paginate(25);
         // Mendapatkan item terakhir dari koleksi data yang dipaginasi
         $lastItem = $members->lastItem();
-        // Mengembalikan view 'admin.manajemenmember.index' dengan data 'members' dan 'lastItem'
-        return view('admin.manajemenmember.index', compact('members','lastItem'));
+        // Mengembalikan view 'Admin.ManajemenMember.index' dengan data 'members' dan 'lastItem'
+        return view('Admin.ManajemenMember.index', compact('members','lastItem'));
     }
 
     /**

@@ -22,6 +22,6 @@ class GuestLandingPageController extends Controller
         $alatPancing = AlatPancing::orderBy('created_at', 'desc')->paginate(6);
 
         // Mengembalikan view 'guest.landingpage.index' dengan data 'images', 'blogs', dan 'alatPancing'
-        return view('guest.landingpage.index', compact(['images', 'blogs', 'alatPancing']));
+        return view('Guest.LandingPage.index', compact(['images', 'blogs', 'alatPancing']));
     }
 }

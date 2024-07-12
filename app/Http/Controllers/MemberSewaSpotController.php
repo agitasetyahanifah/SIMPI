@@ -18,8 +18,8 @@ class MemberSewaSpotController extends Controller
         $spots = Spot::all();
         // Mengambil data sewa spot yang tanggal sewanya lebih besar atau sama dengan hari ini, dan mengelompokkannya berdasarkan spot_id
         $sewaSpots = SewaSpot::where('tanggal_sewa', '>=', Carbon::today())->get()->groupBy('spot_id');
-        // Mengembalikan view 'member.sewaspotpemancingan.sewa-spot' dengan data 'spots' dan 'sewaSpots'
-        return view('member.sewaspotpemancingan.sewa-spot', compact('spots', 'sewaSpots'));
+        // Mengembalikan view 'Member.SewaSpotPemancingan.sewa-spot' dengan data 'spots' dan 'sewaSpots'
+        return view('Member.SewaSpotPemancingan.sewa-spot', compact('spots', 'sewaSpots'));
     }
 
     public function store(Request $request)
@@ -121,7 +121,7 @@ class MemberSewaSpotController extends Controller
         $lastItem = $riwayatSewa->lastItem();
     
         // Kembalikan ke view dengan data riwayat sewa
-        return view('member.sewaspotpemancingan.riwayat-sewa', compact('riwayatSewa', 'lastItem'));
+        return view('Member.SewaSpotPemancingan.riwayat-sewa', compact('riwayatSewa', 'lastItem'));
     }    
 
     public function autoCancel($id)

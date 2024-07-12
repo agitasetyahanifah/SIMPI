@@ -33,8 +33,8 @@ class AdminSewaPemancinganController extends Controller
         // Mengubah data spot menjadi format JSON
         $jsonSpots = $spots->toJson();
 
-        // Mengembalikan view 'admin.sewapemancingan.index' dengan data 'sewaPemancingan', 'lastItem', 'spots', dan 'jsonSpots'    
-        return view('admin.sewapemancingan.index', compact('sewaPemancingan', 'lastItem', 'spots', 'jsonSpots'));
+        // Mengembalikan view 'Admin.SewaPemancingan.index' dengan data 'sewaPemancingan', 'lastItem', 'spots', dan 'jsonSpots'    
+        return view('Admin.SewaPemancingan.index', compact('sewaPemancingan', 'lastItem', 'spots', 'jsonSpots'));
     }
   
     /**

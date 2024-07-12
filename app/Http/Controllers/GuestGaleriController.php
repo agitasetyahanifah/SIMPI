@@ -17,7 +17,7 @@ class GuestGaleriController extends Controller
         // Mendapatkan item terakhir dari koleksi data yang dipaginasi
         $lastItem = $images->lastItem();
         // Mengembalikan view 'guest.galeri.galeri' dengan data 'images' dan 'lastItem'
-        return view('guest.galeri.galeri', compact('images', 'lastItem'));
+        return view('Guest.Galeri.galeri', compact('images', 'lastItem'));
     }
 
     /**

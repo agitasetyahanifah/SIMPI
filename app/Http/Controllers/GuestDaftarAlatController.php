@@ -14,7 +14,7 @@ class GuestDaftarAlatController extends Controller
     {
         $alatPancing = AlatPancing::orderBy('created_at', 'desc')->paginate(18);
         $lastItem = $alatPancing->lastItem();
-        return view('guest.daftaralat.daftar-alat', compact('alatPancing','lastItem'));    
+        return view('Guest.DaftarAlat.daftar-alat', compact('alatPancing','lastItem'));    
     }
 
     /**

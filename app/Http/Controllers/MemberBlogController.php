@@ -18,7 +18,7 @@ class MemberBlogController extends Controller
         // Mendapatkan item terakhir dari koleksi data yang dipaginasi
         $lastItem = $blogs->lastItem();
         // Mengembalikan view 'member.blog.blog' dengan data 'blogs' dan 'lastItem'
-        return view('member.blog.blog', compact('blogs','lastItem'));
+        return view('Member.Blog.blog', compact('blogs','lastItem'));
     }
 
     /**
@@ -51,7 +51,7 @@ class MemberBlogController extends Controller
         $kategoriBlog = KategoriBlog::orderByDesc('created_at')->paginate(5);
     
         // Mengembalikan view dengan data blog dan latestBlogs
-        return view('member.blog.detail-blog', compact('blog', 'latestBlogs', 'kategoriBlog'));
+        return view('Member.Blog.detail-blog', compact('blog', 'latestBlogs', 'kategoriBlog'));
     } 
 
     /**

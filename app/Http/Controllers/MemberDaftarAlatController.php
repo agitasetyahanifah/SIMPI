@@ -19,8 +19,8 @@ class MemberDaftarAlatController extends Controller
         $alatPancing = AlatPancing::orderBy('created_at', 'desc')->paginate(18);
         // Mendapatkan item terakhir dari koleksi data yang dipaginasi
         $lastItem = $alatPancing->lastItem();
-        // Mengembalikan view 'member.daftaralat.daftar-alat' dengan data 'alatPancing' dan 'lastItem'
-        return view('member.daftaralat.daftar-alat', compact('alatPancing','lastItem'));    
+        // Mengembalikan view 'Member.DaftarAlat.daftar-alat' dengan data 'alatPancing' dan 'lastItem'
+        return view('Member.DaftarAlat.daftar-alat', compact('alatPancing','lastItem'));    
     }
 
     /**
@@ -131,7 +131,7 @@ class MemberDaftarAlatController extends Controller
         $lastItem = $riwayatSewaAlat->lastItem();
     
         // Kembalikan ke view dengan data riwayat sewa
-        return view('member.daftaralat.riwayat-sewa-alat', compact('riwayatSewaAlat', 'lastItem'));
+        return view('Member.DaftarAlat.riwayat-sewa-alat', compact('riwayatSewaAlat', 'lastItem'));
     }
 
     public function cancelOrder(Sewaalat $sewaAlat)

@@ -14,6 +14,6 @@ class GuestSpotController extends Controller
         $spots = Spot::all();
         // $sewaSpots = SewaSpot::all()->groupBy('spot_id');
         $sewaSpots = SewaSpot::where('tanggal_sewa', '>=', Carbon::today())->get()->groupBy('spot_id');
-        return view('guest.sewaspot.spot', compact('spots', 'sewaSpots'));
+        return view('Guest.SewaSpot.spot', compact('spots', 'sewaSpots'));
     }
 }

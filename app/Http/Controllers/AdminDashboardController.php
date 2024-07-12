@@ -16,7 +16,7 @@ class AdminDashboardController extends Controller
         $images = Galeri::orderBy('created_at', 'desc')->paginate(12);
 
         // Mengembalikan view 'admin.dashboard.index' dengan data 'images'
-        return view('admin.dashboard.index', compact(['images']));
+        return view('Admin.Dashboard.index', compact(['images']));
     }
 
     public function uploadGambar(Request $request)

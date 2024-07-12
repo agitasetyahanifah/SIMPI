@@ -44,7 +44,7 @@ class MemberLandingPageController extends Controller
             $weather = null;
         }
 
-        return view('member.landingpage.index', compact(['images', 'blogs', 'alatPancing', 'weather']));
+        return view('Member.LandingPage.index', compact(['images', 'blogs', 'alatPancing', 'weather']));
     }
 
 }

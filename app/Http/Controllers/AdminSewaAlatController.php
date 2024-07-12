@@ -31,8 +31,8 @@ class AdminSewaAlatController extends Controller
         $alatPancing = AlatPancing::all();
         // Mengambil semua data alat pancing dengan status 'available'
         $alatPancings = AlatPancing::where('status', 'available')->get();
-        // Mengembalikan view 'admin.sewaalat.index' dengan data 'sewaAlat', 'lastItem', 'member', 'members', 'alatPancing', dan 'alatPancings'
-        return view('admin.sewaalat.index', compact('sewaAlat', 'lastItem', 'member', 'members', 'alatPancing', 'alatPancings'));
+        // Mengembalikan view 'Admin.SewaAlat.index' dengan data 'sewaAlat', 'lastItem', 'member', 'members', 'alatPancing', dan 'alatPancings'
+        return view('Admin.SewaAlat.index', compact('sewaAlat', 'lastItem', 'member', 'members', 'alatPancing', 'alatPancings'));
     }
 
     /**

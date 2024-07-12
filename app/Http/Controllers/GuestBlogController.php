@@ -17,8 +17,8 @@ class GuestBlogController extends Controller
         $blogs = Blog::latest()->paginate(12);
         // Mendapatkan item terakhir dari koleksi data yang dipaginasi
         $lastItem = $blogs->lastItem();
-        // Mengembalikan view 'guest.blog.blog' dengan data 'blogs' dan 'lastItem'
-        return view('guest.blog.blog', compact('blogs','lastItem'));
+        // Mengembalikan view 'Guest.Blog.blog' dengan data 'blogs' dan 'lastItem'
+        return view('Guest.Blog.blog', compact('blogs','lastItem'));
     }
 
     /**

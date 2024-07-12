@@ -26,7 +26,7 @@ class AdminBlogController extends Controller
         // Mengambil semua data kategori blog
         $kategoriOpt = KategoriBlog::all();
         // Mengembalikan view 'admin.blog.index' dengan data 'blogs', 'lastItem', 'lastItem2', 'kategoriBlog', dan 'kategoriOpt'
-        return view('admin.blog.index', compact('blogs','lastItem','lastItem2','kategoriBlog','kategoriOpt'));
+        return view('Admin.Blog.index', compact('blogs','lastItem','lastItem2','kategoriBlog','kategoriOpt'));
     }
 
     /**

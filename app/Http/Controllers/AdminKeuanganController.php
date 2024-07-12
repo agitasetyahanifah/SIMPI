@@ -31,8 +31,8 @@ class AdminKeuanganController extends Controller
         $keuangans = $query->paginate(25);
         $lastItem = $keuangans->lastItem();
     
-        // Mengembalikan view 'admin.keuangan.index' dengan data 'keuangans', 'lastItem', dan 'mutasiTransaksi'
-        return view('admin.keuangan.index', compact('keuangans', 'lastItem', 'mutasiTransaksi'));
+        // Mengembalikan view 'Admin.Keuangan.index' dengan data 'keuangans', 'lastItem', dan 'mutasiTransaksi'
+        return view('Admin.Keuangan.index', compact('keuangans', 'lastItem', 'mutasiTransaksi'));
     }
     
     public function store(Request $request)
@@ -66,7 +66,7 @@ class AdminKeuanganController extends Controller
         $keuangan->save();
     
         // Redirect atau response sesuai kebutuhan
-        return redirect()->route('admin.keuangan.index')->with('success', 'Transaction added successfully!');
+        return redirect()->route('Admin.Keuangan.index')->with('success', 'Transaction added successfully!');
     }
 
     public function edit($id)
@@ -108,7 +108,7 @@ class AdminKeuanganController extends Controller
             $keuangan->save();
     
             // Redirect kembali ke halaman index dengan pesan sukses
-            return redirect()->route('admin.keuangan.index')->with('success', 'Transaction updated successfully.');
+            return redirect()->route('Admin.Keuangan.index')->with('success', 'Transaction updated successfully.');
         }
     
         // Jika tidak ada perubahan, kembalikan dengan pesan info

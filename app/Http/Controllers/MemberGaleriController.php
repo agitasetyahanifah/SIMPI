@@ -16,8 +16,8 @@ class MemberGaleriController extends Controller
         $images = Galeri::orderBy('created_at', 'desc')->paginate(24);
         // Mendapatkan item terakhir dari koleksi data yang dipaginasi
         $lastItem = $images->lastItem();
-        // Mengembalikan view 'member.galeri.galeri' dengan data 'images' dan 'lastItem'
-        return view('member.galeri.galeri', compact('images', 'lastItem'));
+        // Mengembalikan view 'Member.Galeri.galeri' dengan data 'images' dan 'lastItem'
+        return view('Member.Galeri.galeri', compact('images', 'lastItem'));
     }
 
     /**
