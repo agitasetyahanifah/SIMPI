@@ -129,20 +129,23 @@
         <a href="{{ route('member.spots.riwayat-sewa') }}" class="btn btn-primary mb-3 mb-sm-0">Reservation History</a>
       </div>      
       @if(session('success'))
-          <div class="alert alert-success">
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
               {{ session('success') }}
+              <button class="btn-close text-dark" type="button" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
           </div>
       @endif
 
       @if ($errors->any())
-          <div class="alert alert-danger">
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
               <ul>
                   @foreach ($errors->all() as $error)
                       <li>{{ $error }}</li>
                   @endforeach
               </ul>
+              <button class="btn-close text-dark" type="button" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>    
           </div>
       @endif
+      
       <div class="card-body p-6 mb-4">
           <div class="kolam">
             <h1 style="color: white;">Pool</h1>

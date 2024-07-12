@@ -79,18 +79,20 @@
       </div>
      
       @if(session('success'))
-          <div class="alert alert-success">
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
               {{ session('success') }}
+              <button class="btn-close text-dark" type="button" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
           </div>
       @endif
-
+      
       @if ($errors->any())
-          <div class="alert alert-danger">
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
               <ul>
                   @foreach ($errors->all() as $error)
                       <li>{{ $error }}</li>
                   @endforeach
               </ul>
+              <button class="btn-close text-dark" type="button" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>    
           </div>
       @endif
 
