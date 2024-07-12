@@ -76,27 +76,45 @@ class AdminKeuanganController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Validasi data yang diterima dari formulir edit
-        $request->validate([
+        // Mengambil data transaksi keuangan berdasarkan ID
+        $keuangan = Keuangan::findOrFail($id);
+    
+        // Simpan data saat ini untuk membandingkan perubahan
+        $currentData = [
+            'tanggal_transaksi' => $keuangan->tanggal_transaksi,
+            'jumlah' => $keuangan->jumlah,
+            'jenis_transaksi' => $keuangan->jenis_transaksi,
+            'keterangan' => $keuangan->keterangan,
+        ];
+    
+        // Validasi input form untuk tanggal transaksi, jumlah, jenis transaksi, dan keterangan
+        $validated = $request->validate([
             'edit_tanggal_transaksi' => 'required|date',
             'edit_jumlah' => 'required|numeric',
             'edit_jenis_transaksi' => 'required|in:pemasukan,pengeluaran',
             'edit_keterangan' => 'nullable|string|max:255',
         ]);
-
-        // Mengambil data transaksi keuangan berdasarkan ID
-        $keuangan = Keuangan::findOrFail($id);
-
-        // Mengupdate data transaksi keuangan dengan data baru dari formulir edit
-        $keuangan->tanggal_transaksi = $request->edit_tanggal_transaksi;
-        $keuangan->jumlah = $request->edit_jumlah;
-        $keuangan->jenis_transaksi = $request->edit_jenis_transaksi;
-        $keuangan->keterangan = $request->edit_keterangan;
-        $keuangan->save();
-
-        // Redirect kembali ke halaman index dengan pesan sukses
-        return redirect()->route('admin.keuangan.index')->with('success', 'Transaction updated successfully.');
+    
+        // Update data transaksi keuangan jika ada perubahan
+        if ($keuangan->tanggal_transaksi != $validated['edit_tanggal_transaksi'] ||
+            $keuangan->jumlah != $validated['edit_jumlah'] ||
+            $keuangan->jenis_transaksi != $validated['edit_jenis_transaksi'] ||
+            $keuangan->keterangan != $validated['edit_keterangan']) {
+            
+            $keuangan->tanggal_transaksi = $validated['edit_tanggal_transaksi'];
+            $keuangan->jumlah = $validated['edit_jumlah'];
+            $keuangan->jenis_transaksi = $validated['edit_jenis_transaksi'];
+            $keuangan->keterangan = $validated['edit_keterangan'];
+            $keuangan->save();
+    
+            // Redirect kembali ke halaman index dengan pesan sukses
+            return redirect()->route('admin.keuangan.index')->with('success', 'Transaction updated successfully.');
+        }
+    
+        // Jika tidak ada perubahan, kembalikan dengan pesan info
+        return redirect()->back()->with('info', 'No changes were made to the transaction data.');
     }
+            
 
     public function destroy($id)
     {

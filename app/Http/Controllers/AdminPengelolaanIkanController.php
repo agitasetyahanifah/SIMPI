@@ -141,17 +141,37 @@ class AdminPengelolaanIkanController extends Controller
         // Cari data ikan masuk berdasarkan ID
         $ikanMasuk = IkanMasuk::findOrFail($id);
     
-        // Update data ikan masuk
-        $ikanMasuk->tanggal = $validatedData['edit_tanggal_ikan_masuk'];
-        $ikanMasuk->jenis_ikan_id = $validatedData['edit_jenis_ikan'];
-        $ikanMasuk->jumlah = $validatedData['edit_jumlah'];
-        $ikanMasuk->catatan = $validatedData['edit_catatan'];
-        $ikanMasuk->user_id = Auth::id();
+        // Simpan data saat ini untuk membandingkan perubahan
+        $currentData = [
+            'tanggal' => $ikanMasuk->tanggal,
+            'jenis_ikan_id' => $ikanMasuk->jenis_ikan_id,
+            'jumlah' => $ikanMasuk->jumlah,
+            'catatan' => $ikanMasuk->catatan,
+        ];
+    
+        // Update data ikan masuk hanya jika ada perubahan
+        $ikanMasuk->fill([
+            'tanggal' => $validatedData['edit_tanggal_ikan_masuk'],
+            'jenis_ikan_id' => $validatedData['edit_jenis_ikan'],
+            'jumlah' => $validatedData['edit_jumlah'],
+            'catatan' => $validatedData['edit_catatan'],
+            'user_id' => Auth::id(),
+        ]);
+    
+        // Periksa apakah ada perubahan pada data
+        $isUpdated = $ikanMasuk->isDirty();
+    
+        // Jika tidak ada perubahan, kembalikan dengan pesan info
+        if (!$isUpdated) {
+            return redirect()->route('admin.pengelolaanIkan.index')->with('info', 'No changes were made to the incoming fish data.');
+        }
+    
+        // Simpan perubahan data ikan masuk
         $ikanMasuk->save();
     
-        // Redirect atau berikan respons sesuai kebutuhan Anda
+        // Redirect dengan pesan sukses
         return redirect()->route('admin.pengelolaanIkan.index')->with('success', 'Incoming fish data updated successfully.');
-    }
+    }    
 
     public function updateIkanKeluar(Request $request, $id)
     {
@@ -164,21 +184,42 @@ class AdminPengelolaanIkanController extends Controller
             'edit_catatan' => 'nullable|string',
         ]);
     
-        // Cari data ikan masuk berdasarkan ID
+        // Cari data ikan keluar berdasarkan ID
         $ikanKeluar = IkanKeluar::findOrFail($id);
     
-        // Update data ikan masuk
-        $ikanKeluar->tanggal = $validatedData['edit_tanggal_ikan_keluar'];
-        $ikanKeluar->jenis_ikan_id = $validatedData['edit_jenis_ikan'];
-        $ikanKeluar->jumlah = $validatedData['edit_jumlah'];
-        $ikanKeluar->catatan = $validatedData['edit_catatan'];
-        $ikanKeluar->kondisi_ikan = $validatedData['edit_kondisi_ikan'];
-        $ikanKeluar->user_id = Auth::id();
+        // Simpan data saat ini untuk membandingkan perubahan
+        $currentData = [
+            'tanggal' => $ikanKeluar->tanggal,
+            'jenis_ikan_id' => $ikanKeluar->jenis_ikan_id,
+            'jumlah' => $ikanKeluar->jumlah,
+            'catatan' => $ikanKeluar->catatan,
+            'kondisi_ikan' => $ikanKeluar->kondisi_ikan,
+        ];
+    
+        // Update data ikan keluar hanya jika ada perubahan
+        $ikanKeluar->fill([
+            'tanggal' => $validatedData['edit_tanggal_ikan_keluar'],
+            'jenis_ikan_id' => $validatedData['edit_jenis_ikan'],
+            'jumlah' => $validatedData['edit_jumlah'],
+            'catatan' => $validatedData['edit_catatan'],
+            'kondisi_ikan' => $validatedData['edit_kondisi_ikan'],
+            'user_id' => Auth::id(),
+        ]);
+    
+        // Periksa apakah ada perubahan pada data
+        $isUpdated = $ikanKeluar->isDirty();
+    
+        // Jika tidak ada perubahan, kembalikan dengan pesan info
+        if (!$isUpdated) {
+            return redirect()->route('admin.pengelolaanIkan.index')->with('info', 'No changes were made to the outcoming fish data.');
+        }
+    
+        // Simpan perubahan data ikan keluar
         $ikanKeluar->save();
     
-        // Redirect atau berikan respons sesuai kebutuhan Anda
+        // Redirect dengan pesan sukses
         return redirect()->route('admin.pengelolaanIkan.index')->with('success', 'Outcoming fish data has been updated successfully.');
-    }
+    }    
 
     /**
      * Remove the specified resource from storage.

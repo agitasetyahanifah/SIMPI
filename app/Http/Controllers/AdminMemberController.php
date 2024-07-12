@@ -86,29 +86,45 @@ class AdminMemberController extends Controller
             'password' => 'nullable|string|min:8',
             'status' => 'required|string|in:aktif,tidak aktif',
         ]);
-
+    
         // Temukan data member berdasarkan ID
         $member = User::findOrFail($id);
-
+    
+        // Simpan data saat ini untuk membandingkan perubahan
+        $currentData = [
+            'nama' => $member->nama,
+            'telepon' => $member->telepon,
+            'email' => $member->email,
+            'status' => $member->status,
+        ];
+    
         // Update data member dengan nilai dari form
         $member->nama = $request->input('nama');
         $member->telepon = $request->input('telepon');
         $member->email = $request->input('email');
-
+    
         // Update password jika ada input password baru
         if ($request->filled('password')) {
             $member->password = bcrypt($request->input('password'));
         }
-
+    
         // Update status member
         $member->status = $request->input('status');
-
+    
+        // Periksa apakah ada perubahan pada data
+        $isUpdated = $member->isDirty();
+    
+        // Jika tidak ada perubahan, kembalikan dengan pesan info
+        if (!$isUpdated) {
+            return redirect()->back()->with('info', 'No changes were made to the member data.');
+        }
+    
         // Simpan perubahan data member
         $member->save();
-
+    
         // Redirect kembali ke halaman sebelumnya dengan pesan sukses
         return redirect()->back()->with('success', 'Member data has been updated successfully');
-    }
+    }    
 
     /**
      * Remove the specified resource from storage.

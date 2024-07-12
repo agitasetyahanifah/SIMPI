@@ -111,24 +111,33 @@ class AdminBlogController extends Controller
             'judul' => 'required|string|max:255',
             'kategori_blog' => 'required|exists:kategori_blog,id',
             'body' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10048', // Validasi untuk foto hanya jika ada file yang diupload
         ]);
-
+    
+        // Simpan data saat ini untuk membandingkan perubahan
+        $currentData = [
+            'judul' => $blog->judul,
+            'kategori_id' => $blog->kategori_id,
+            'body' => $blog->body,
+            'image' => $blog->image,
+        ];
+    
         // Jika ada file gambar yang diunggah
         if ($request->hasFile('image')) {
-            // hapus foto lama
-            if($blog->image){
+            // Hapus foto lama
+            if ($blog->image) {
                 unlink(public_path('images/' . $blog->image));
             }
-
-            // simpan foto baru
+    
+            // Simpan foto baru
             $image = $request->file('image');
             $nameImage = time() . '_' . $image->getClientOriginalName();
             $image->move(public_path('images/'), $nameImage);
-
+    
             // Update nama file gambar di data blog
             $blog->image = $nameImage;
         }
-
+    
         // Update data blog dengan nilai dari form
         $blog->judul = $validated['judul'];
         $blog->slug = Str::slug($validated['judul']);
@@ -136,9 +145,16 @@ class AdminBlogController extends Controller
         $blog->user_id = Auth::id();
         $blog->body = $validated['body'];
         $blog->save();
-
-        // Redirect kembali ke halaman sebelumnya dengan pesan sukses
-        return redirect()->back()->with('success', 'Blog updated successfully.');
+    
+        // Periksa apakah ada perubahan pada data
+        $isUpdated = $blog->wasChanged();
+    
+        // Berikan respons sesuai dengan perubahan
+        if ($isUpdated) {
+            return redirect()->back()->with('success', 'Blog updated successfully.');
+        } else {
+            return redirect()->back()->with('info', 'No changes were made to the blog data.');
+        }
     }
     
     /**
