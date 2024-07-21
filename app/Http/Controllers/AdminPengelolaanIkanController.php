@@ -29,8 +29,8 @@ class AdminPengelolaanIkanController extends Controller
         // Mengambil semua data jenis ikan
         $jenisIkanOpt = JenisIkan::all();
 
-        // Mengembalikan view 'Admin.PengelolaanIkan.index' dengan data 'ikanMasuk', 'ikanKeluar', 'lastItem1', 'lastItem2', 'jenisIkan', 'lastItem3', dan 'jenisIkanOpt'
-        return view('Admin.PengelolaanIkan.index', compact('ikanMasuk', 'ikanKeluar', 'lastItem1', 'lastItem2','jenisIkan', 'lastItem3','jenisIkanOpt'));
+        // Mengembalikan view 'admin.pengelolaanIkan.index' dengan data 'ikanMasuk', 'ikanKeluar', 'lastItem1', 'lastItem2', 'jenisIkan', 'lastItem3', dan 'jenisIkanOpt'
+        return view('admin.pengelolaanIkan.index', compact('ikanMasuk', 'ikanKeluar', 'lastItem1', 'lastItem2','jenisIkan', 'lastItem3','jenisIkanOpt'));
     }
 
     /**
@@ -64,7 +64,7 @@ class AdminPengelolaanIkanController extends Controller
         $ikanMasuk->save();
     
         // Redirect atau berikan respons sesuai kebutuhan Anda
-        return redirect()->route('Admin.PengelolaanIkan.index')->with('success', 'Incoming fish data added successfully.');
+        return redirect()->route('admin.pengelolaanIkan.index')->with('success', 'Incoming fish data added successfully.');
     }
 
     public function storeIkanKeluar(Request $request)
@@ -89,14 +89,16 @@ class AdminPengelolaanIkanController extends Controller
         $ikanKeluar->save();
     
         // Redirect atau berikan respons sesuai kebutuhan Anda
-        return redirect()->route('Admin.PengelolaanIkan.index')->with('success', 'Outcoming fish data has been successfully added.');
+        return redirect()->route('admin.pengelolaanIkan.index')->with('success', 'Outcoming fish data has been successfully added.');
     }
 
     public function storeJenisIkan(Request $request)
     {
-        // Validasi data yang diterima dari form
+        // Validasi data yang diterima dari form dengan custom message
         $validatedData = $request->validate([
-            'jenis_ikan' => 'required',
+            'jenis_ikan' => 'required|unique:jenis_ikan,jenis_ikan',
+        ], [
+            'jenis_ikan.unique' => 'Types of fish already exists.',
         ]);
     
         // Simpan data ke database
@@ -106,7 +108,7 @@ class AdminPengelolaanIkanController extends Controller
         $jenisIkan->save();
     
         // Redirect atau berikan respons sesuai kebutuhan Anda
-        return redirect()->route('Admin.PengelolaanIkan.index')->with('success', 'Fish type data successfully added.');
+        return redirect()->route('admin.pengelolaanIkan.index')->with('success', 'Fish type data successfully added.');
     }
 
     /**
@@ -163,14 +165,14 @@ class AdminPengelolaanIkanController extends Controller
     
         // Jika tidak ada perubahan, kembalikan dengan pesan info
         if (!$isUpdated) {
-            return redirect()->route('Admin.PengelolaanIkan.index')->with('info', 'No changes were made to the incoming fish data.');
+            return redirect()->route('admin.pengelolaanIkan.index')->with('info', 'No changes were made to the incoming fish data.');
         }
     
         // Simpan perubahan data ikan masuk
         $ikanMasuk->save();
     
         // Redirect dengan pesan sukses
-        return redirect()->route('Admin.PengelolaanIkan.index')->with('success', 'Incoming fish data updated successfully.');
+        return redirect()->route('admin.pengelolaanIkan.index')->with('success', 'Incoming fish data updated successfully.');
     }    
 
     public function updateIkanKeluar(Request $request, $id)
@@ -211,14 +213,14 @@ class AdminPengelolaanIkanController extends Controller
     
         // Jika tidak ada perubahan, kembalikan dengan pesan info
         if (!$isUpdated) {
-            return redirect()->route('Admin.PengelolaanIkan.index')->with('info', 'No changes were made to the outcoming fish data.');
+            return redirect()->route('admin.pengelolaanIkan.index')->with('info', 'No changes were made to the outcoming fish data.');
         }
     
         // Simpan perubahan data ikan keluar
         $ikanKeluar->save();
     
         // Redirect dengan pesan sukses
-        return redirect()->route('Admin.PengelolaanIkan.index')->with('success', 'Outcoming fish data has been updated successfully.');
+        return redirect()->route('admin.pengelolaanIkan.index')->with('success', 'Outcoming fish data has been updated successfully.');
     }    
 
     /**
@@ -233,7 +235,7 @@ class AdminPengelolaanIkanController extends Controller
         $ikanMasuk->delete();
     
         // Redirect atau berikan respons sesuai kebutuhan Anda
-        return redirect()->route('Admin.PengelolaanIkan.index')->with('success', 'Incoming fish data has been successfully deleted.');
+        return redirect()->route('admin.pengelolaanIkan.index')->with('success', 'Incoming fish data has been successfully deleted.');
     }
 
     public function deleteIkanKeluar($id)
@@ -245,7 +247,7 @@ class AdminPengelolaanIkanController extends Controller
         $ikanKeluar->delete();
     
         // Redirect atau berikan respons sesuai kebutuhan Anda
-        return redirect()->route('Admin.PengelolaanIkan.index')->with('success', 'Outcoming fish data has been successfully deleted.');
+        return redirect()->route('admin.pengelolaanIkan.index')->with('success', 'Outcoming fish data has been successfully deleted.');
     }
 
     public function deleteJenisIkan($id)
@@ -263,7 +265,7 @@ class AdminPengelolaanIkanController extends Controller
         Schema::enableForeignKeyConstraints();
     
         // Redirect atau berikan respons sesuai kebutuhan Anda
-        return redirect()->route('Admin.PengelolaanIkan.index')->with('success', 'Fish type data has been successfully deleted.');
+        return redirect()->route('admin.pengelolaanIkan.index')->with('success', 'Fish type data has been successfully deleted.');
     }
     
 }

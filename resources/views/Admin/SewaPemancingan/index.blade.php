@@ -30,6 +30,41 @@
 @endif
 
 <div class="container-fluid py-4">
+    {{-- tambahkan section untuk update harga sewa spot pemancingan --}}
+    {{-- Section for updating rental price --}}
+<div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header pb-0">
+          <h4 class="font-weight-bolder mb-0">Update Fishing Spot Rental Price</h4>
+        </div>
+        <div class="card-body">
+          {{-- <form action="{{ route('admin.spots.updatePrices') }}" method="POST"> --}}
+          <form action="#" method="POST">
+            @csrf
+            <div class="form-group">
+              <label for="spot">Select Spot</label>
+              <select id="spot" name="spot_id" class="form-control" required>
+                <option value="">Select Spot</option>
+                @foreach($spots as $spot)
+                  <option value="{{ $spot->id }}">{{ $spot->nomor_spot }}</option>
+                @endforeach
+              </select>
+            </div>
+            <div class="form-group mt-3">
+              <label for="newPrice">New Rental Price</label>
+              <input type="number" id="newPrice" name="rental_price" class="form-control" placeholder="Enter new rental price" required>
+            </div>
+            <div class="form-group mt-3">
+              <button type="submit" class="btn btn-primary">Update Price</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
     <div class="row">
       <div class="col-12">
         <div class="card">

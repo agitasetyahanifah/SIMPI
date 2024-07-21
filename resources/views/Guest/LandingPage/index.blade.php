@@ -500,7 +500,7 @@
   <script src="../assets/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
 
     {{-- Javascrip Chart Cuaca --}}
-    <script>
+    {{-- <script>
       const ctx = document.getElementById('weatherChart').getContext('2d');
       const weatherChart = new Chart(ctx, {
           type: 'line',
@@ -552,8 +552,117 @@
       }
   
       fetchWeatherDataForChart();
+    </script> --}}
+
+    <script>
+      const ctx = document.getElementById('weatherChart').getContext('2d');
+      const weatherChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+              labels: [], // Labels akan diisi dengan jam dari data OpenWeatherMap
+              datasets: [{
+                  label: 'Temperature (°C)',
+                  data: [], // Data akan diisi dengan suhu pada jam tertentu dari data OpenWeatherMap
+                  backgroundColor: 'rgba(255, 204, 0, 0.2)',
+                  borderColor: 'rgba(255, 204, 0, 1)',
+                  borderWidth: 2,
+                  fill: true,
+              }]
+          },
+          options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                  x: {
+                      title: {
+                          display: true,
+                          text: 'Time (Hours)'
+                      },
+                      ticks: {
+                          callback: function(value, index, values) {
+                              const date = new Date(weatherChart.data.labels[index]);
+                              return `${date.getHours()}:00`;
+                          }
+                      }
+                  },
+                  y: {
+                      title: {
+                          display: true,
+                          text: 'Temperature (°C)'
+                      },
+                      beginAtZero: false
+                  }
+              },
+              plugins: {
+                  tooltip: {
+                      callbacks: {
+                          title: function(tooltipItems) {
+                              const date = new Date(tooltipItems[0].label);
+                              return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:00`;
+                          },
+                          label: function(tooltipItem) {
+                              return `Temperature: ${tooltipItem.raw}°C`;
+                          }
+                      }
+                  }
+              }
+          }
+      });
+    
+      async function fetchWeatherDataForChart() {
+          try {
+              const apiKey = "8f6451a388d8d187d4edddbb1a50ca3a";
+              const city = "malangjiwan";
+              const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
+    
+              const response = await fetch(apiUrl);
+              const data = await response.json();
+              console.log(data);
+    
+              // Filter data untuk hanya mengambil entri dengan jam dari 01:00 hingga 23:00
+              const filteredData = data.list.filter(item => {
+                  const date = new Date(item.dt * 1000);
+                  return date.getHours() >= 1 && date.getHours() <= 23;
+              });
+    
+              // Kelompokkan data berdasarkan tanggal untuk memastikan mulai dari jam 01:00 setiap hari
+              const groupedData = {};
+              filteredData.forEach(item => {
+                  const date = new Date(item.dt * 1000);
+                  const key = date.toISOString().split('T')[0]; // Bagian tanggal saja
+                  if (!groupedData[key]) {
+                      groupedData[key] = [];
+                  }
+                  groupedData[key].push(item);
+              });
+    
+              // Rata-rata data sambil menjaga urutan dan memastikan dimulai dari jam 01:00
+              const chartLabels = [];
+              const chartData = [];
+              for (const date in groupedData) {
+                  // Pastikan mulai dari jam 01:00 dan sertakan semua data per jam
+                  groupedData[date].sort((a, b) => a.dt - b.dt); // Urutkan data berdasarkan timestamp
+                  groupedData[date].forEach(item => {
+                      const dateObj = new Date(item.dt * 1000);
+                      if (dateObj.getHours() >= 1 && dateObj.getHours() <= 23) { // Pastikan berada dalam rentang waktu
+                          chartLabels.push(dateObj.toISOString()); // Simpan tanggal lengkap untuk tooltip
+                          chartData.push(item.main.temp);
+                      }
+                  });
+              }
+    
+              weatherChart.data.labels = chartLabels;
+              weatherChart.data.datasets[0].data = chartData;
+              weatherChart.update();
+          } catch (error) {
+              console.error('Gagal mengambil data cuaca untuk grafik:', error);
+          }
+      }
+    
+      fetchWeatherDataForChart();
     </script>
-  
+       
+
     <!-- Script JavaScript untuk mendapatkan data cuaca dari OpenWeatherMap -->
     <script>
       const apiKey = "8f6451a388d8d187d4edddbb1a50ca3a";

@@ -34,15 +34,26 @@ class AdminAlatPancingController extends Controller
      */
     public function store(Request $request)
     {
+        //Custom pesan error jika nama alat sama
+        $messages = [
+            'nama_alat.unique' => 'The name of the fishing equipment already exists.',
+        ];
+
         // Validasi data yang diterima dari request
         $request->validate([
             'foto' => 'required|image|mimes:jpeg,png,jpg,gif|max:10048',
-            'nama_alat' => 'required|string',
+            'nama_alat' => 'required|string|unique:alat_pancing,nama_alat',
             'harga' => 'required|numeric',
             'jumlah' => 'required|numeric',
             'status' => 'required|string|in:available,not available',
             'spesifikasi' => 'nullable|string',
-        ]);
+        ], $messages);
+
+
+        // Cek manual apakah nama_alat sudah ada
+        if (AlatPancing::where('nama_alat', $request->nama_alat)->exists()) {
+            return redirect()->back()->withErrors(['nama_alat' => 'The name of the fishing equipment already exists.']);
+        }
 
         // Menyimpan foto ke dalam direktori public/images
         $fotoFileName = time() . '_' . $request->file('foto')->getClientOriginalName();
@@ -81,18 +92,28 @@ class AdminAlatPancingController extends Controller
 
     public function update(Request $request, $id)
     {
+        // Custom pesan error jika nama sama
+        $messages = [
+            'nama_alat.unique' => 'The name of the fishing equipment already exists.',
+        ];
+
         // Validasi data yang dikirim dari form
         $request->validate([
-            'nama_alat' => 'required|string',
+            'nama_alat' => 'required|string|unique:alat_pancing,nama_alat,' . $id,
             'harga' => 'required|numeric',
             'jumlah' => 'required|numeric',
             'status' => 'required|in:available,not available',
             'spesifikasi' => 'nullable|string',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10048' // Validasi untuk foto hanya jika ada file yang diupload
-        ]);
+        ], $messages);
     
         // Cari data alat pancing berdasarkan ID
         $alatPancing = AlatPancing::findOrFail($id);
+
+
+        if (AlatPancing::where('nama_alat', $request->nama_alat)->where('id', '!=', $id)->exists()) {
+            return redirect()->back()->with('error', 'The name of the fishing equipment already exists.');
+        }
     
         // Simpan data saat ini untuk membandingkan perubahan
         $currentData = [
