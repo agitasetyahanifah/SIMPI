@@ -36,4 +36,18 @@ class SewaSpot extends Model
         return $this->belongsTo(Spot::class);
     }
 
+    public function updateSesiSewaSpot()
+    {
+        return $this->belongsTo(UpdateSesiSewaSpot::class, 'sesi_id');
+    }
+
+    public function updateHargaSewaSpot()
+    {
+        return $this->belongsTo(UpdateHargaSewaSpot::class, 'harga_id');
+    }
+
+    public function keuangans()
+    {
+        return $this->hasMany(Keuangan::class, 'sewa_spot_id');
+    }
 }

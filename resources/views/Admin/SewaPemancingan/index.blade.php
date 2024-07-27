@@ -18,6 +18,13 @@
     </div>
 @endif
 
+@if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ session('error') }}
+        <button class="btn-close text-dark" type="button" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>    
+    </div>
+@endif
+
 @if ($errors->any())
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <ul>
@@ -30,41 +37,256 @@
 @endif
 
 <div class="container-fluid py-4">
-    {{-- tambahkan section untuk update harga sewa spot pemancingan --}}
-    {{-- Section for updating rental price --}}
-<div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header pb-0">
-          <h4 class="font-weight-bolder mb-0">Update Fishing Spot Rental Price</h4>
-        </div>
-        <div class="card-body">
-          {{-- <form action="{{ route('admin.spots.updatePrices') }}" method="POST"> --}}
-          <form action="#" method="POST">
-            @csrf
-            <div class="form-group">
-              <label for="spot">Select Spot</label>
-              <select id="spot" name="spot_id" class="form-control" required>
-                <option value="">Select Spot</option>
-                @foreach($spots as $spot)
-                  <option value="{{ $spot->id }}">{{ $spot->nomor_spot }}</option>
-                @endforeach
-              </select>
-            </div>
-            <div class="form-group mt-3">
-              <label for="newPrice">New Rental Price</label>
-              <input type="number" id="newPrice" name="rental_price" class="form-control" placeholder="Enter new rental price" required>
-            </div>
-            <div class="form-group mt-3">
-              <button type="submit" class="btn btn-primary">Update Price</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+    {{-- Update harga sewa spot --}}
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header pb-0">
+                    <h4 class="font-weight-bolder mb-0">Update Fishing Spot Reservation Price</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Price for Member -->
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-success">
+                                <div class="card-header bg-success text-white">
+                                    Member Price
+                                </div>
+                                <div class="card-body d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="card-title">Rp <span id="memberPrice">{{ number_format($hargaMember, 0, ',', '.') }} ,-</span></h5>
+                                        <p class="card-text">The price for members.</p>
+                                    </div>
+                                    <a href="#" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#updatePriceModal">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
 
-  
+                        <!-- Update Price Modal Member -->
+                        <div class="modal fade" id="updatePriceModal" tabindex="-1" aria-labelledby="updatePriceModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="updatePriceModalLabel">Update Member Price</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form method="POST" action="{{ route('admin.sewapemancingan.updateHargaSpot') }}">
+                                        @csrf
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label for="newPrice" class="form-label">New Price</label>
+                                                <input type="number" class="form-control" id="newPrice" name="price" required>
+                                            </div>
+                                            <input type="hidden" name="price_type" value="member">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Price for Non-Member -->
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-danger">
+                                <div class="card-header bg-danger text-white">
+                                    Non-Member Price
+                                </div>
+                                <div class="card-body d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="card-title">Rp <span id="nonMemberPrice">{{ number_format($hargaNonMember, 0, ',', '.') }} ,-</span></h5>
+                                        <p class="card-text">The price for non-members.</p>
+                                    </div>
+                                    <a href="#" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#updatePriceNonMemberModal">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal Update Price for Non-Member -->
+                        <div class="modal fade" id="updatePriceNonMemberModal" tabindex="-1" aria-labelledby="updatePriceNonMemberModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="updatePriceNonMemberModalLabel">Update Non-Member Price</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form method="POST" action="{{ route('admin.sewapemancingan.updateHargaSpot') }}">
+                                        @csrf
+                                        <div class="modal-body">
+                                            <div class="mb-3">
+                                                <label for="newNonMemberPrice" class="form-label">New Price</label>
+                                                <input type="number" class="form-control" id="newNonMemberPrice" name="price" required>
+                                            </div>
+                                            <input type="hidden" name="price_type" value="non member">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>            
+        </div>
+    </div>
+
+    {{-- Update sesi sewa spot --}}
+    <div class="row mb-3">
+        <div class="col-12">
+        <div class="card">
+            <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+                <h4 class="font-weight-bolder mb-0">Update Fishing Spot Reservation Session</h4>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal">
+                    <i class="fas fa-plus"></i> Add
+                </button>
+
+                <!-- Modal Add Session -->
+                <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addModalLabel">Add New Session</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{ route('admin.sewaPemancingan.sessionsStore') }}" method="POST">
+                                    @csrf
+                                    <div class="row mb-3">
+                                        <div class="col-md-6">
+                                            <label for="startTime" class="form-label">Start Time</label>
+                                            <input type="time" class="form-control" name="start_time">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="endTime" class="form-label">End Time</label>
+                                            <input type="time" class="form-control" name="end_time">
+                                        </div>
+                                        <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                @if($sesiSpot->isEmpty())
+                <div class="alert alert-warning" role="alert">
+                    No sessions available.
+                </div>
+                @else
+                    @foreach($sesiSpot as $session)
+                        <form class="d-flex align-items-center" method="POST" action="{{ route('sewaPemancingan.index') }}">
+                            @csrf
+                            <div id="form-container" class="row w-100 g-3">
+                                <div class="col-md-3">
+                                    <label for="startTime" class="form-label">Start Time</label>
+                                    <input type="time" class="form-control" name="start_time" value="{{ $session->waktu_mulai }}" readonly>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="endTime" class="form-label">End Time</label>
+                                    <input type="time" class="form-control" name="end_time" value="{{ $session->waktu_selesai }}" readonly>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="sessionTime" class="form-label">Session Time</label>
+                                    <input type="text" class="form-control" name="session_time" value="{{ $session->waktu_sesi }}" readonly disabled>
+                                </div>
+                                <div class="col-md-3 d-flex justify-content-end">
+                                    <!-- Update Button -->
+                                    <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#updateModal{{ $session->id }}">
+                                        <i class="fas fa-pen"></i>
+                                    </button>
+            
+                                    <!-- Delete Button -->
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $session->id }}">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    @endforeach
+                @endif
+            </div>         
+        </div>
+        </div>
+    </div>
+
+    <!-- Modal Update Sesi -->
+    @foreach($sesiSpot as $session)
+    <div class="modal fade" id="updateModal{{ $session->id }}" tabindex="-1" aria-labelledby="updateModalLabel{{ $session->id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateModalLabel{{ $session->id }}">Update Session</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ route('admin.sewaPemancingan.sessionsUpdate', $session->id) }}">
+                        @csrf
+                        @method('PUT')
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="startTime{{ $session->id }}" class="form-label">Start Time</label>
+                                {{-- <input type="time" class="form-control" id="startTime{{ $session->id }}" name="start_time" value="{{ $session->waktu_mulai }}" required> --}}
+                                <input type="time" class="form-control" id="startTime{{ $session->id }}" name="start_time" value="{{ \Carbon\Carbon::parse($session->waktu_mulai)->format('H:i') }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="endTime{{ $session->id }}" class="form-label">End Time</label>
+                                {{-- <input type="time" class="form-control" id="endTime{{ $session->id }}" name="end_time" value="{{ $session->waktu_selesai }}" required> --}}
+                                <input type="time" class="form-control" id="endTime{{ $session->id }}" name="end_time" value="{{ \Carbon\Carbon::parse($session->waktu_selesai)->format('H:i') }}" required>
+                            </div>
+                            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
+
+    <!-- Delete Modal -->
+    @foreach($sesiSpot as $session)
+    <div class="modal fade" id="deleteModal{{ $session->id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ $session->id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel{{ $session->id }}">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this session?
+                </div>
+                <div class="modal-footer">
+                    <form method="POST" action="{{ route('admin.sewaPemancingan.sessionsDelete', $session->id) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endforeach
+
+    {{-- Sewa Spot Manajemen --}}
     <div class="row">
       <div class="col-12">
         <div class="card">
@@ -152,11 +374,11 @@
                                         </tr>
                                         <tr>
                                             <th>Session</th>
-                                            <td>{{ $pemancingan->sesi }}</td>
+                                            <td>{{ $pemancingan->updateSesiSewaSpot->waktu_sesi }}</td>
                                         </tr>
                                         <tr>
                                             <th>Reservation Fee</th>
-                                            <td>Rp {{ number_format($pemancingan->biaya_sewa, 0, ',', '.') }}</td>
+                                            <td>Rp {{ number_format($pemancingan->UpdateHargaSewaSpot->harga, 0, ',', '.') }} ,-</td>
                                         </tr>
                                         <tr>
                                             <th>Payment Status</th>
@@ -237,20 +459,23 @@
                             @csrf
                             @method('PUT')
                             <div class="modal-body">
-                                <p class="me-3" style="font-size: 18pt"><b>Booking Code Booking: {{ $pemancingan->kode_booking }}</b></p>
+                                <p class="me-3" style="font-size: 18pt"><b>Booking Code: {{ $pemancingan->kode_booking }}</b></p>
                                 <div class="form-group mb-3">
                                     <label for="edit_nama_pelanggan">Customer Name</label>
                                     <input type="text" class="form-control" id="edit_nama_pelanggan" name="edit_nama_pelanggan" value="{{ $pemancingan->member->nama }}" disabled>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="edit_tanggal_sewa">Booking Date</label>
-                                    <input type="date" class="form-control" id="edit_tanggal_sewa_{{ $pemancingan->id }}" name="edit_tanggal_sewa" value="{{ $pemancingan->tanggal_sewa }}" min="{{ date('Y-m-d') }}" required>
+                                    <input type="date" class="form-control dynamic-spot" id="edit_tanggal_sewa_{{ $pemancingan->id }}" name="edit_tanggal_sewa" value="{{ $pemancingan->tanggal_sewa }}" min="{{ date('Y-m-d') }}" data-id="{{ $pemancingan->id }}" required>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="edit_sesi">Session</label>
-                                    <select class="form-control" id="edit_sesi_{{ $pemancingan->id }}" name="edit_sesi" required>
-                                        <option value="08.00-12.00" {{ $pemancingan->sesi == '08.00-12.00' ? 'selected' : '' }}>08.00-12.00</option>
-                                        <option value="13.00-17.00" {{ $pemancingan->sesi == '13.00-17.00' ? 'selected' : '' }}>13.00-17.00</option>
+                                    <select class="form-control dynamic-spot" id="edit_sesi_{{ $pemancingan->id }}" name="edit_sesi" data-id="{{ $pemancingan->id }}" required>
+                                        @foreach($sesiSpot as $sesi)
+                                            <option value="{{ $sesi->id }}" {{ $pemancingan->sesi_id == $sesi->id ? 'selected' : '' }}>
+                                                {{ $sesi->waktu_sesi }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group mb-3">
@@ -258,7 +483,8 @@
                                     <select class="form-control" id="edit_nomor_spot_{{ $pemancingan->id }}" name="edit_nomor_spot" required>
                                         @foreach($spots as $spot)
                                             @php
-                                                $availableSessions = $spot->getAvailableSessions($pemancingan->tanggal_sewa, $pemancingan->sesi);
+                                                // Mendapatkan sesi yang tersedia untuk spot ini pada tanggal yang ditentukan
+                                                $availableSessions = $spot->getAvailableSessions($pemancingan->tanggal_sewa, $pemancingan->sesi_id);
                                             @endphp
                                             @if(count($availableSessions) > 0 || $spot->id == $pemancingan->spot->id)
                                                 <option value="{{ $spot->id }}" {{ $spot->id == $pemancingan->spot->id ? 'selected' : '' }}>
@@ -267,7 +493,7 @@
                                             @endif
                                         @endforeach
                                     </select>
-                                </div>
+                                </div>                    
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -330,6 +556,7 @@
         </div>
       </div>
     </div>
+
 </div>
 </div>
 
@@ -369,7 +596,7 @@
 </script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
+{{-- <script>
     $(document).ready(function() {
         function updateAvailableSpots(id) {
             const tanggalSewa = $(`#edit_tanggal_sewa_${id}`).val();
@@ -413,7 +640,7 @@
             updateAvailableSpots(id);
         });
     });
-</script>
+</script> --}}
 
 {{-- Script untuk Search --}}
 <script>
@@ -432,6 +659,41 @@
             } else {
                 row.style.display = 'none';
             }
+        });
+    });
+</script>
+
+{{-- Javascript untuk ambil nomor spot yang tersedia berdasarkan tanggal dan sesi --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.dynamic-spot').forEach(function(element) {
+            element.addEventListener('change', function() {
+                let id = this.getAttribute('data-id');
+                let tanggalSewa = document.getElementById('edit_tanggal_sewa_' + id).value;
+                let sesiId = document.getElementById('edit_sesi_' + id).value;
+                let currentSpotId = document.getElementById('edit_nomor_spot_' + id).value;
+
+                if (tanggalSewa && sesiId) {
+                    fetch(`/admin/sewapemancingan/getAvailableSpots?tanggal_sewa=${tanggalSewa}&sesi_id=${sesiId}&current_spot_id=${currentSpotId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            let spotSelect = document.getElementById('edit_nomor_spot_' + id);
+                            spotSelect.innerHTML = '';
+
+                            data.jsonSpots.forEach(spot => {
+                                let option = document.createElement('option');
+                                option.value = spot.id;
+                                option.textContent = spot.nomor_spot;
+
+                                if (spot.id == currentSpotId) {
+                                    option.selected = true;
+                                }
+
+                                spotSelect.appendChild(option);
+                            });
+                        });
+                }
+            });
         });
     });
 </script>

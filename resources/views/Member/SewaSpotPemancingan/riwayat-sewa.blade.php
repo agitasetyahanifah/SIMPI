@@ -77,7 +77,7 @@
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-md-2"><strong>Session</strong></div>
-                                    <div class="col-md-10">{{ $sewa->sesi }}</div>
+                                    <div class="col-md-10">{{ $sewa->updateSesiSewaSpot->waktu_sesi }}</div>
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-md-2"><strong>Payment Status</strong></div>
@@ -193,11 +193,11 @@
                                                             </tr>
                                                             <tr>
                                                                 <th>Session</th>
-                                                                <td>{{ $sewa->sesi }}</td>
+                                                                <td>{{ $sewa->updateSesiSewaSpot->waktu_sesi }}</td>
                                                             </tr>
                                                             <tr>
                                                                 <th>Reservation Fee</th>
-                                                                <td>Rp {{ number_format($sewa->biaya_sewa, 0, ',', '.') }} ,-</td>
+                                                                <td>Rp {{ number_format($sewa->updateHargaSewaSpot->harga ?? 0, 0, ',', '.') }} ,-</td>
                                                             </tr>
                                                             <tr>
                                                                 <th>Payment Status</th>

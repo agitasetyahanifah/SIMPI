@@ -16,14 +16,17 @@ return new class extends Migration
             $table->string('kode_booking')->unique();
             $table->unsignedBigInteger('user_id');
             $table->date('tanggal_sewa');
-            $table->enum('sesi', ['08.00-12.00', '13.00-17.00']);
             $table->unsignedBigInteger('spot_id');
-            $table->integer('biaya_sewa')->nullable();
             $table->enum('status', ['sudah dibayar', 'menunggu pembayaran', 'dibatalkan'])->default('menunggu pembayaran');
+            $table->unsignedBigInteger('sesi_id');
+            $table->unsignedBigInteger('harga_id');
             $table->timestamps();
 
+            // Foreign key constraints
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('spot_id')->references('id')->on('spots')->onDelete('cascade');
+            $table->foreign('sesi_id')->references('id')->on('update_sesi_sewa_spots')->onDelete('cascade');
+            $table->foreign('harga_id')->references('id')->on('update_harga_sewa_spots')->onDelete('cascade');
         });
     }
 
@@ -32,6 +35,14 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('sewa_spots', function (Blueprint $table) {
+            // Drop foreign key constraints before dropping the columns
+            $table->dropForeign(['user_id']);
+            $table->dropForeign(['spot_id']);
+            $table->dropForeign(['sesi_id']);
+            $table->dropForeign(['harga_id']);
+        });
+
         Schema::dropIfExists('sewa_spots');
     }
 };

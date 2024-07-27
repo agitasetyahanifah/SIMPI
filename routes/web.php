@@ -101,8 +101,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('/admin/members', AdminMemberController::class);
     // Rute Booking Tempat Pemancingan
     Route::resource('/admin/sewaPemancingan', AdminSewaPemancinganController::class);
+    Route::post('/admin/sewaPemancingan/updateHargaSewaSpot', [AdminSewaPemancinganController::class, 'updateHargaSpot'])->name('admin.sewapemancingan.updateHargaSpot');
     Route::get('/admin/sewapemancingan/getAvailableSpots', [AdminSewaPemancinganController::class, 'getAvailableSpotsJson'])->name('admin.sewapemancingan.getAvailableSpotsJson');
     Route::post('/admin/sewaPemancingan/konfirmasi-pembayaran/{id}', [AdminSewaPemancinganController::class, 'konfirmasiPembayaran'])->name('admin.sewaPemancingan.konfirmasiPembayaran');
+    Route::post('/admin/sewaPemancingan/sessions', [AdminSewaPemancinganController::class, 'storeSesiSpot'])->name('admin.sewaPemancingan.sessionsStore');
+    Route::put('admin/sewaPemancingan/sessions/{id}', [AdminSewaPemancinganController::class, 'updateSesiSpot'])->name('admin.sewaPemancingan.sessionsUpdate');
+    Route::delete('/admin/sewaPemancingan/sessions/{id}', [AdminSewaPemancinganController::class, 'deleteSesiSpot'])->name('admin.sewaPemancingan.sessionsDelete');
 });
 
 
@@ -122,7 +126,10 @@ Route::middleware(['auth', 'member'])->group(function () {
     Route::get('/member/sewaPemancingan/spots/riwayatSewa', [MemberSewaSpotController::class, 'riwayatSewa'])->name('member.spots.riwayat-sewa');
     Route::delete('/member/sewaPemancingan/spots/cancel/{sewaSpot}', [MemberSewaSpotController::class, 'cancelOrder'])->name('member.spots.cancel');
     Route::post('/member/sewaPemancingan/sposts/auto-cancel/{id}', [MemberSewaSpotController::class, 'autoCancel'])->name('member.spots.autoCancel');
-    Route::get('/cek-ketersediaan', [MemberSewaSpotController::class, 'cekKetersediaan']);
+    // Route::get('/cek-ketersediaan', [MemberSewaSpotController::class, 'cekKetersediaan']);
+    // Route::get('/check-availability', [MemberSewaSpotController::class, 'checkAvailability']);
+    Route::get('/cek-ketersediaan', [MemberSewaSpotController::class, 'checkAvailability']);
+
     // Daftar Alat yang Disewakan Member
     Route::get('/member/daftarAlat', [MemberDaftarAlatController::class, 'index'])->name('member.daftar-alat.index');
     Route::post('/member/daftarAlat/sewaAlat', [MemberDaftarAlatController::class, 'store'])->name('member.sewa-alat');

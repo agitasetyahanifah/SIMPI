@@ -11,20 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('keuangan', function (Blueprint $table) {
+        Schema::create('update_sesi_sewa_spots', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_transaksi')->unique();
+            $table->string('waktu_mulai');
+            $table->string('waktu_selesai');
+            $table->string('waktu_sesi')->nullable();
             $table->unsignedBigInteger('user_id');
-            $table->date('tanggal_transaksi');
-            $table->time('waktu_transaksi');
-            $table->integer('jumlah');
-            $table->enum('jenis_transaksi', ['pemasukan', 'pengeluaran']);
-            $table->string('keterangan')->nullable();
+
             $table->timestamps();
-        
-            // Menambahkan foreign key constraint pada kolom user_id
+
+            // Foreign key constraint
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        });        
+        });
     }
 
     /**
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('keuangan');
+        Schema::dropIfExists('update_sesi_sewa_spots');
     }
 };

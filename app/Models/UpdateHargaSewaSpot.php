@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Keuangan extends Model
+class UpdateHargaSewaSpot extends Model
 {
     use HasFactory;
 
-    protected $table = 'keuangan';
+    protected $table = 'update_harga_sewa_spots';
 
     protected $guarded = ['id'];
 
-    public function sewaSpot()
+    public function user()
     {
-        return $this->belongsTo(SewaSpot::class, 'sewa_spot_id');
+        return $this->belongsTo(User::class);
     }
 }
