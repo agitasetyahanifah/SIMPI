@@ -172,16 +172,14 @@ class AdminSewaAlatController extends Controller
         $sewaAlat = SewaAlat::findOrFail($id);
     
         // Hapus transaksi keuangan terkait sewa alat ini
-        Keuangan::where('keterangan', 'like', '%Equipment Rental Payment by ' . $sewaAlat->member->nama . '%')
-            ->orWhere('keterangan', 'like', '%Fines for Late Return of Equipment by ' . $sewaAlat->member->nama . '%')
-            ->delete();
+        Keuangan::where('sewa_alat_id', $sewaAlat->id)->delete();
     
         // Hapus alat pancing dari database
         $sewaAlat->delete();
     
         // Redirect kembali ke halaman sewa pemancingan dengan pesan sukses
         return redirect()->back()->with('success', 'Fishing equipment rental data and associated financial records have been successfully deleted.');
-    }    
+    }       
 
     public function konfirmasiPembayaran($id, Request $request)
     {
@@ -200,6 +198,7 @@ class AdminSewaAlatController extends Controller
         $keuangan = new Keuangan();
         $keuangan->kode_transaksi = 'TRSA' . strtoupper(Str::random(10));
         $keuangan->user_id = Auth::id();
+        $keuangan->sewa_alat_id = $alat->id;
         $keuangan->tanggal_transaksi = Carbon::now()->toDateString();
         $keuangan->waktu_transaksi = Carbon::now()->toTimeString();
         $keuangan->jumlah = $alat->biaya_sewa;
@@ -237,6 +236,7 @@ class AdminSewaAlatController extends Controller
             $keuanganDenda = new Keuangan();
             $keuanganDenda->kode_transaksi = 'TRSA' . strtoupper(Str::random(10));
             $keuanganDenda->user_id = Auth::id();
+            $keuanganDenda->sewa_alat_id = $sewaAlat->id;
             $keuanganDenda->tanggal_transaksi = Carbon::now()->toDateString();
             $keuanganDenda->waktu_transaksi = Carbon::now()->toTimeString();
             $keuanganDenda->jumlah = $denda;

@@ -62,25 +62,6 @@ class Spot extends Model
     }
 
     // Dapatkan sesi yang tersedia pada tanggal sewa tertentu
-    // public function getAvailableSessions($tanggalSewa, $currentSesi = null)
-    // {
-    //     $bookedSessions = $this->sewaSpots()
-    //                            ->where('tanggal_sewa', $tanggalSewa)
-    //                            ->whereIn('status', ['menunggu pembayaran', 'sudah dibayar'])
-    //                            ->pluck('sesi_id')
-    //                            ->toArray();
-    
-    //     if ($currentSesi) {
-    //         $bookedSessions = array_diff($bookedSessions, [$currentSesi]);
-    //     }
-    
-    //     $allSessions = UpdateSesiSewaSpot::pluck('id')->toArray();
-    
-    //     $availableSessions = array_diff($allSessions, $bookedSessions);
-    
-    //     return $availableSessions;
-    // }
-
     public function getAvailableSessions($tanggalSewa, $currentSesi = null)
     {
         $bookedSessions = $this->sewaSpots()
