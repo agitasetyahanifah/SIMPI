@@ -112,6 +112,13 @@
       color: gray !important;
     }
 
+    .btn.disabled {
+        background-color: lightgray !important;
+        border-color: lightgray !important;
+        color: gray !important;
+        cursor: not-allowed;
+        }
+
   </style>
 
 </head>
@@ -126,6 +133,7 @@
       </div>
       <div class="mt-3 mb-4 d-flex justify-content-between align-items-center">
         <h2 class="font-weight-bolder mt-4 mb-3 mx-auto">Fishing Spot</h2>
+        {{-- <a href="{{ route('member.spots.riwayat-sewa') }}" class="btn btn-primary mb-3 mb-sm-0">Reservation History</a> --}}
       </div>      
       @if(session('success'))
           <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -133,7 +141,7 @@
               <button class="btn-close text-dark" type="button" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
           </div>
       @endif
-      
+
       @if ($errors->any())
           <div class="alert alert-danger alert-dismissible fade show" role="alert">
               <ul>
@@ -144,6 +152,7 @@
               <button class="btn-close text-dark" type="button" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>    
           </div>
       @endif
+      
       <div class="card-body p-6 mb-4">
           <div class="kolam">
             <h1 style="color: white;">Pool</h1>
@@ -151,72 +160,112 @@
 
             <!-- Bagian atas (1-15) dari kiri ke kanan -->
             @foreach ($spots->whereBetween('nomor_spot', ['01', '15']) as $spot)
-                @php
-                    $selectedDate = date('Y-m-d');
-                    $availableSesi = ['08.00-12.00', '13.00-17.00'];
-                    $spotBooked = $sewaSpots->has($spot->id) && $sewaSpots[$spot->id]->contains('tanggal_sewa', $selectedDate);
-                    $spotBookedSesi = $spotBooked ? $sewaSpots[$spot->id]->where('tanggal_sewa', $selectedDate)->pluck('sesi')->toArray() : [];
-                    $availableSesiCount = count(array_diff($availableSesi, $spotBookedSesi));
-                    $isSpotAvailable = $availableSesiCount > 0;
-                @endphp
-                <div id="spot-{{ $spot->id }}" class="spot top{{ !$isSpotAvailable ? ' disabled' : '' }}" 
-                    data-bs-toggle="modal" data-bs-target="{{ !$isSpotAvailable ? '' : '#spotModal' }}" 
-                    style="left: calc(({{ ltrim($spot->nomor_spot, '0') }} - 1) * 80px);">
-                    {{ $spot->nomor_spot }}
-                </div>
+            @php
+                $selectedDate = date('Y-m-d');
+                $spotSesi = $sewaSpots->where('spot_id', $spot->id)->where('tanggal_sewa', $selectedDate);
+                $spotBookedSesi = $spotSesi->pluck('sesi_id')->toArray();
+                $statusPembayaran = $spotSesi->pluck('status', 'sesi_id')->toArray();
+                
+                // Ambil semua sesi yang mungkin ada
+                $allSesi = \App\Models\UpdateSesiSewaSpot::pluck('id', 'waktu_sesi')->toArray();
+                $availableSesiIds = array_diff(array_keys($allSesi), $spotBookedSesi);
+
+                // Tampilkan spot jika ada sesi yang tersedia
+                $isSpotAvailable = count($availableSesiIds) > 0;
+            @endphp
+            <div id="spot-{{ $spot->id }}" class="spot top{{ !$isSpotAvailable ? ' disabled' : '' }}" 
+                data-bs-toggle="{{ !$isSpotAvailable ? '' : 'modal' }}" 
+                data-bs-target="{{ !$isSpotAvailable ? '' : '#spotModal' }}" 
+                data-spot-id="{{ $spot->id }}" 
+                data-status-pembayaran="{{ json_encode($statusPembayaran) }}"
+                data-available="{{ $isSpotAvailable ? 'true' : 'false' }}"
+                style="left: calc(({{ ltrim($spot->nomor_spot, '0') }} - 1) * 80px);">
+                {{ $spot->nomor_spot }}
+            </div>
             @endforeach
 
             <!-- Bagian kanan (16-20) dari atas ke bawah -->
             @foreach ($spots->whereBetween('nomor_spot', ['16', '20']) as $spot)
-                @php
-                    $availableSesi = ['08.00-12.00', '13.00-17.00'];
-                    $spotBooked = $sewaSpots->has($spot->id) && $sewaSpots[$spot->id]->contains('tanggal_sewa', $selectedDate);
-                    $spotBookedSesi = $spotBooked ? $sewaSpots[$spot->id]->where('tanggal_sewa', $selectedDate)->pluck('sesi')->toArray() : [];
-                    $availableSesiCount = count(array_diff($availableSesi, $spotBookedSesi));
-                    $isSpotAvailable = $availableSesiCount > 0;
-                @endphp
-                <div id="spot-{{ $spot->id }}" class="spot right{{ !$isSpotAvailable ? ' disabled' : '' }}" 
-                    data-bs-toggle="modal" data-bs-target="{{ !$isSpotAvailable ? '' : '#spotModal' }}" 
-                    style="top: calc(({{ ltrim($spot->nomor_spot, '0') }} - 16) * 80px);">
-                    {{ $spot->nomor_spot }}
-                </div>
+            @php
+                $selectedDate = date('Y-m-d');
+                $spotSesi = $sewaSpots->where('spot_id', $spot->id)->where('tanggal_sewa', $selectedDate);
+                $spotBookedSesi = $spotSesi->pluck('sesi_id')->toArray();
+                $statusPembayaran = $spotSesi->pluck('status', 'sesi_id')->toArray();
+                
+                // Ambil semua sesi yang mungkin ada
+                $allSesi = \App\Models\UpdateSesiSewaSpot::pluck('id', 'waktu_sesi')->toArray();
+                $availableSesiIds = array_diff(array_keys($allSesi), $spotBookedSesi);
+
+                // Tampilkan spot jika ada sesi yang tersedia
+                $isSpotAvailable = count($availableSesiIds) > 0;
+            @endphp
+            <div id="spot-{{ $spot->id }}" class="spot right{{ !$isSpotAvailable ? ' disabled' : '' }}" 
+                data-bs-toggle="{{ !$isSpotAvailable ? '' : 'modal' }}" 
+                data-bs-target="{{ !$isSpotAvailable ? '' : '#spotModal' }}" 
+                data-spot-id="{{ $spot->id }}" 
+                data-status-pembayaran="{{ json_encode($statusPembayaran) }}"
+                data-available="{{ $isSpotAvailable ? 'true' : 'false' }}"
+                style="top: calc(({{ ltrim($spot->nomor_spot, '0') }} - 16) * 80px);">
+                {{ $spot->nomor_spot }}
+            </div>
             @endforeach
 
             <!-- Bagian bawah (21-35) dari kanan ke kiri -->
             @foreach ($spots->whereBetween('nomor_spot', ['21', '35']) as $spot)
-                @php
-                    $availableSesi = ['08.00-12.00', '13.00-17.00'];
-                    $spotBooked = $sewaSpots->has($spot->id) && $sewaSpots[$spot->id]->contains('tanggal_sewa', $selectedDate);
-                    $spotBookedSesi = $spotBooked ? $sewaSpots[$spot->id]->where('tanggal_sewa', $selectedDate)->pluck('sesi')->toArray() : [];
-                    $availableSesiCount = count(array_diff($availableSesi, $spotBookedSesi));
-                    $isSpotAvailable = $availableSesiCount > 0;
-                @endphp
-                <div id="spot-{{ $spot->id }}" class="spot bottom{{ !$isSpotAvailable ? ' disabled' : '' }}" 
-                    data-bs-toggle="modal" data-bs-target="{{ !$isSpotAvailable ? '' : '#spotModal' }}" 
-                    style="left: calc((35 - {{ ltrim($spot->nomor_spot, '0') }}) * 80px);">
-                    {{ $spot->nomor_spot }}
-                </div>
+            @php
+                $selectedDate = date('Y-m-d');
+                $spotSesi = $sewaSpots->where('spot_id', $spot->id)->where('tanggal_sewa', $selectedDate);
+                $spotBookedSesi = $spotSesi->pluck('sesi_id')->toArray();
+                $statusPembayaran = $spotSesi->pluck('status', 'sesi_id')->toArray();
+                
+                // Ambil semua sesi yang mungkin ada
+                $allSesi = \App\Models\UpdateSesiSewaSpot::pluck('id', 'waktu_sesi')->toArray();
+                $availableSesiIds = array_diff(array_keys($allSesi), $spotBookedSesi);
+
+                // Tampilkan spot jika ada sesi yang tersedia
+                $isSpotAvailable = count($availableSesiIds) > 0;
+            @endphp
+            <div id="spot-{{ $spot->id }}" class="spot bottom{{ !$isSpotAvailable ? ' disabled' : '' }}" 
+                data-bs-toggle="{{ !$isSpotAvailable ? '' : 'modal' }}" 
+                data-bs-target="{{ !$isSpotAvailable ? '' : '#spotModal' }}" 
+                data-spot-id="{{ $spot->id }}" 
+                data-status-pembayaran="{{ json_encode($statusPembayaran) }}"
+                data-available="{{ $isSpotAvailable ? 'true' : 'false' }}"
+                style="left: calc((35 - {{ ltrim($spot->nomor_spot, '0') }}) * 80px);">
+                {{ $spot->nomor_spot }}
+            </div>
             @endforeach
 
             <!-- Bagian kiri (36-40) dari bawah ke atas -->
             @foreach ($spots->whereBetween('nomor_spot', ['36', '40']) as $spot)
-                @php
-                    $availableSesi = ['08.00-12.00', '13.00-17.00'];
-                    $spotBooked = $sewaSpots->has($spot->id) && $sewaSpots[$spot->id]->contains('tanggal_sewa', $selectedDate);
-                    $spotBookedSesi = $spotBooked ? $sewaSpots[$spot->id]->where('tanggal_sewa', $selectedDate)->pluck('sesi')->toArray() : [];
-                    $availableSesiCount = count(array_diff($availableSesi, $spotBookedSesi));
-                    $isSpotAvailable = $availableSesiCount > 0;
-                @endphp
-                <div id="spot-{{ $spot->id }}" class="spot left{{ !$isSpotAvailable ? ' disabled' : '' }}"
-                    data-bs-toggle="modal" data-bs-target="{{ !$isSpotAvailable ? '' : '#spotModal' }}" 
-                    style="top: calc((40 - {{ ltrim($spot->nomor_spot, '0') }}) * 80px);">
-                    {{ $spot->nomor_spot }}
-                </div>
+            @php
+                $selectedDate = date('Y-m-d');
+                $spotSesi = $sewaSpots->where('spot_id', $spot->id)->where('tanggal_sewa', $selectedDate);
+                $spotBookedSesi = $spotSesi->pluck('sesi_id')->toArray();
+                $statusPembayaran = $spotSesi->pluck('status', 'sesi_id')->toArray();
+                
+                // Ambil semua sesi yang mungkin ada
+                $allSesi = \App\Models\UpdateSesiSewaSpot::pluck('id', 'waktu_sesi')->toArray();
+                $availableSesiIds = array_diff(array_keys($allSesi), $spotBookedSesi);
+
+                // Tampilkan spot jika ada sesi yang tersedia
+                $isSpotAvailable = count($availableSesiIds) > 0;
+            @endphp
+            <div id="spot-{{ $spot->id }}" class="spot left{{ !$isSpotAvailable ? ' disabled' : '' }}"
+                data-bs-toggle="{{ !$isSpotAvailable ? '' : 'modal' }}" 
+                data-bs-target="{{ !$isSpotAvailable ? '' : '#spotModal' }}" 
+                data-spot-id="{{ $spot->id }}" 
+                data-status-pembayaran="{{ json_encode($statusPembayaran) }}"
+                data-available="{{ $isSpotAvailable ? 'true' : 'false' }}"
+                style="top: calc((40 - {{ ltrim($spot->nomor_spot, '0') }}) * 80px);">
+                {{ $spot->nomor_spot }}
+            </div>
             @endforeach
 
             </div>          
           </div>        
       </div>
+
     </div>
 
     <!-- Modal Sewa Spot Pemancingan -->
@@ -230,33 +279,41 @@
               <div class="modal-body">
                   <form id="sewaSpotForm">
                       @csrf
-                      <input type="hidden" name="spot_id" id="selectedSpotId" value="">
+
+                      <div class="text-center">
+                          <a class="btn btn-outline-primary" style="font-size: 18pt"><span id="selectedSpotNumber"></span></a>
+                      </div>
 
                       <div class="form-group">
-                        <label for="nama_pelanggan" class="col-form-label">Customer Name</label>
-                        <input type="text" class="form-control" id="nama_pelanggan" disabled>
+                          <label for="nama_pelanggan" class="col-form-label">Customer Name</label>
+                          <input type="text" class="form-control" id="nama_pelanggan" name="nama_pelanggan" disabled>
                       </div>                
                       <div class="form-group">
-                        <label for="tanggal_sewa" class="col-form-label">Booking Date</label>
-                        <input type="date" class="form-control" id="tanggal_sewa" value="{{ date('Y-m-d') }}" min="{{ date('Y-m-d') }}" required>
+                          <label for="tanggal_sewa" class="col-form-label">Booking Date</label>
+                          <input type="date" class="form-control" id="tanggal_sewa" name="tanggal_sewa" value="{{ date('Y-m-d') }}" min="{{ date('Y-m-d') }}" required>
                       </div>
-                      <div class="mb-3">
-                          <label for="sesi" class="form-label">Select Session:</label>
+                      <div class="form-group mb-0">
+                          <label for="sesi" class="col-form-label">Select Session:</label>
                           <div id="sesiButtons">
-                              <button type="button" class="btn btn-outline-primary sesi-button"
-                                  data-sesi="08.00-12.00">08.00-12.00</button>
-                              <button type="button" class="btn btn-outline-primary sesi-button"
-                                  data-sesi="13.00-17.00">13.00-17.00</button>
-                          </div>
-                          <input type="hidden" id="sesi" name="sesi" required>
-                      </div>
+                            @foreach ($sessions as $session)
+                                <button type="button" class="btn btn-outline-primary sesi-button" data-sesi-id="{{ $session->id }}">
+                                    {{ $session->waktu_sesi }}
+                                </button>
+                            @endforeach
+                        </div>                        
+                      </div>                                    
                       <div class="mb-3">
-                        <a><strong>Note: </strong>Fishing Spot Rental Fee for Each Session Rp. 10,000,-</a>
+                        <label for="harga_id_display" class="col-form-label">Price:</label>
+                        <input type="text" class="form-control" id="harga_id_display" name="harga_id_display" value="Rp {{ number_format($nonMemberPrice, 0, ',', '.') }},-" disabled>
+                        {{-- <input type="hidden" name="harga_id" id="harga_id" value="{{ $harga_id }}"> --}}
                       </div>
+
+                      <input type="hidden" name="spot_id" id="selectedSpotId" value="">
+                      <input type="hidden" name="sesi_id" id="sesi_id" value="" required>
 
                       <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                          <a class="btn btn-primary" href="{{ route('login') }}">Book</a>
+                          <a href="{{ route('login') }}" type="submit" class="btn btn-primary">Book</a>
                       </div>
                   </form>
               </div>
@@ -289,15 +346,142 @@
   <script src="{{ asset('assets/js/soft-ui-dashboard.min.js?v=1.0.7') }}"></script>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+
+  <script>
+    $(document).ready(function() {
+      $('.spot').click(function() {
+        var selectedSpot = $(this).text();
+        $('#selectedSpotNumber').text(selectedSpot);
+      });
+    });
+  </script>
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var selectedSpotId;
+      var editTanggalSewaInputs = document.querySelectorAll('.edit_tanggal_sewa');
+
+      editTanggalSewaInputs.forEach(function(input) {
+          input.addEventListener('change', function() {
+              var date = this.value;
+              var pemancinganId = this.dataset.pemancinganId;
+
+              var xhr = new XMLHttpRequest();
+              xhr.open('GET', '/api/available-spots?date=' + date + '&pemancingan_id=' + pemancinganId);
+              xhr.onload = function() {
+                  if (xhr.status === 200) {
+                      var response = JSON.parse(xhr.responseText);
+                      var spotSelect = document.querySelector('#edit_spot_id_' + pemancinganId);
+                      spotSelect.innerHTML = '';
+
+                      if (response.length > 0) {
+                          response.forEach(function(spot) {
+                              var option = document.createElement('option');
+                              option.value = spot.id;
+                              option.textContent = spot.nomor_spot;
+                              spotSelect.appendChild(option);
+                          });
+                      } else {
+                          var option = document.createElement('option');
+                          option.value = '';
+                          option.textContent = 'No spots available';
+                          spotSelect.appendChild(option);
+                      }
+                  } else {
+                      console.error('Request failed. Status: ' + xhr.status);
+                  }
+              };
+              xhr.send();
+          });
+      });
+
+      document.addEventListener('change', function(event) {
+          if (event.target.classList.contains('edit_spot_id')) {
+              var spotId = event.target.value;
+              var date = document.querySelector('#edit_tanggal_sewa_' + event.target.dataset.pemancinganId).value;
+              var pemancinganId = event.target.dataset.pemancinganId;
+
+              var xhr = new XMLHttpRequest();
+              xhr.open('GET', '/api/available-sessions?date=' + date + '&spot_id=' + spotId + '&pemancingan_id=' + pemancinganId);
+              xhr.onload = function() {
+                  if (xhr.status === 200) {
+                      var response = JSON.parse(xhr.responseText);
+                      var sessionSelect = document.querySelector('#edit_sesi_' + pemancinganId);
+                      sessionSelect.innerHTML = '';
+
+                      if (response.length > 0) {
+                          response.forEach(function(session) {
+                              var option = document.createElement('option');
+                              option.value = session;
+                              option.textContent = session;
+                              sessionSelect.appendChild(option);
+                          });
+                      } else {
+                          var option = document.createElement('option');
+                          option.value = '';
+                          option.textContent = 'No sessions available';
+                          sessionSelect.appendChild(option);
+                      }
+                  } else {
+                      console.error('Request failed. Status: ' + xhr.status);
+                  }
+              };
+              xhr.send();
+          }
+      });
+    });
+  </script>  
+
+  {{-- Javascript ambil spot id dan sesi id --}}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sesiButtons = document.querySelectorAll('#sesiButtons .btn');
+        const spotButtons = document.querySelectorAll('.spot:not(.disabled)'); // Select only enabled spot buttons
+        const sesiIdInput = document.getElementById('sesi_id');
+        const spotIdInput = document.getElementById('selectedSpotId');
+        const selectedSpotNumberElement = document.getElementById('selectedSpotNumber');
+  
+        // Handle sesi button click
+        sesiButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                sesiButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                const selectedSesiId = this.getAttribute('data-sesi-id');
+                sesiIdInput.value = selectedSesiId;
+            });
+        });
+  
+        // Handle spot button click
+        spotButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const selectedSpotId = this.getAttribute('data-spot-id');
+                spotIdInput.value = selectedSpotId;
+                selectedSpotNumberElement.textContent = this.textContent.trim();
+            });
+        });
+  
+        // Before submitting the form, ensure both sesi_id and spot_id are set
+        document.getElementById('sewaSpotForm').addEventListener('submit', function(event) {
+            if (!sesiIdInput.value || !spotIdInput.value) {
+                event.preventDefault();
+                alert('Please select both a session and a spot.');
+                return false;
+            }
+        });
+    });
+  </script>
+
+  {{-- Javascript menangani sesi id dan spot id yang sudah dipesan menjadi disabled --}}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let selectedSpotId = null;
     
         function updateSesiButtons(spotId, tanggalSewa) {
-            var sesiButtons = document.querySelectorAll('.sesi-button');
+            const sesiButtons = document.querySelectorAll('.sesi-button');
     
             // Reset tombol sesi
-            sesiButtons.forEach(function(button) {
+            sesiButtons.forEach(button => {
                 button.classList.remove('disabled');
                 button.disabled = false;
                 button.classList.remove('btn-primary');
@@ -306,17 +490,19 @@
     
             // AJAX request untuk mengecek ketersediaan sesi
             $.ajax({
-                url: '/cek-ketersediaan',
+                url: '/guest/cek-ketersediaan',
                 type: 'GET',
                 data: {
                     tanggal_sewa: tanggalSewa,
                     spot_id: spotId
                 },
                 success: function(data) {
-                    var bookedSesi = data.sesi_terpesan;
-                    sesiButtons.forEach(function(button) {
-                        var sesi = button.getAttribute('data-sesi');
-                        if (bookedSesi.includes(sesi)) {
+                    const { disabled_sesi, available_spots } = data;
+    
+                    // Menandai tombol sesi yang tidak tersedia
+                    sesiButtons.forEach(button => {
+                        const sesiId = $(button).data('sesi-id');
+                        if (disabled_sesi.includes(sesiId)) {
                             button.classList.add('disabled');
                             button.disabled = true;
                             button.classList.remove('btn-outline-primary');
@@ -326,36 +512,70 @@
                             button.disabled = false;
                         }
                     });
+    
+                    // Menandai spot yang tidak memiliki sesi yang tersedia
+                    document.querySelectorAll('.spot').forEach(spot => {
+                        const spotId = spot.getAttribute('data-spot-id');
+                        if (!available_spots.includes(parseInt(spotId, 10))) {
+                            spot.classList.add('disabled');
+                            spot.style.cursor = 'not-allowed';
+                            // Hapus event listener klik pada spot yang dinonaktifkan
+                            spot.removeEventListener('click', handleSpotClick);
+                        } else {
+                            spot.classList.remove('disabled');
+                            spot.style.cursor = 'pointer';
+                            // Tambahkan event listener klik kembali jika diperlukan
+                            spot.addEventListener('click', handleSpotClick);
+                        }
+                    });
                 }
             });
         }
     
-        document.querySelectorAll('.spot').forEach(function(spot) {
-            spot.addEventListener('click', function() {
-                if (spot.classList.contains('disabled')) {
-                    return;
-                }
-                selectedSpotId = spot.getAttribute('id').split('-')[1];
-                document.getElementById('selectedSpotId').value = selectedSpotId;
-                var selectedDate = document.getElementById('tanggal_sewa').value;
-                updateSesiButtons(selectedSpotId, selectedDate);
-            });
+        function handleSpotClick() {
+            if (this.classList.contains('disabled')) {
+                return;
+            }
+            selectedSpotId = this.getAttribute('data-spot-id');
+            document.getElementById('selectedSpotId').value = selectedSpotId;
+            const selectedDate = document.getElementById('tanggal_sewa').value;
+            updateSesiButtons(selectedSpotId, selectedDate);
+        }
+    
+        document.querySelectorAll('.spot').forEach(spot => {
+            // Nonaktifkan spot berdasarkan data-available saat halaman dimuat
+            if (spot.getAttribute('data-available') === 'false') {
+                spot.classList.add('disabled');
+                spot.style.cursor = 'not-allowed';
+                spot.removeEventListener('click', handleSpotClick);
+            } else {
+                spot.style.cursor = 'pointer';
+                spot.addEventListener('click', handleSpotClick);
+            }
         });
     
-        document.querySelectorAll('.sesi-button').forEach(function(button) {
+        document.querySelectorAll('.sesi-button').forEach(button => {
             button.addEventListener('click', function() {
                 if (button.classList.contains('disabled')) {
                     return;
                 }
-                var sesi = button.getAttribute('data-sesi');
-                document.querySelector('input[name="sesi"]').value = sesi;
+    
+                // Reset semua tombol sesi yang dipilih
+                document.querySelectorAll('.sesi-button').forEach(btn => {
+                    btn.classList.remove('btn-primary');
+                    btn.classList.add('btn-outline-primary');
+                });
+    
+                // Pilih tombol sesi yang diklik
+                const sesi = button.getAttribute('data-sesi-id');
+                document.querySelector('input[name="sesi_id"]').value = sesi;
                 button.classList.remove('btn-outline-primary');
                 button.classList.add('btn-primary');
             });
         });
     
         document.getElementById('tanggal_sewa').addEventListener('change', function() {
-            var selectedDate = this.value;
+            const selectedDate = this.value;
             if (selectedSpotId) {
                 updateSesiButtons(selectedSpotId, selectedDate);
             }
@@ -366,83 +586,15 @@
             selectedSpotId = null;
             document.getElementById('selectedSpotId').value = '';
         });
-    });
-  </script>
-
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    var editTanggalSewaInputs = document.querySelectorAll('.edit_tanggal_sewa');
-
-    editTanggalSewaInputs.forEach(function(input) {
-        input.addEventListener('change', function() {
-            var date = this.value;
-            var pemancinganId = this.dataset.pemancinganId;
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/api/available-spots?date=' + date + '&pemancingan_id=' + pemancinganId);
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    var spotSelect = document.querySelector('#edit_spot_id_' + pemancinganId);
-                    spotSelect.innerHTML = '';
-
-                    if (response.length > 0) {
-                        response.forEach(function(spot) {
-                            var option = document.createElement('option');
-                            option.value = spot.id;
-                            option.textContent = spot.nomor_spot;
-                            spotSelect.appendChild(option);
-                        });
-                    } else {
-                        var option = document.createElement('option');
-                        option.value = '';
-                        option.textContent = 'No spots available';
-                        spotSelect.appendChild(option);
-                    }
-                } else {
-                    console.error('Request failed. Status: ' + xhr.status);
-                }
-            };
-            xhr.send();
-        });
-    });
-
-    document.addEventListener('change', function(event) {
-        if (event.target.classList.contains('edit_spot_id')) {
-            var spotId = event.target.value;
-            var date = document.querySelector('#edit_tanggal_sewa_' + event.target.dataset.pemancinganId).value;
-            var pemancinganId = event.target.dataset.pemancinganId;
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/api/available-sessions?date=' + date + '&spot_id=' + spotId + '&pemancingan_id=' + pemancinganId);
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    var sessionSelect = document.querySelector('#edit_sesi_' + pemancinganId);
-                    sessionSelect.innerHTML = '';
-
-                    if (response.length > 0) {
-                        response.forEach(function(session) {
-                            var option = document.createElement('option');
-                            option.value = session;
-                            option.textContent = session;
-                            sessionSelect.appendChild(option);
-                        });
-                    } else {
-                        var option = document.createElement('option');
-                        option.value = '';
-                        option.textContent = 'No sessions available';
-                        sessionSelect.appendChild(option);
-                    }
-                } else {
-                    console.error('Request failed. Status: ' + xhr.status);
-                }
-            };
-            xhr.send();
+    
+        // Trigger the initial update to disable unavailable spots
+        const initialSpotId = document.querySelector('.spot:not(.disabled)')?.getAttribute('data-spot-id');
+        const initialDate = document.getElementById('tanggal_sewa')?.value || date('Y-m-d');
+        if (initialSpotId) {
+            updateSesiButtons(initialSpotId, initialDate);
         }
     });
-});
-  </script>
-  
+  </script>    
+ 
 </body>
 </html>

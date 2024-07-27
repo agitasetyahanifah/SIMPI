@@ -79,7 +79,7 @@ class Spot extends Model
         $availableSessions = array_diff($allSessions, $bookedSessions);
     
         return $availableSessions;
-    }    
+    }
 
     public function getUnavailableSessions($tanggalSewa)
     {

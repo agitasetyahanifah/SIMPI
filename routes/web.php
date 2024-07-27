@@ -154,6 +154,7 @@ Route::prefix('guest')->name('guest.')->group(function () {
     Route::get('/daftarAlat', [GuestDaftarAlatController::class, 'index'])->name('daftar-alat.index');
     // Sewa Spot Pemancingan
     Route::get('/spots', [GuestSpotController::class, 'index'])->name('spots.index');
+    Route::get('/cek-ketersediaan', [GuestSpotController::class, 'checkAvailability']);
 
 });
 
