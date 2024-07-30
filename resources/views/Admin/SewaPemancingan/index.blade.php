@@ -174,7 +174,7 @@
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Save</button>
+                                        <button type="submit" class="btn btn-primary">Add</button>
                                     </div>
                                 </form>
                             </div>
@@ -291,7 +291,183 @@
       <div class="col-12">
         <div class="card">
           <div class="card-header pb-0">
-            <h4 class="font-weight-bolder mb-0">Fishing Spot Reservation Management</h4>
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="font-weight-bolder mb-0">Fishing Spot Reservation Management</h4>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createReservationModal">
+                    <i class="fas fa-plus"></i> Create
+                </button>
+            </div>
+
+            <!-- The Modal Create Reservation Spot-->
+            <div class="modal fade" id="createReservationModal" tabindex="-1" aria-labelledby="createReservationModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createReservationModalLabel">Create Reservation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                            <div class="d-grid gap-2">
+                                <button type="button" class="btn btn-primary" id="createMemberReservationBtn" data-bs-toggle="modal" data-bs-target="#createMemberReservationModal">
+                                    <i class="fas fa-user"></i> Create Reservation Spot for Member
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="createNonMemberReservationBtn" data-bs-toggle="modal" data-bs-target="#createNonMemberReservationModal">
+                                    <i class="fas fa-user-slash"></i> Create Reservation Spot for Non-Member
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Modal Footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for Member -->
+            <div class="modal fade" id="createMemberReservationModal" tabindex="-1" aria-labelledby="createMemberReservationModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createMemberReservationModalLabel">Create Reservation for Member</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                            <form action="{{ route('admin.sewaPemancingan.save-member-reservation') }}" method="POST">
+                                @csrf
+                                <!-- Reservation Type -->
+                                <div class="form-group mb-3">
+                                    <label for="reservation_type_member">Reservation Type</label>
+                                    <input type="text" class="form-control" id="reservation_type_member" name="reservation_type" value="Member" disabled>
+                                </div>
+                                <!-- Customer Name -->
+                                <div class="form-group mb-3">
+                                    <label for="customer_name_member">Customer Name</label>
+                                    <select class="form-control" id="customer_name_member" name="customer_id" required style="color: #000;">
+                                        <option value="" disabled selected>Select a member</option>
+                                        @foreach($members as $member)
+                                            <option value="{{ $member->id }}">{{ $member->nama }}</option>
+                                        @endforeach
+                                    </select>                                    
+                                </div>
+                                <!-- Booking Date -->
+                                <div class="form-group mb-3">
+                                    <label for="booking_date_member">Booking Date</label>
+                                    <input type="date" class="form-control" id="booking_date_member" name="booking_date" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" required>
+                                </div>
+                                <!-- Session -->
+                                <div class="form-group mb-3">
+                                    <label for="session_member">Session</label>
+                                    <select class="form-control" id="session_member" name="session_id" required>
+                                        @foreach($sesiSpot as $session)
+                                            <option value="{{ $session->id }}">{{ $session->waktu_sesi }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <!-- Spot Number -->
+                                <div class="form-group mb-3">
+                                    <label for="spot_number_member">Spot Number</label>
+                                    <select class="form-control" id="spot_number_member" name="spot_id" required>
+                                        @foreach($spots as $spot)
+                                            @php
+                                                $availableSessions = $spot->getAvailableSessions($spot->id, $session->id);
+                                            @endphp
+                                            @if(count($availableSessions) > 0)
+                                                <option value="{{ $spot->id }}">{{ $spot->nomor_spot }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <!-- Price -->
+                                <div class="form-group mb-3">
+                                    <label for="price_member">Price</label>
+                                    <input type="text" class="form-control" id="harga_id_display" name="harga_id_display" value="Rp {{ number_format($memberPrice, 0, ',', '.') }},-" disabled>
+                                    <input type="hidden" name="price_id" id="price_id" value="{{ $harga_member_id }}">
+                                </div>
+                                <!-- Modal Footer -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Create</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal for Non-Member -->
+            <div class="modal fade" id="createNonMemberReservationModal" tabindex="-1" aria-labelledby="createNonMemberReservationModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="createNonMemberReservationModalLabel">Create Reservation for Non-Member</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <!-- Modal Body -->
+                        <div class="modal-body">
+                            <form action="{{ route('admin.sewaPemancingan.save-non-member-reservation') }}" method="POST">
+                                @csrf
+                                <!-- Reservation Type -->
+                                <div class="form-group mb-3">
+                                    <label for="reservation_type_non_member">Reservation Type</label>
+                                    <input type="text" class="form-control" id="reservation_type_non_member" name="reservation_type" value="Non-Member" disabled>
+                                </div>
+                                <!-- Customer Name -->
+                                <div class="form-group mb-3">
+                                    <label for="customer_name_non_member">Customer Name</label>
+                                    <input type="text" class="form-control" id="customer_name_non_member" name="customer_name" value="Non Member" disabled>
+                                    <input type="hidden" name="customer_id" value="null">
+                                </div>
+                                <!-- Booking Date -->
+                                <div class="form-group mb-3">
+                                    <label for="booking_date_non_member">Booking Date</label>
+                                    <input type="date" class="form-control" id="booking_date_non_member" name="booking_date" min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" required>
+                                </div>
+                                <!-- Session -->
+                                <div class="form-group mb-3">
+                                    <label for="session_non_member">Session</label>
+                                    <select class="form-control" id="session_non_member" name="session_id" required>
+                                        @foreach($sesiSpot as $session)
+                                            <option value="{{ $session->id }}">{{ $session->waktu_sesi }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <!-- Spot Number -->
+                                <div class="form-group mb-3">
+                                    <label for="spot_number_non_member">Spot Number</label>
+                                    <select class="form-control" id="spot_number_non_member" name="spot_id" required>
+                                        @foreach($spots as $spot)
+                                            @php
+                                                $availableSessions = $spot->getAvailableSessions($spot->id, $session->id);
+                                            @endphp
+                                            @if(count($availableSessions) > 0)
+                                                <option value="{{ $spot->id }}">{{ $spot->nomor_spot }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <!-- Price -->
+                                <div class="form-group mb-3">
+                                    <label for="price_member">Price</label>
+                                    <input type="text" class="form-control" id="harga_id_display" name="harga_id_display" value="Rp {{ number_format($nonMemberPrice, 0, ',', '.') }},-" disabled>
+                                    <input type="hidden" name="price_id" id="price_id" value="{{ $harga_nonmember_id }}">
+                                </div>
+                                <!-- Modal Footer -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Create</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="mt-3">                
                 <input type="text" id="searchInput" class="form-control" placeholder="Search...">
             </div>
@@ -317,7 +493,14 @@
                     <tr>
                         <td class="text-center">{{ $currentNumber++ }}</td>
                         <td>{{ $pemancingan->kode_booking }}</td>
-                        <td>{{ $pemancingan->member->nama }}</td>
+                        {{-- <td>{{ $pemancingan->member->nama }}</td> --}}
+                        <td>
+                            @if($pemancingan->user_id)
+                                {{ $pemancingan->member->nama }}
+                            @else
+                                Non Member
+                            @endif
+                        </td>                        
                         <td>{{ $pemancingan->tanggal_sewa }}</td>
                         <td class="align-middle text-center text-sm">
                             @if($pemancingan->status == 'sudah dibayar')
@@ -362,7 +545,14 @@
                                     <table class="table">
                                         <tr>
                                             <th style="width: 35%">Customer Name</th>
-                                            <td>{{ $pemancingan->member->nama }}</td>
+                                            {{-- <td>{{ $pemancingan->member->nama }}</td> --}}
+                                            <td>
+                                                @if($pemancingan->user_id)
+                                                    {{ $pemancingan->member->nama }}
+                                                @else
+                                                    Non Member
+                                                @endif
+                                            </td> 
                                         </tr>
                                         <tr>
                                             <th>Booking Date</th>
@@ -462,7 +652,8 @@
                                 <p class="me-3" style="font-size: 18pt"><b>Booking Code: {{ $pemancingan->kode_booking }}</b></p>
                                 <div class="form-group mb-3">
                                     <label for="edit_nama_pelanggan">Customer Name</label>
-                                    <input type="text" class="form-control" id="edit_nama_pelanggan" name="edit_nama_pelanggan" value="{{ $pemancingan->member->nama }}" disabled>
+                                    {{-- <input type="text" class="form-control" id="edit_nama_pelanggan" name="edit_nama_pelanggan" value="{{ $pemancingan->member->nama }}" disabled> --}}
+                                    <input type="text" class="form-control" id="edit_nama_pelanggan" name="edit_nama_pelanggan" value="{{ $pemancingan->user_id ? $pemancingan->member->nama : 'Non Member' }}" disabled>
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="edit_tanggal_sewa">Booking Date</label>
@@ -496,7 +687,7 @@
                                 </div>                    
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                 <button type="submit" class="btn btn-primary">Save</button>
                             </div>
                         </form>
@@ -596,51 +787,6 @@
 </script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-{{-- <script>
-    $(document).ready(function() {
-        function updateAvailableSpots(id) {
-            const tanggalSewa = $(`#edit_tanggal_sewa_${id}`).val();
-            const sesi = $(`#edit_sesi_${id}`).val();
-            const currentSpotId = $(`#edit_nomor_spot_${id}`).val();
-            const currentSesi = $(`#edit_sesi_${id} option:selected`).val();
-
-            $.ajax({
-                url: '{{ route("admin.sewapemancingan.getAvailableSpotsJson") }}',
-                type: 'GET',
-                data: {
-                    tanggal_sewa: tanggalSewa,
-                    sesi: sesi,
-                    current_spot_id: currentSpotId,
-                    current_sesi: currentSesi
-                },
-                success: function(response) {
-                    const availableSpots = response.jsonSpots;
-                    let options = '';
-
-                    availableSpots.forEach(function(spot) {
-                        options += `<option value="${spot.id}">${spot.nomor_spot}</option>`;
-                    });
-
-                    $(`#edit_nomor_spot_${id}`).html(options);
-                    $(`#edit_nomor_spot_${id}`).val(currentSpotId);
-                },
-                error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
-            });
-        }
-
-        $('[id^=edit_tanggal_sewa_], [id^=edit_sesi_]').change(function() {
-            const id = $(this).attr('id').split('_').pop();
-            updateAvailableSpots(id);
-        });
-
-        $('[id^=edit_tanggal_sewa_], [id^=edit_sesi_]').each(function() {
-            const id = $(this).attr('id').split('_').pop();
-            updateAvailableSpots(id);
-        });
-    });
-</script> --}}
 
 {{-- Script untuk Search --}}
 <script>
@@ -663,7 +809,7 @@
     });
 </script>
 
-{{-- Javascript untuk ambil nomor spot yang tersedia berdasarkan tanggal dan sesi --}}
+{{-- Javascript untuk ambil nomor spot yang tersedia berdasarkan tanggal dan sesi pada modal edit --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.dynamic-spot').forEach(function(element) {
@@ -697,5 +843,81 @@
         });
     });
 </script>
+
+<!-- Javascript untuk ambil nomor spot yang tersedia berdasarkan tanggal dan sesi pada modal create -->
+{{-- <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function updateAvailableSpots() {
+            let tanggalSewa = document.getElementById('create_tanggal_sewa').value;
+            let sesiId = document.getElementById('create_sesi').value;
+            let spotSelect = document.getElementById('create_nomor_spot');
+
+            if (tanggalSewa && sesiId) {
+                fetch(`/admin/sewapemancingan/getAvailableSpots?tanggal_sewa=${tanggalSewa}&sesi_id=${sesiId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        spotSelect.innerHTML = '';
+
+                        data.jsonSpots.forEach(spot => {
+                            let option = document.createElement('option');
+                            option.value = spot.id;
+                            option.textContent = spot.nomor_spot;
+
+                            spotSelect.appendChild(option);
+                        });
+                    });
+            }
+        }
+
+        document.getElementById('create_tanggal_sewa').addEventListener('change', updateAvailableSpots);
+        document.getElementById('create_sesi').addEventListener('change', updateAvailableSpots);
+    });
+</script> --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function updateAvailableSpots() {
+            let tanggalSewa, sesiId, spotSelect;
+
+            // Check which modal is open and get the correct elements
+            if (document.getElementById('createMemberReservationModal').classList.contains('show')) {
+                tanggalSewa = document.getElementById('booking_date_member').value;
+                sesiId = document.getElementById('session_member').value;
+                spotSelect = document.getElementById('spot_number_member');
+            } else if (document.getElementById('createNonMemberReservationModal').classList.contains('show')) {
+                tanggalSewa = document.getElementById('booking_date_non_member').value;
+                sesiId = document.getElementById('session_non_member').value;
+                spotSelect = document.getElementById('spot_number_non_member');
+            } else {
+                return; // No relevant modal is open
+            }
+
+            if (tanggalSewa && sesiId) {
+                fetch(`/admin/sewapemancingan/getAvailableSpots?tanggal_sewa=${tanggalSewa}&sesi_id=${sesiId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        spotSelect.innerHTML = '';
+
+                        data.jsonSpots.forEach(spot => {
+                            let option = document.createElement('option');
+                            option.value = spot.id;
+                            option.textContent = spot.nomor_spot;
+
+                            spotSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching available spots:', error);
+                    });
+            }
+        }
+
+        // Event listeners for the booking date and session change events
+        document.getElementById('booking_date_member')?.addEventListener('change', updateAvailableSpots);
+        document.getElementById('session_member')?.addEventListener('change', updateAvailableSpots);
+        document.getElementById('booking_date_non_member')?.addEventListener('change', updateAvailableSpots);
+        document.getElementById('session_non_member')?.addEventListener('change', updateAvailableSpots);
+    });
+</script>
+
 
 @endsection

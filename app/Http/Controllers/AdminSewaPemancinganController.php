@@ -42,6 +42,7 @@ class AdminSewaPemancinganController extends Controller
         $hargaMember = UpdateHargaSewaSpot::where('status_member', 'member')
                                         ->latest()
                                         ->first();
+
         $hargaNonMember = UpdateHargaSewaSpot::where('status_member', 'non member')
                                             ->latest()
                                             ->first();
@@ -50,11 +51,24 @@ class AdminSewaPemancinganController extends Controller
         $hargaMember = $hargaMember ? $hargaMember->harga : 0;
         $hargaNonMember = $hargaNonMember ? $hargaNonMember->harga : 0;
 
+        // Mengambil harga member terbaru
+        $latestMemberPrice = UpdateHargaSewaSpot::where('status_member', 'member')->latest()->first();
+        $memberPrice = $latestMemberPrice ? $latestMemberPrice->harga : 0;
+        $harga_member_id = $latestMemberPrice ? $latestMemberPrice->id : null;
+
+        // Mengambil harga non member terbaru
+        $latestNonMemberPrice = UpdateHargaSewaSpot::where('status_member', 'non member')->latest()->first();
+        $nonMemberPrice = $latestNonMemberPrice ? $latestNonMemberPrice->harga : 0;
+        $harga_nonmember_id = $latestNonMemberPrice ? $latestNonMemberPrice->id : null;
+
         // Ambil sesi sewa spot
         $sesiSpot = UpdateSesiSewaSpot::latest()->get();
 
+        // Mengambil data pengguna dengan role "member"
+        $members = User::where('role', 'member')->where('status', 'aktif')->orderBy('nama', 'asc')->get();
+
         // Mengembalikan view 'Admin.SewaPemancingan.index' dengan data 'sewaPemancingan', 'lastItem', 'spots', dan 'jsonSpots'    
-        return view('Admin.SewaPemancingan.index', compact('sewaPemancingan', 'lastItem', 'spots', 'jsonSpots', 'sesiSpot', 'hargaMember', 'hargaNonMember'));
+        return view('Admin.SewaPemancingan.index', compact('sewaPemancingan', 'lastItem', 'spots', 'jsonSpots', 'sesiSpot', 'hargaMember', 'hargaNonMember','members','memberPrice', 'harga_member_id','nonMemberPrice','harga_nonmember_id'));
     }
   
     /**
@@ -63,6 +77,72 @@ class AdminSewaPemancinganController extends Controller
     public function create()
     {
         //
+    }     
+
+    public function storeMemberReservation(Request $request)
+    {
+        // Validasi input form
+        $validated = $request->validate([
+            'customer_id' => 'required|exists:users,id|integer',
+            'booking_date' => 'required|date|after_or_equal:today',
+            'session_id' => 'required|exists:update_sesi_sewa_spots,id|integer',
+            'spot_id' => 'required|exists:spots,id|integer',
+            'price_id' => 'required|exists:update_harga_sewa_spots,id|integer',
+        ]);
+    
+        // Ambil data dari hasil validasi
+        $userId = $validated['customer_id'];
+        $tanggalSewa = $validated['booking_date'];
+        $sesiId = $validated['session_id'];
+        $spotId = $validated['spot_id'];
+        $hargaId = $validated['price_id'];
+    
+        // Simpan reservasi
+        SewaSpot::create([
+            'tipe_sewa' => 'member',
+            'user_id' => $userId,
+            'tanggal_sewa' => $tanggalSewa,
+            'spot_id' => $spotId,
+            'sesi_id' => $sesiId,
+            'harga_id' => $hargaId,
+            'status' => 'menunggu pembayaran',
+        ]);
+    
+        // Redirect kembali dengan pesan sukses
+        return redirect()->back()->with('success', 'Reservation spot for member created successfully.');
+    }
+
+    public function storeNonMemberReservation(Request $request)
+    {
+        // Validasi input form
+        $validated = $request->validate([
+            // 'customer_name' => 'required|string',
+            'booking_date' => 'required|date|after_or_equal:today',
+            'session_id' => 'required|exists:update_sesi_sewa_spots,id|integer',
+            'spot_id' => 'required|exists:spots,id|integer',
+            'price_id' => 'required|exists:update_harga_sewa_spots,id|integer',
+        ]);
+
+        // Ambil data dari hasil validasi
+        // $customerName = $validated['customer_name'];
+        $tanggalSewa = $validated['booking_date'];
+        $sesiId = $validated['session_id'];
+        $spotId = $validated['spot_id'];
+        $hargaId = $validated['price_id'];
+
+        // Simpan reservasi
+        SewaSpot::create([
+            'tipe_sewa' => 'non member',
+            'user_id' => null,
+            'tanggal_sewa' => $tanggalSewa,
+            'spot_id' => $spotId,
+            'sesi_id' => $sesiId,
+            'harga_id' => $hargaId,
+            'status' => 'menunggu pembayaran',
+        ]);
+
+        // Redirect kembali dengan pesan sukses
+        return redirect()->back()->with('success', 'Reservation spot for non member created successfully.');
     }
 
     /**
@@ -84,13 +164,57 @@ class AdminSewaPemancinganController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    // public function update(Request $request, $id)
+    // {
+    //     // Validasi input dari form
+    //     $request->validate([
+    //         'edit_tanggal_sewa' => 'required|date',
+    //         'edit_nomor_spot' => 'required|exists:spots,id',
+    //         'edit_sesi' => 'required|exists:update_sesi_sewa_spots,id',
+    //     ]);
+    
+    //     // Ambil sesi yang dipilih
+    //     $selectedSesi = UpdateSesiSewaSpot::findOrFail($request->edit_sesi);
+        
+    //     // Ambil spot yang dipilih
+    //     $selectedSpot = Spot::findOrFail($request->edit_nomor_spot);
+    
+    //     // Validasi apakah sudah ada pesanan sewa yang sama setelah diupdate
+    //     $existingOrder = SewaSpot::where('tanggal_sewa', $request->edit_tanggal_sewa)
+    //                               ->where('spot_id', $request->edit_nomor_spot)
+    //                               ->where('sesi_id', $selectedSesi->id)
+    //                               ->where('id', '!=', $id)
+    //                               ->exists();
+    
+    //     if ($existingOrder) {
+    //         return redirect()->back()->with('error', 'This spot is booked for the same date and session. Please choose another spot!');
+    //     }
+    
+    //     // Proses update jika validasi berhasil
+    //     $pemancingan = SewaSpot::findOrFail($id);
+    
+    //     if ($pemancingan->tanggal_sewa != $request->edit_tanggal_sewa ||
+    //         $pemancingan->spot_id != $request->edit_nomor_spot ||
+    //         $pemancingan->sesi_id != $selectedSesi->id) {
+    //         $pemancingan->tanggal_sewa = $request->edit_tanggal_sewa;
+    //         $pemancingan->spot_id = $request->edit_nomor_spot;
+    //         $pemancingan->sesi_id = $selectedSesi->id;
+    //         $pemancingan->harga_id = $this->getHargaIdForSpot($selectedSpot->id, $request->user());
+    //         $pemancingan->status = 'menunggu pembayaran';
+    //         $pemancingan->save();
+    
+    //         return redirect()->back()->with('success', 'Fishing spot reservation successfully updated with changes.');
+    //     } else {
+    //         return redirect()->back()->with('info', 'There are no changes to fishing spot reservations.');
+    //     }
+    // }
     public function update(Request $request, $id)
     {
         // Validasi input dari form
         $request->validate([
             'edit_tanggal_sewa' => 'required|date',
             'edit_nomor_spot' => 'required|exists:spots,id',
-            'edit_sesi' => 'required|exists:update_sesi_sewa_spots,id', // Validasi ID sesi
+            'edit_sesi' => 'required|exists:update_sesi_sewa_spots,id',
         ]);
     
         // Ambil sesi yang dipilih
@@ -119,8 +243,13 @@ class AdminSewaPemancinganController extends Controller
             $pemancingan->tanggal_sewa = $request->edit_tanggal_sewa;
             $pemancingan->spot_id = $request->edit_nomor_spot;
             $pemancingan->sesi_id = $selectedSesi->id;
-            $pemancingan->harga_id = $this->getHargaIdForSpot($selectedSpot->id, $request->user()); // Mendapatkan harga sesuai dengan spot dan user
-            $pemancingan->status = 'menunggu pembayaran';
+    
+            // Ambil harga ID sesuai dengan status member/non-member
+            $user = $request->user(); // User yang sedang login
+            $pemancinganStatus = $pemancingan->user_id ? 'member' : 'non member'; // Tentukan status berdasarkan user_id
+    
+            $pemancingan->harga_id = $this->getHargaIdForSpot($pemancinganStatus);
+            // $pemancingan->status = 'menunggu pembayaran';
             $pemancingan->save();
     
             return redirect()->back()->with('success', 'Fishing spot reservation successfully updated with changes.');
@@ -132,18 +261,28 @@ class AdminSewaPemancinganController extends Controller
     /**
      * Mendapatkan harga ID berdasarkan spot dan user
      */
-    private function getHargaIdForSpot($spotId, $user)
+    // private function getHargaIdForSpot($user)
+    // {
+    //     // Mendapatkan harga member dan non-member terbaru
+    //     $hargaMember = UpdateHargaSewaSpot::where('status_member', 'member')->latest()->first();
+    //     $hargaNonMember = UpdateHargaSewaSpot::where('status_member', 'non member')->latest()->first();
+        
+    //     if ($user && $hargaMember) {
+    //         // Menggunakan harga member jika user terautentikasi
+    //         return $hargaMember->id;
+    //     }
+    
+    //     // Menggunakan harga non-member jika tidak ada user terautentikasi
+    //     return $hargaNonMember ? $hargaNonMember->id : null;
+    // }
+
+    private function getHargaIdForSpot($status)
     {
         // Mendapatkan harga member dan non-member terbaru
-        $hargaMember = UpdateHargaSewaSpot::where('status_member', 'member')->latest()->first();
-        $hargaNonMember = UpdateHargaSewaSpot::where('status_member', 'non member')->latest()->first();
-    
-        if ($user && $hargaMember) {
-            return $hargaMember->id; // Menggunakan harga member jika user terautentikasi
-        }
-    
-        return $hargaNonMember ? $hargaNonMember->id : null; // Menggunakan harga non-member jika tidak ada user terautentikasi
-    }    
+        $harga = UpdateHargaSewaSpot::where('status_member', $status)->latest()->first();
+        
+        return $harga ? $harga->id : null;
+    }
     
     /**
      * Remove the specified resource from storage.
@@ -189,7 +328,8 @@ class AdminSewaPemancinganController extends Controller
         $keuangan->waktu_transaksi = Carbon::now()->toTimeString();
         $keuangan->jumlah = $jumlah;
         $keuangan->jenis_transaksi = 'pemasukan';
-        $keuangan->keterangan = 'Spot Booking Payment by ' . $pemancingan->member->nama;
+        // $keuangan->keterangan = 'Spot Booking Payment by ' . $pemancingan->member->nama;
+        $keuangan->keterangan = 'Spot Booking Payment by ' . ($pemancingan->user_id ? $pemancingan->member->nama : 'Non Member');
         $keuangan->save();
 
         return redirect()->back()->with('success', 'Payment confirmed successfully.');

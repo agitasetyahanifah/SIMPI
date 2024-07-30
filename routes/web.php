@@ -107,6 +107,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/sewaPemancingan/sessions', [AdminSewaPemancinganController::class, 'storeSesiSpot'])->name('admin.sewaPemancingan.sessionsStore');
     Route::put('admin/sewaPemancingan/sessions/{id}', [AdminSewaPemancinganController::class, 'updateSesiSpot'])->name('admin.sewaPemancingan.sessionsUpdate');
     Route::delete('/admin/sewaPemancingan/sessions/{id}', [AdminSewaPemancinganController::class, 'deleteSesiSpot'])->name('admin.sewaPemancingan.sessionsDelete');
+    Route::post('/admin/sewaPemancingan/save-member-reservation', [AdminSewaPemancinganController::class, 'storeMemberReservation'])->name('admin.sewaPemancingan.save-member-reservation');
+    Route::post('/admin/sewaPemancingan/save-non-member-reservation', [AdminSewaPemancinganController::class, 'storeNonMemberReservation'])->name('admin.sewaPemancingan.save-non-member-reservation');
+
 });
 
 

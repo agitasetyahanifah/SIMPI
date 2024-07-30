@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('sewa_spots', function (Blueprint $table) {
             $table->id();
+            $table->enum('tipe_sewa', ['member', 'non member']);
             $table->string('kode_booking')->unique();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->date('tanggal_sewa');
             $table->unsignedBigInteger('spot_id');
             $table->enum('status', ['sudah dibayar', 'menunggu pembayaran', 'dibatalkan'])->default('menunggu pembayaran');
