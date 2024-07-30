@@ -21,13 +21,15 @@ return new class extends Migration
             $table->integer('jumlah');
             $table->integer('biaya_sewa')->nullable();
             $table->integer('denda')->nullable();
+            // $table->unsignedBigInteger('denda_id')->nullable();
             $table->enum('status', ['menunggu pembayaran', 'sudah dibayar', 'dibatalkan'])->default('menunggu pembayaran');
             $table->enum('status_pengembalian', ['proses', 'sudah kembali', 'terlambat kembali'])->nullable();
             $table->timestamps();
         
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('alat_id')->references('id')->on('alat_pancing')->onDelete('cascade');
-        });        
+            // $table->foreign('denda_id')->references('id')->on('denda')->onDelete('set null');
+        });
     }
 
     /**
@@ -35,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sewa_alat');    
+        Schema::dropIfExists('sewa_alat');
     }
 };

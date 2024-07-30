@@ -164,50 +164,6 @@ class AdminSewaPemancinganController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    // public function update(Request $request, $id)
-    // {
-    //     // Validasi input dari form
-    //     $request->validate([
-    //         'edit_tanggal_sewa' => 'required|date',
-    //         'edit_nomor_spot' => 'required|exists:spots,id',
-    //         'edit_sesi' => 'required|exists:update_sesi_sewa_spots,id',
-    //     ]);
-    
-    //     // Ambil sesi yang dipilih
-    //     $selectedSesi = UpdateSesiSewaSpot::findOrFail($request->edit_sesi);
-        
-    //     // Ambil spot yang dipilih
-    //     $selectedSpot = Spot::findOrFail($request->edit_nomor_spot);
-    
-    //     // Validasi apakah sudah ada pesanan sewa yang sama setelah diupdate
-    //     $existingOrder = SewaSpot::where('tanggal_sewa', $request->edit_tanggal_sewa)
-    //                               ->where('spot_id', $request->edit_nomor_spot)
-    //                               ->where('sesi_id', $selectedSesi->id)
-    //                               ->where('id', '!=', $id)
-    //                               ->exists();
-    
-    //     if ($existingOrder) {
-    //         return redirect()->back()->with('error', 'This spot is booked for the same date and session. Please choose another spot!');
-    //     }
-    
-    //     // Proses update jika validasi berhasil
-    //     $pemancingan = SewaSpot::findOrFail($id);
-    
-    //     if ($pemancingan->tanggal_sewa != $request->edit_tanggal_sewa ||
-    //         $pemancingan->spot_id != $request->edit_nomor_spot ||
-    //         $pemancingan->sesi_id != $selectedSesi->id) {
-    //         $pemancingan->tanggal_sewa = $request->edit_tanggal_sewa;
-    //         $pemancingan->spot_id = $request->edit_nomor_spot;
-    //         $pemancingan->sesi_id = $selectedSesi->id;
-    //         $pemancingan->harga_id = $this->getHargaIdForSpot($selectedSpot->id, $request->user());
-    //         $pemancingan->status = 'menunggu pembayaran';
-    //         $pemancingan->save();
-    
-    //         return redirect()->back()->with('success', 'Fishing spot reservation successfully updated with changes.');
-    //     } else {
-    //         return redirect()->back()->with('info', 'There are no changes to fishing spot reservations.');
-    //     }
-    // }
     public function update(Request $request, $id)
     {
         // Validasi input dari form
@@ -261,21 +217,6 @@ class AdminSewaPemancinganController extends Controller
     /**
      * Mendapatkan harga ID berdasarkan spot dan user
      */
-    // private function getHargaIdForSpot($user)
-    // {
-    //     // Mendapatkan harga member dan non-member terbaru
-    //     $hargaMember = UpdateHargaSewaSpot::where('status_member', 'member')->latest()->first();
-    //     $hargaNonMember = UpdateHargaSewaSpot::where('status_member', 'non member')->latest()->first();
-        
-    //     if ($user && $hargaMember) {
-    //         // Menggunakan harga member jika user terautentikasi
-    //         return $hargaMember->id;
-    //     }
-    
-    //     // Menggunakan harga non-member jika tidak ada user terautentikasi
-    //     return $hargaNonMember ? $hargaNonMember->id : null;
-    // }
-
     private function getHargaIdForSpot($status)
     {
         // Mendapatkan harga member dan non-member terbaru
@@ -334,6 +275,15 @@ class AdminSewaPemancinganController extends Controller
 
         return redirect()->back()->with('success', 'Payment confirmed successfully.');
     }
+
+    public function konfirmasiKehadiran(Request $request, $id)
+    {
+        $sewaPemancingan = SewaSpot::findOrFail($id);
+        $sewaPemancingan->status_kehadiran = 'sudah hadir';
+        $sewaPemancingan->save();
+    
+        return redirect()->back()->with('success', 'Attendance status updated successfully.');
+    }    
 
     public function getAvailableSpotsJson(Request $request)
     {

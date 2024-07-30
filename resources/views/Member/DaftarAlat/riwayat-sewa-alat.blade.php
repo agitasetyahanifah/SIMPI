@@ -182,6 +182,19 @@
                                                     <li>Ensure the payment status has changed to <b>"Already Paid"</b>.</li>
                                                     <li>Done.</li>
                                                 </ul>
+                                                <ul>
+                                                    <b style="color: orange">Note: </b> <br>
+                                                    <li>
+                                                        <a>If you want to pay in another way, please contact the admin via the number below!</a> <br>
+                                                        {{-- <a href="https://wa.me/6285647289934">0856-4728-9934 (Admin)</a> --}}
+                                                        <a href="https://wa.me/6289522956203" style="color: orange">0859-5229-56203 (Admin)</a>
+                                                    </li>
+                                                    <li>
+                                                        <a>
+                                                            If you borrow equipment outside the PT LegendNet Indonesia fishing area, <b>you must leave your identity card</b>.
+                                                        </a>
+                                                    </li>
+                                                </ul>  
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -259,9 +272,20 @@
                                                             </tr>
                                                         </table>
                                                         <div class="mt-3">
-                                                            <p><strong>Note: </strong>
-                                                                Please make payment directly to the admin at the fishing location.<br> 
-                                                            </p>
+                                                            <ul>
+                                                                <b style="color: orange">Note: </b> <br>
+                                                                <li>Please make payment directly to the admin at the fishing location.</li>
+                                                                <li>
+                                                                    <a>If you want to pay in another way, please contact the admin via the number below!</a> <br>
+                                                                    {{-- <a href="https://wa.me/6285647289934">0856-4728-9934 (Admin)</a> --}}
+                                                                    <a href="https://wa.me/6289522956203" style="color: orange">0859-5229-56203 (Admin)</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a>
+                                                                        If you borrow equipment outside the PT LegendNet Indonesia fishing area, <b>you must leave your identity card</b>.
+                                                                    </a>
+                                                                </li>
+                                                            </ul>  
                                                             <a style="color: coral">Late Returns will be subject to a fee <b>Rp 5.000,- /day</b></a>
                                                             {{-- <p>Untuk informasi lebih lanjut atau pertanyaan, bisa menghubungi admin melalui kontak berikut:</p>
                                                             <table class="table table-borderless">

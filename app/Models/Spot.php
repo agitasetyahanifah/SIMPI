@@ -81,13 +81,30 @@ class Spot extends Model
         return $availableSessions;
     }
 
+    // public function getUnavailableSessions($tanggalSewa)
+    // {
+    //     return $this->sewaSpots()
+    //                 ->where('tanggal_sewa', $tanggalSewa)
+    //                 ->whereIn('status', ['menunggu pembayaran', 'sudah dibayar'])
+    //                 ->pluck('sesi_id')
+    //                 ->toArray();
+    // }
+
+    // Dapatkan sesi yang tidak tersedia pada tanggal sewa tertentu
     public function getUnavailableSessions($tanggalSewa)
     {
-        return $this->sewaSpots()
-                    ->where('tanggal_sewa', $tanggalSewa)
-                    ->whereIn('status', ['menunggu pembayaran', 'sudah dibayar'])
-                    ->pluck('sesi_id')
-                    ->toArray();
+        $bookedSessions = $this->sewaSpots()
+                               ->where('tanggal_sewa', $tanggalSewa)
+                               ->whereIn('status', ['menunggu pembayaran', 'sudah dibayar'])
+                               ->pluck('sesi_id')
+                               ->toArray();
+
+        // Jika tidak ada sesi yang dibooking, return empty array
+        if (empty($bookedSessions)) {
+            return [];
+        }
+
+        return $bookedSessions;
     }
  
 }

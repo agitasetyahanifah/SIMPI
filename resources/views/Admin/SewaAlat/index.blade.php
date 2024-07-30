@@ -30,6 +30,37 @@
 @endif
 
 <div class="container-fluid py-4">
+    {{-- kolom untuk update denda sewa alat per hari --}}
+    {{-- <div class="row mb-3">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header pb-0">
+                    <h4 class="font-weight-bolder mb-0">Set Fines Per Day</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row mt-3">
+                        <div class="col-md-2">
+                            @if ($denda)
+                                <h4>Rp {{ number_format($denda->denda, 0, ',', '.') }},- /Day</h4>
+                            @else
+                                <h4>Rp 0,- /Day</h4>
+                            @endif
+                        </div>
+                        <div class="col-md-10">
+                            <form action="{{ route('admin.sewaAlat.update_denda_sewa_alat') }}" method="POST">
+                                @csrf
+                                <div class="input-group mb-3">
+                                    <input type="number" class="form-control" name="denda_sewa_alat" placeholder="Enter fine amount per day" aria-label="Fine amount per day" aria-describedby="button-addon2">
+                                    <button class="btn btn-outline-primary mb-0" type="submit" id="button-addon2">Update Fine</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> --}}
+
     <div class="row">
       <div class="col-12">
         <div class="card">

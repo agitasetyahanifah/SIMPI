@@ -78,6 +78,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::put('/admin/sewaAlat/{id}', [AdminSewaAlatController::class, 'update'])->name('admin.sewaAlat.update');
     Route::post('/admin/sewaAlat/konfirmasi-pembayaran/{id}', [AdminSewaAlatController::class, 'konfirmasiPembayaran'])->name('admin.sewaAlat.konfirmasiPembayaran');
     Route::post('/sewa-alat/konfirmasi-pengembalian/{id}', [AdminSewaAlatController::class, 'konfirmasiPengembalian'])->name('admin.sewaAlat.konfirmasiPengembalian');
+    Route::post('/update-denda-sewa-alat', [AdminSewaAlatController::class, 'updateDenda'])->name('admin.sewaAlat.update_denda_sewa_alat');
     // Rute untuk menampilkan halaman utama pengelolaan ikan
     Route::get('/admin/pengelolaanIkan', [AdminPengelolaanIkanController::class, 'index'])->name('admin.pengelolaanIkan.index');
     // Rute untuk jenis ikan
@@ -109,6 +110,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('/admin/sewaPemancingan/sessions/{id}', [AdminSewaPemancinganController::class, 'deleteSesiSpot'])->name('admin.sewaPemancingan.sessionsDelete');
     Route::post('/admin/sewaPemancingan/save-member-reservation', [AdminSewaPemancinganController::class, 'storeMemberReservation'])->name('admin.sewaPemancingan.save-member-reservation');
     Route::post('/admin/sewaPemancingan/save-non-member-reservation', [AdminSewaPemancinganController::class, 'storeNonMemberReservation'])->name('admin.sewaPemancingan.save-non-member-reservation');
+    Route::post('/sewa-pemancingan/{id}/konfirmasi-kehadiran', [AdminSewaPemancinganController::class, 'konfirmasiKehadiran'])->name('admin.sewaPemancingan.konfirmasiKehadiran');
+
 
 });
 

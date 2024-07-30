@@ -10,6 +10,7 @@ use App\Models\SewaAlat;
 use App\Models\User;
 use App\Models\Keuangan;
 use Carbon\Carbon;
+use App\Models\Denda;
 
 class AdminSewaAlatController extends Controller
 {
@@ -31,6 +32,8 @@ class AdminSewaAlatController extends Controller
         $alatPancing = AlatPancing::all();
         // Mengambil semua data alat pancing dengan status 'available'
         $alatPancings = AlatPancing::where('status', 'available')->get();
+        // Mengambil data terbaru dari tabel denda
+        // $denda = Denda::latest()->first();
         // Mengembalikan view 'Admin.SewaAlat.index' dengan data 'sewaAlat', 'lastItem', 'member', 'members', 'alatPancing', dan 'alatPancings'
         return view('Admin.SewaAlat.index', compact('sewaAlat', 'lastItem', 'member', 'members', 'alatPancing', 'alatPancings'));
     }
@@ -246,6 +249,22 @@ class AdminSewaAlatController extends Controller
         }
     
         return redirect()->back()->with('success', 'The return status has been updated.');
-    }    
+    }
+
+    // public function updateDenda(Request $request)
+    // {
+    //     // Validasi input
+    //     $request->validate([
+    //         'denda_sewa_alat' => 'required|integer|min:0',
+    //     ]);
+
+    //     // Buat instance baru dan simpan denda
+    //     $denda = new Denda();
+    //     $denda->denda = $request->input('denda_sewa_alat');
+    //     $denda->save();
+
+    //     // Redirect atau berikan respons sesuai kebutuhan
+    //     return redirect()->back()->with('success', 'Fines per Day has been updated successfully');
+    // }
     
 }

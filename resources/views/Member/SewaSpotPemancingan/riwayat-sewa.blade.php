@@ -156,6 +156,14 @@
                                                     <li>Ensure the payment status has changed to <b>"Already Paid"</b>.</li>
                                                     <li>Done.</li>
                                                 </ul>
+                                                <ul>
+                                                    <b style="color: orange">Note: </b> <br>
+                                                    <li>
+                                                        <a>If you want to pay in another way, please contact the admin via the number below!</a> <br>
+                                                        {{-- <a href="https://wa.me/6285647289934">0856-4728-9934 (Admin)</a> --}}
+                                                        <a href="https://wa.me/6289522956203" style="color: orange">0859-5229-56203 (Admin)</a>
+                                                    </li>
+                                                </ul> 
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

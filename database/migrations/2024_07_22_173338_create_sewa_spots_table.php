@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('tanggal_sewa');
             $table->unsignedBigInteger('spot_id');
             $table->enum('status', ['sudah dibayar', 'menunggu pembayaran', 'dibatalkan'])->default('menunggu pembayaran');
+            $table->enum('status_kehadiran', ['tidak hadir', 'belum hadir', 'sudah hadir'])->default('belum hadir');
             $table->unsignedBigInteger('sesi_id');
             $table->unsignedBigInteger('harga_id');
             $table->timestamps();

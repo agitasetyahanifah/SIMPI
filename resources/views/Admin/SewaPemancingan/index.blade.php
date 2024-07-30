@@ -374,7 +374,8 @@
                                     <select class="form-control" id="spot_number_member" name="spot_id" required>
                                         @foreach($spots as $spot)
                                             @php
-                                                $availableSessions = $spot->getAvailableSessions($spot->id, $session->id);
+                                                // $availableSessions = $spot->getAvailableSessions($spot->id, $session->id);
+                                                $availableSessions = $sesiSpot->isNotEmpty() ? $spot->getAvailableSessions($spot->id, $sesiSpot->first()->id) : [];
                                             @endphp
                                             @if(count($availableSessions) > 0)
                                                 <option value="{{ $spot->id }}">{{ $spot->nomor_spot }}</option>
@@ -443,7 +444,8 @@
                                     <select class="form-control" id="spot_number_non_member" name="spot_id" required>
                                         @foreach($spots as $spot)
                                             @php
-                                                $availableSessions = $spot->getAvailableSessions($spot->id, $session->id);
+                                                // $availableSessions = $spot->getAvailableSessions($spot->id, $session->id);
+                                                $availableSessions = $sesiSpot->isNotEmpty() ? $spot->getAvailableSessions($spot->id, $sesiSpot->first()->id) : [];
                                             @endphp
                                             @if(count($availableSessions) > 0)
                                                 <option value="{{ $spot->id }}">{{ $spot->nomor_spot }}</option>
@@ -481,7 +483,8 @@
                     <th>Booking Code</th>
                     <th>Customer Name</th>
                     <th>Booking Date</th>
-                    <th class="text-center">Status</th>
+                    <th class="text-center">Payment Status</th>
+                    <th class="text-center">Attendance Status</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -509,6 +512,15 @@
                                 <span class="badge badge-sm bg-gradient-secondary">Waiting for Payment</span>
                             @elseif($pemancingan->status == 'dibatalkan')
                                 <span class="badge badge-sm bg-gradient-danger">Canceled</span>
+                            @endif                    
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                            @if($pemancingan->status_kehadiran == 'sudah hadir')
+                                <span class="badge badge-sm bg-gradient-success">Already Present</span>
+                            @elseif($pemancingan->status_kehadiran == 'belum hadir')
+                                <span class="badge badge-sm bg-gradient-secondary">Not Yet Present</span>
+                            @elseif($pemancingan->status_kehadiran == 'tidak hadir')
+                                <span class="badge badge-sm bg-gradient-danger">Not Present</span>
                             @endif                    
                         </td>
                         <td class="text-align-end">
@@ -584,6 +596,20 @@
                                                 @endif
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <th>Attendance Status</th>
+                                            <td>
+                                                @if($pemancingan->status_kehadiran === 'tidak hadir')
+                                                    <span class="text-danger">Not Present</span>
+                                                @elseif($pemancingan->status_kehadiran === 'sudah hadir')
+                                                    <span class="text-success">Already Present</span>
+                                                @elseif($pemancingan->status_kehadiran === 'belum hadir')
+                                                    <span class="text-warning">Not Yet Present</span>
+                                                @else
+                                                    {{ $pemancingan->status_kehadiran }}
+                                                @endif
+                                            </td>
+                                        </tr>
                                     </table>
                                     @if($pemancingan->status === 'menunggu pembayaran')
                                         <form id="konfirmasiForm{{ $pemancingan->id }}" action="{{ route('admin.sewaPemancingan.konfirmasiPembayaran', $pemancingan->id) }}" method="POST">
@@ -594,16 +620,36 @@
                                                     Payment Confirmation
                                                 </label>
                                             </div>
-                                            {{-- <button type="button" class="btn btn-success mt-3" onclick="showKonfirmasiModal({{ $pemancingan->id }})">Konfirmasi</button> --}}
-                                            <button type="button" class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#konfirmasiModal{{ $pemancingan->id }}">
+                                            <button type="button" class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#konfirmasiPembayaranModal{{ $pemancingan->id }}">
                                                 Confirm
                                             </button>                                                                                    
                                         </form>
-                                        @elseif($pemancingan->status === 'dibatalkan')
-                                            <p style="color: red"><i class="fas fa-times-circle" style="font-size: 18px"></i> Payment Cancelled</p>
-                                        @elseif($pemancingan->status === 'sudah dibayar')
-                                            <p style="color: green"><i class="fas fa-check-circle" style="font-size: 18px"></i> Payment has been confirmed</p>
-                                        @endif                                
+                                    @elseif($pemancingan->status === 'dibatalkan')
+                                        <p style="color: red"><i class="fas fa-times-circle" style="font-size: 18px"></i> Payment Cancelled</p>
+                                    @elseif($pemancingan->status === 'sudah dibayar')
+                                        <p style="color: green"><i class="fas fa-check-circle" style="font-size: 18px"></i> Payment has been confirmed</p>
+                                    @endif
+                                    
+                                    @if($pemancingan->status_kehadiran === 'belum hadir')
+                                        @if($pemancingan->status === 'sudah dibayar')
+                                            <form id="konfirmasiKehadiranForm{{ $pemancingan->id }}" action="{{ route('admin.sewaPemancingan.konfirmasiKehadiran', $pemancingan->id) }}" method="POST">
+                                                @csrf
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="sudah hadir" id="konfirmasiKehadiran{{ $pemancingan->id }}" name="status_kehadiran" required>
+                                                    <label class="form-check-label" for="konfirmasiKehadiran{{ $pemancingan->id }}">
+                                                        Attendance Confirmation
+                                                    </label>
+                                                </div>
+                                                <button type="button" class="btn btn-success mt-3" data-bs-toggle="modal" data-bs-target="#konfirmasiKehadiranModal{{ $pemancingan->id }}">
+                                                    Confirm
+                                                </button>                                                                                    
+                                            </form>
+                                        @endif
+                                    @elseif($pemancingan->status_kehadiran === 'tidak hadir')
+                                        <p style="color: red"><i class="fas fa-times-circle" style="font-size: 18px"></i> Attendance status: Not Present</p>
+                                    @elseif($pemancingan->status_kehadiran === 'sudah hadir')
+                                        <p style="color: green"><i class="fas fa-check-circle" style="font-size: 18px"></i> Attendance status has been confirmed</p>
+                                    @endif                              
                                 </div>
                             </div>
                         </div>
@@ -613,23 +659,42 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Modal untuk Konfirmasi Pembayaran -->
-            <div class="modal fade" id="konfirmasiModal{{ $pemancingan->id }}" tabindex="-1" role="dialog" aria-labelledby="konfirmasiModalLabel{{ $pemancingan->id }}" aria-hidden="true">
+            <div class="modal fade" id="konfirmasiPembayaranModal{{ $pemancingan->id }}" tabindex="-1" role="dialog" aria-labelledby="konfirmasiPembayaranLabel{{ $pemancingan->id }}" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="konfirmasiModalLabel{{ $pemancingan->id }}">Payment Confirmation</h5>
+                            <h5 class="modal-title" id="konfirmasiPembayaranLabel{{ $pemancingan->id }}">Payment Confirmation</h5>
                             <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">×</span>
                             </button>
                         </div>
                         <div class="modal-body">
-                            Are you sure want to confirm payment for the Booking Code: {{ $pemancingan->kode_booking }}?
+                            Are you sure you want to confirm payment for the Booking Code: {{ $pemancingan->kode_booking }}?
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-success" onclick="submitKonfirmasiForm({{ $pemancingan->id }})">Confirm</button>
+                            <button type="button" class="btn btn-success" onclick="submitKonfirmasiForm({{ $pemancingan->id }}, 'Pembayaran')">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Konfirmasi Kehadiran-->
+            <div class="modal fade" id="konfirmasiKehadiranModal{{ $pemancingan->id }}" tabindex="-1" aria-labelledby="konfirmasiKehadiranLabel{{ $pemancingan->id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="konfirmasiKehadiranLabel{{ $pemancingan->id }}">Confirm Attendance</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to confirm attendance for the Booking Code: {{ $pemancingan->kode_booking }}?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-success" onclick="submitKonfirmasiForm({{ $pemancingan->id }}, 'Kehadiran')">Confirm</button>
                         </div>
                     </div>
                 </div>
@@ -766,23 +831,12 @@
 </script>
 
 <script>
-    function showKonfirmasiModal(id) {
-        const checkbox = document.getElementById('konfirmasiPembayaran' + id);
-        if (checkbox.checked) {
-            var modal = new bootstrap.Modal(document.getElementById('konfirmasiModal' + id), {
-                keyboard: false
-            });
-            modal.show();
-        } else {
-            var errorModal = new bootstrap.Modal(document.getElementById('errorModal' + id), {
-                keyboard: false
-            });
-            errorModal.show();
+    function submitKonfirmasiForm(id, type) {
+        if (type === 'Pembayaran') {
+            document.getElementById('konfirmasiForm' + id).submit();
+        } else if (type === 'Kehadiran') {
+            document.getElementById('konfirmasiKehadiranForm' + id).submit();
         }
-    }
-
-    function submitKonfirmasiForm(id) {
-        document.getElementById('konfirmasiForm' + id).submit();
     }
 </script>
 
@@ -845,34 +899,6 @@
 </script>
 
 <!-- Javascript untuk ambil nomor spot yang tersedia berdasarkan tanggal dan sesi pada modal create -->
-{{-- <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        function updateAvailableSpots() {
-            let tanggalSewa = document.getElementById('create_tanggal_sewa').value;
-            let sesiId = document.getElementById('create_sesi').value;
-            let spotSelect = document.getElementById('create_nomor_spot');
-
-            if (tanggalSewa && sesiId) {
-                fetch(`/admin/sewapemancingan/getAvailableSpots?tanggal_sewa=${tanggalSewa}&sesi_id=${sesiId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        spotSelect.innerHTML = '';
-
-                        data.jsonSpots.forEach(spot => {
-                            let option = document.createElement('option');
-                            option.value = spot.id;
-                            option.textContent = spot.nomor_spot;
-
-                            spotSelect.appendChild(option);
-                        });
-                    });
-            }
-        }
-
-        document.getElementById('create_tanggal_sewa').addEventListener('change', updateAvailableSpots);
-        document.getElementById('create_sesi').addEventListener('change', updateAvailableSpots);
-    });
-</script> --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         function updateAvailableSpots() {
@@ -918,6 +944,5 @@
         document.getElementById('session_non_member')?.addEventListener('change', updateAvailableSpots);
     });
 </script>
-
 
 @endsection
