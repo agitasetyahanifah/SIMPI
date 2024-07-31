@@ -41,38 +41,33 @@ class AdminBlogController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function storeMemberReservation(Request $request)
+    public function store(Request $request)
     {
-        // Validasi input form
+        // Validasi input form untuk judul, kategori blog yang ada, gambar, dan isi blog
         $validated = $request->validate([
-            'customer_id' => 'required|exists:users,id|integer',
-            'booking_date' => 'required|date|after_or_equal:today',
-            'session_id' => 'required|exists:update_sesi_sewa_spots,id|integer',
-            'spot_id' => 'required|exists:spots,id|integer',
-            'price_id' => 'required|exists:update_harga_sewa_spots,id|integer',
+            'judul' => 'required|string|max:255',
+            'kategori_blog' => 'required|exists:kategori_blog,id',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10048',
+            'body' => 'required|string',
         ]);
-    
-        // Ambil data dari hasil validasi
-        $userId = $validated['customer_id'];
-        $tanggalSewa = $validated['booking_date'];
-        $sesiId = $validated['session_id'];
-        $spotId = $validated['spot_id'];
-        $hargaId = $validated['price_id'];
-    
-        // Simpan reservasi
-        SewaSpot::create([
-            'tipe_sewa' => 'member',
-            'user_id' => $userId,
-            'tanggal_sewa' => $tanggalSewa,
-            'spot_id' => $spotId,
-            'sesi_id' => $sesiId,
-            'harga_id' => $hargaId,
-            'status' => 'menunggu pembayaran',
-        ]);
-    
-        // Redirect kembali dengan pesan sukses
-        return redirect()->back()->with('success', 'Member reservation created successfully.');
-    }    
+
+        // Menyimpan foto ke dalam direktori public/images
+        $imageFileName = $request->file('image')->getClientOriginalName();
+	    $request->file('image')->move('images', $imageFileName);
+
+        // Simpan data blog baru ke dalam database
+        $blog = new Blog();
+        $blog->judul = $validated['judul'];
+        $blog->slug = Str::slug($validated['judul']);
+        $blog->kategori_id = $validated['kategori_blog'];
+        $blog->user_id = Auth::id();
+        $blog->image = $imageFileName;
+        $blog->body = $validated['body'];
+        $blog->save();
+
+        // Redirect kembali ke halaman sebelumnya dengan pesan sukses
+        return redirect()->back()->with('success', 'Blog added successfully.');
+    }  
 
     public function storeKategori(Request $request)
     {

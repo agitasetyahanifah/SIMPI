@@ -117,6 +117,7 @@ class MemberSewaSpotController extends Controller
         if ($sewaSpot->status === 'menunggu pembayaran' && Carbon::now()->lt($sewaSpot->timeout)) {
             // Ubah status pesanan menjadi "dibatalkan"
             $sewaSpot->status = 'dibatalkan';
+            $sewaSpot->status_kehadiran = 'tidak hadir';
             $sewaSpot->save();
     
             return redirect()->back()->with('success', 'Fishing Spot Booking has been successfully cancelled.');
@@ -192,6 +193,7 @@ class MemberSewaSpotController extends Controller
 
             if ($hoursDifference >= 24) {
                 $sewa->status = 'dibatalkan';
+                $sewa->status_kehadiran = 'tidak hadir';
                 $sewa->save();
             }
         }
