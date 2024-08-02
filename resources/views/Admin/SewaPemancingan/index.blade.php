@@ -843,7 +843,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 {{-- Script untuk Search --}}
-<script>
+{{-- <script>
     document.getElementById('searchInput').addEventListener('keyup', function() {
         const searchValue = this.value.toLowerCase().trim();
         const rows = document.querySelectorAll('tbody tr');
@@ -861,6 +861,31 @@
                 row.style.display = 'none';
             }
         });
+    });
+</script> --}}
+
+{{-- Script untuk Search --}}
+<script>
+    document.getElementById('searchInput').addEventListener('keyup', function(event) {
+        // Cek apakah tombol yang ditekan adalah Enter (kode 13)
+        if (event.keyCode === 13) {
+            const searchValue = this.value.toLowerCase().trim();
+            const rows = document.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const bookingCode = row.cells[1].textContent.toLowerCase().trim();
+                const customerName = row.cells[2].textContent.toLowerCase().trim();
+                const bookingDate = row.cells[3].textContent.toLowerCase().trim();
+                const status = row.cells[4].textContent.toLowerCase().trim();
+                const attendanceStatus = row.cells[5].textContent.toLowerCase().trim();
+
+                if (bookingCode.includes(searchValue) || customerName.includes(searchValue) || bookingDate.includes(searchValue) || status.includes(searchValue) || attendanceStatus.includes(searchValue)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
     });
 </script>
 
