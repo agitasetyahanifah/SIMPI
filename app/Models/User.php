@@ -18,6 +18,9 @@ class User extends Authenticatable
      * @var array<int, string>
      */
 
+    use Notifiable;
+
+
     protected $table = 'users';
 
     // protected $fillable = [

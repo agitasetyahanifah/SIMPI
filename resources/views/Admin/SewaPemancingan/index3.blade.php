@@ -496,7 +496,6 @@
                     <tr>
                         <td class="text-center">{{ $currentNumber++ }}</td>
                         <td>{{ $pemancingan->kode_booking }}</td>
-                        {{-- <td>{{ $pemancingan->member->nama }}</td> --}}
                         <td>
                             @if($pemancingan->user_id)
                                 {{ $pemancingan->member->nama }}
@@ -808,6 +807,7 @@
                 </ul>
             </nav>
             <!-- End Pagination -->
+
           </div>
         </div>
       </div>

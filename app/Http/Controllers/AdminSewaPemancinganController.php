@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\JsonResponse;
@@ -14,6 +15,7 @@ use App\Models\Keuangan;
 use Carbon\Carbon;
 use App\Models\UpdateHargaSewaSpot;
 use App\Models\UpdateSesiSewaSpot;
+use App\Notifications\SesiSpotUpdated;
 
 class AdminSewaPemancinganController extends Controller
 {
@@ -386,6 +388,47 @@ class AdminSewaPemancinganController extends Controller
         return redirect()->back()->with('success', 'Session added successfully!');
     }
     
+    // public function updateSesiSpot(Request $request, $id)
+    // {
+    //     // Validate the request data
+    //     $validatedData = $request->validate([
+    //         'start_time' => 'required|date_format:H:i',
+    //         'end_time' => 'required|date_format:H:i|after:start_time',
+    //     ]);
+    
+    //     // Find the session by ID
+    //     $session = UpdateSesiSewaSpot::findOrFail($id);
+    
+    //     // Check if there are any changes
+    //     if (
+    //         $session->waktu_mulai == $validatedData['start_time'] &&
+    //         $session->waktu_selesai == $validatedData['end_time']
+    //     ) {
+    //         return redirect()->route('sewaPemancingan.index')->with('info', 'No changes were made.');
+    //     }
+    
+    //     // Check for duplicate session times
+    //     $existingSession = UpdateSesiSewaSpot::where('id', '!=', $id)
+    //         ->where(function($query) use ($validatedData) {
+    //             $query->where('waktu_mulai', $validatedData['start_time'])
+    //                   ->orWhere('waktu_selesai', $validatedData['end_time']);
+    //         })
+    //         ->first();
+    
+    //     if ($existingSession) {
+    //         return redirect()->route('sewaPemancingan.index')->with('error', 'Session with the same time already exists.');
+    //     }
+    
+    //     // Update the session with new values
+    //     $session->waktu_mulai = $validatedData['start_time'];
+    //     $session->waktu_selesai = $validatedData['end_time'];
+    //     $session->waktu_sesi = $validatedData['start_time'] . ' - ' . $validatedData['end_time'];
+    //     $session->user_id = auth()->id();
+    //     $session->save();
+    
+    //     return redirect()->route('sewaPemancingan.index')->with('success', 'Session updated successfully!');
+    // }
+
     public function updateSesiSpot(Request $request, $id)
     {
         // Validate the request data
@@ -417,13 +460,34 @@ class AdminSewaPemancinganController extends Controller
             return redirect()->route('sewaPemancingan.index')->with('error', 'Session with the same time already exists.');
         }
     
-        // Update the session with new values
+        // Notifikasi ke member
+        $membersToNotify = SewaSpot::where('sesi_id', $id)
+            ->whereIn('status', ['sudah dibayar', 'menunggu pembayaran'])
+            ->where('status_kehadiran', 'belum hadir')
+            ->get();
+    
+        // Update sesi
         $session->waktu_mulai = $validatedData['start_time'];
         $session->waktu_selesai = $validatedData['end_time'];
         $session->waktu_sesi = $validatedData['start_time'] . ' - ' . $validatedData['end_time'];
         $session->user_id = auth()->id();
         $session->save();
     
+        // Kirim notifikasi ke member
+        if ($membersToNotify && $membersToNotify->isNotEmpty()) {
+            foreach ($membersToNotify as $member) {
+                // Check if $member and $member->user exist
+                if (isset($member->user) && $member->user) {
+                    Notification::send($member->user, new SesiSpotUpdated($session));
+                } else {
+                    // Log a warning if $member or $member->user is missing
+                    Log::warning('Cannot send notification, user is missing or $member is null.', ['member' => $member]);
+                }
+            }
+        } else {
+            Log::info('No members to notify.');
+        }
+
         return redirect()->route('sewaPemancingan.index')->with('success', 'Session updated successfully!');
     }
 

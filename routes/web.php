@@ -112,7 +112,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/sewaPemancingan/save-non-member-reservation', [AdminSewaPemancinganController::class, 'storeNonMemberReservation'])->name('admin.sewaPemancingan.save-non-member-reservation');
     Route::post('/sewa-pemancingan/{id}/konfirmasi-kehadiran', [AdminSewaPemancinganController::class, 'konfirmasiKehadiran'])->name('admin.sewaPemancingan.konfirmasiKehadiran');
 
-
 });
 
 

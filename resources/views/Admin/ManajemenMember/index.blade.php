@@ -37,8 +37,8 @@
           <div class="card-header pb-0">
             <h4 class="font-weight-bolder mb-0">Member Management</h4>
             {{-- Button Tambah Member --}}
-            <form action="/admin/members" method="post">
-              @csrf
+            {{-- <form action="/admin/members" method="post">
+              @csrf --}}
               <div class="col-12 text-end">
                   <button class="btn btn-outline-primary mb-1" type="submit" data-bs-toggle="modal" data-bs-target="#exampleModalMessage">Add</button>
               </div>

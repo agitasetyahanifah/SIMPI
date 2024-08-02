@@ -35,6 +35,9 @@
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <!-- Di bagian <head> tambahkan CSS Select2 -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
   {{-- Trix Editor --}}
   <link rel="stylesheet" type="text/css" href="https://unpkg.com/trix@2.0.8/dist/trix.css">
   <script type="text/javascript" src="https://unpkg.com/trix@2.0.8/dist/trix.umd.min.js"></script>
@@ -74,6 +77,11 @@
     display: none;
   }
   
+  .list-group-item:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+  }
+
   </style>
 
   <style>
@@ -421,6 +429,11 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="../assets/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
+
+  <!-- Tambahkan ini sebelum penutup body untuk JavaScript Select2 -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 </body>
 
 </html>
