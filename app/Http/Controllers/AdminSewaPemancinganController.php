@@ -459,6 +459,9 @@ class AdminSewaPemancinganController extends Controller
         if ($existingSession) {
             return redirect()->route('sewaPemancingan.index')->with('error', 'Session with the same time already exists.');
         }
+
+        // Find related SewaSpot
+        $sewaSpots = SewaSpot::where('sesi_id', $id)->get();
     
         // Notifikasi ke member
         $membersToNotify = SewaSpot::where('sesi_id', $id)
@@ -478,7 +481,7 @@ class AdminSewaPemancinganController extends Controller
             foreach ($membersToNotify as $member) {
                 // Check if $member and $member->user exist
                 if (isset($member->user) && $member->user) {
-                    Notification::send($member->user, new SesiSpotUpdated($session));
+                    Notification::send($member->user, new SesiSpotUpdated($session, $member));
                 } else {
                     // Log a warning if $member or $member->user is missing
                     Log::warning('Cannot send notification, user is missing or $member is null.', ['member' => $member]);
